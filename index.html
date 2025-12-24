@@ -1,651 +1,989 @@
 <!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chá de Casa Nova – Juliana & Matheus</title>
+<html lang="pt-BR" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chá de Casa Nova – Juliana & Matheus</title>
 
-  <!-- Sem Tailwind (mais leve e mais compatível com celular antigo) -->
-  <style>
-    :root{
-      --bg:#FAF8F5;
-      --surface:#FFFFFF;
-      --text:#5D4E37;
-      --muted:#8B7355;
-      --primary:#6B9B5E;
-      --danger:#D4A5A5;
-      --line:#EDE9E3;
-      --soft:#F5F2ED;
-      --warn:#FFF9E6;
-    }
-    *{ box-sizing:border-box; }
-    body{
-      margin:0; background:var(--bg); color:var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    .wrap{ max-width:1100px; margin:0 auto; padding:18px; }
-    .hero{
-      background: radial-gradient(ellipse at 20% 80%, rgba(195,177,160,.3) 0%, transparent 50%),
-                  radial-gradient(ellipse at 80% 20%, rgba(168,195,160,.2) 0%, transparent 50%),
-                  radial-gradient(ellipse at 50% 50%, rgba(210,180,140,.15) 0%, transparent 70%);
-      padding:24px 0 18px;
-    }
-    .card{
-      background:var(--surface); border:1px solid var(--line);
-      border-radius:18px; padding:18px;
-      box-shadow: 0 10px 30px rgba(93,78,55,.08);
-    }
-    .title{ font-size:34px; margin:10px 0 6px; }
-    .subtitle{ font-size:20px; color:var(--muted); margin:0 0 14px; }
-    .pill{
-      display:inline-block; padding:6px 12px; border-radius:999px;
-      background:rgba(107,155,94,.10); border:1px dashed var(--primary);
-      margin:10px 0;
-    }
-    .btn{
-      appearance:none; border:0; cursor:pointer;
-      background:var(--primary); color:#fff;
-      padding:12px 16px; border-radius:999px;
-      font-weight:700; font-size:16px;
-    }
-    .btn:disabled{ opacity:.6; cursor:not-allowed; }
-    .btn.secondary{
-      background:#FEE2E2; color:#DC2626; font-weight:700;
-    }
-    .grid{
-      display:grid; grid-template-columns: repeat(1, minmax(0, 1fr));
-      gap:12px;
-    }
-    @media(min-width: 820px){
-      .grid{ grid-template-columns: repeat(3, minmax(0,1fr)); }
-    }
-    .item{
-      background:var(--surface); border:2px solid var(--line);
-      border-radius:18px; padding:14px; position:relative;
-    }
-    .item h3{ margin:8px 0 6px; font-size:18px; }
-    .item p{ margin:0 0 10px; color:var(--muted); font-size:14px; }
-    .tag{
-      position:absolute; top:12px; right:12px;
-      font-size:12px; color:#fff; background:var(--muted);
-      padding:5px 9px; border-radius:999px;
-    }
-    .by{ font-size:13px; color:var(--muted); font-style:italic; margin:6px 0 10px;}
-    .imgbox{
-      width:72px; height:72px; border-radius:14px;
-      overflow:hidden; background:#f2f2f2;
-      display:flex; align-items:center; justify-content:center;
-      margin:0 auto;
-    }
-    .imgbox img{ width:100%; height:100%; object-fit:contain; }
-    .section{ padding:18px 0; }
-    .soft{ background:var(--soft); padding:18px 0; }
-    .notice{
-      background:var(--warn); border:1px solid #F5E6B3;
-      border-radius:14px; padding:12px; color:#8B6914;
-      margin:12px 0;
-    }
-    .highlight{
-      background:var(--warn); border-bottom:2px solid var(--primary);
-      padding:2px 6px; border-radius:8px; font-weight:700;
-    }
+    <!-- Tailwind via CDN (mantém o visual do seu original) -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    /* Modal */
-    .backdrop{
-      position:fixed; inset:0; background:rgba(0,0,0,.5);
-      display:none; align-items:center; justify-content:center;
-      padding:14px; z-index:50;
-    }
-    .modal{
-      width:100%; max-width:520px; max-height:88vh;
-      overflow:auto; border-radius:18px; background:#fff;
-      padding:16px; position:relative;
-      animation: pop .12s ease;
-    }
-    @keyframes pop{ from{ transform:scale(.98); opacity:.6;} to{transform:scale(1); opacity:1;} }
-    .x{
-      position:absolute; top:10px; right:10px;
-      width:36px; height:36px; border-radius:999px;
-      border:0; background:#f3f3f3; cursor:pointer;
-      font-size:18px;
-    }
-    label{ display:block; font-weight:700; margin:12px 0 6px; }
-    input{
-      width:100%; padding:12px 12px; border-radius:12px;
-      border:2px solid var(--line); background:var(--bg);
-      font-size:16px;
-    }
-    .small{ font-size:12px; color:var(--muted); margin-top:6px; }
-    .center{ text-align:center; }
-    .toast{
-      position:fixed; top:14px; left:50%; transform:translateX(-50%);
-      background:var(--primary); color:#fff; padding:10px 14px;
-      border-radius:999px; font-weight:700; display:none; z-index:99;
-      box-shadow: 0 10px 30px rgba(0,0,0,.15);
-      max-width:92vw; text-align:center;
-    }
-    .toast.error{ background:var(--danger); }
-    .steps{
-      display:grid; gap:10px;
-      grid-template-columns: repeat(1, minmax(0,1fr));
-      margin-top:10px;
-    }
-    @media(min-width:820px){ .steps{ grid-template-columns: repeat(4, minmax(0,1fr)); } }
-    .step{
-      background:#fff; border:1px solid var(--line);
-      border-radius:16px; padding:14px; text-align:center;
-    }
-    .num{
-      width:54px; height:54px; border-radius:999px; margin:0 auto 8px;
-      background:var(--primary); color:#fff; display:flex;
-      align-items:center; justify-content:center; font-size:26px; font-weight:900;
-    }
-    footer{ padding:28px 0; text-align:center; color:var(--muted); }
-  </style>
-</head>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Questrial&display=swap"
+      rel="stylesheet"
+    />
 
-<body>
-  <div class="toast" id="toast"></div>
+    <style>
+      body { box-sizing: border-box; }
+      .font-heading { font-family: "Cormorant Garamond", Georgia, serif; }
+      .font-body { font-family: "Questrial", sans-serif; }
 
-  <div class="hero">
-    <div class="wrap">
-      <div class="center">
-        <div class="pill">🌿 Chá de Casa Nova</div>
-        <h1 class="title">Juliana & Matheus</h1>
-        <p class="subtitle"><em>Um novo lar, um novo começo</em></p>
+      .hero-pattern {
+        background-image:
+          radial-gradient(ellipse at 20% 80%, rgba(195, 177, 160, 0.3) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 20%, rgba(168, 195, 160, 0.2) 0%, transparent 50%),
+          radial-gradient(ellipse at 50% 50%, rgba(210, 180, 140, 0.15) 0%, transparent 70%);
+      }
 
-        <div class="card" style="margin-top:12px;">
-          <div class="center">
-            <div style="letter-spacing:.25em; text-transform:uppercase; font-size:12px; color:var(--primary); font-weight:900;">⏰ Faltam</div>
-            <div style="font-size:34px; font-weight:900; margin:8px 0;" id="countdown">-- dias --:--:--</div>
-            <div style="font-size:18px; font-weight:900;">📅 08 de Fevereiro de 2026 • 15h</div>
-          </div>
-        </div>
+      .card-hover { transition: all 0.25s ease; }
+      .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
 
-        <div class="pill" style="margin-top:12px;">
-          📍 <strong>Salão Torre Rubi</strong> – Cond. Side Barra Funda • Rua do Bosque, 980
-        </div>
+      /* animações leves (mantém bonito sem pesar tanto) */
+      @keyframes fadeInUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+      .animate-fade-in { animation: fadeInUp 0.5s ease forwards; }
+      .scroll-smooth { scroll-behavior: smooth; }
 
-        <div style="margin-top:14px;">
-          <button class="btn" onclick="scrollToList()">Ver Lista de Presentes ⬇️</button>
-        </div>
-      </div>
-    </div>
-  </div>
+      .toast { animation: slideIn 0.25s ease, fadeOut 0.25s ease 2.7s forwards; }
+      @keyframes slideIn { from { transform: translateY(-80%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+      @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-  <div class="section" style="background:#fff;">
-    <div class="wrap center">
-      <div style="font-size:34px;">🏠</div>
-      <h2 style="margin:8px 0 10px;">Seja bem-vindo(a)!</h2>
-      <div style="max-width:860px; margin:0 auto; font-size:18px; line-height:1.5;">
-        <p>Estamos muito felizes em compartilhar esse momento especial com vocês! Estamos montando nosso primeiro cantinho juntos e preparamos com carinho uma lista de itens que vão nos ajudar a transformar essa casa em um verdadeiro lar.</p>
-        <p>Sua presença é muito importante para nós e fará esse momento ainda mais especial.</p>
-        <p>Para nos ajudar a montar esse novo começo, pedimos que <span class="highlight">cada convidado escolha um item da lista</span>, para que todos possam participar.</p>
-        <p>Escolhemos cada item pensando em nosso dia a dia e em criar memórias felizes nesse novo lar que está nascendo. 💚</p>
-      </div>
-    </div>
-  </div>
+      .celebration-pulse { animation: celebrationPulse 1s ease infinite; }
+      @keyframes celebrationPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 
-  <div class="soft">
-    <div class="wrap">
-      <div class="center">
-        <h2 style="margin:0 0 6px;">Como Funciona</h2>
-        <p style="margin:0 0 14px; color:var(--muted); font-size:18px;">Simples e fácil, sem complicação!</p>
-      </div>
+      .confetti-icon { animation: confetti 2s ease-in-out infinite; }
+      @keyframes confetti { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-18px) rotate(360deg); opacity: 0; } }
 
-      <div class="steps">
-        <div class="step">
-          <div class="num">1</div>
-          <h3>Escolha</h3>
-          <p style="margin:0; color:var(--muted);">Navegue pela lista e escolha o presente que deseja dar</p>
-        </div>
-        <div class="step">
-          <div class="num">2</div>
-          <h3>Reserve</h3>
-          <p style="margin:0; color:var(--muted);">Preencha seu nome e data de nascimento para garantir o item</p>
-        </div>
-        <div class="step">
-          <div class="num">3</div>
-          <h3>Compre</h3>
-          <p style="margin:0; color:var(--muted);">Adquira onde preferir, no seu tempo</p>
-        </div>
-        <div class="step">
-          <div class="num">4</div>
-          <h3>Entregue</h3>
-          <p style="margin:0; color:var(--muted);">Leve no dia do chá e celebre conosco!</p>
-        </div>
-      </div>
-    </div>
-  </div>
+      /* pequenos ajustes pro “mobile antigo” */
+      img { max-width: 100%; height: auto; }
+    </style>
+  </head>
 
-  <div class="section" id="lista">
-    <div class="wrap">
-      <div class="center">
-        <div style="font-size:34px;">🎁</div>
-        <h2 style="margin:8px 0 6px;">Lista de Presentes</h2>
-        <p style="margin:0; color:var(--muted); font-size:18px;">Clique em um item para reservá-lo</p>
-      </div>
+  <body class="h-full font-body scroll-smooth">
+    <div id="app-wrapper" class="w-full h-full overflow-auto" style="background-color:#faf8f5">
+      <!-- Toast Container -->
+      <div id="toast-container" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"></div>
 
-      <div class="notice" id="loadingBanner">⏳ <strong>Carregando a lista...</strong> Aguarde alguns segundos para reservar.</div>
+      <!-- Hero -->
+      <section class="hero-pattern min-h-screen flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
+        <div class="absolute top-10 left-10 text-4xl opacity-20 animate-fade-in">🌿</div>
+        <div class="absolute top-20 right-16 text-3xl opacity-15 animate-fade-in" style="animation-delay:.1s">🌱</div>
+        <div class="absolute bottom-20 left-20 text-3xl opacity-20 animate-fade-in" style="animation-delay:.2s">🍃</div>
+        <div class="absolute bottom-32 right-10 text-4xl opacity-15 animate-fade-in" style="animation-delay:.3s">🌿</div>
 
-      <div class="card" style="margin-top:12px;">
-        <div class="grid" id="grid"></div>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <div class="wrap">
-      <div style="font-size:40px;">💚</div>
-      <div style="font-size:18px; margin-top:8px;">Obrigado por fazer parte desse momento tão especial. Cada gesto de carinho significa muito para nós!</div>
-      <div style="margin-top:8px; font-weight:900; color:var(--text); font-size:20px;">Juliana & Matheus</div>
-      <div style="margin-top:8px; opacity:.7;">🌿 🏠 💚</div>
-    </div>
-  </footer>
-
-  <!-- MODAL RESERVA -->
-  <div class="backdrop" id="reserveBackdrop">
-    <div class="modal">
-      <button class="x" onclick="closeReserve()">✕</button>
-      <div class="center">
-        <div id="reserveIcon" style="font-size:44px; margin-top:4px;">🎁</div>
-        <h3 id="reserveTitle" style="margin:8px 0 4px;">Nome do Presente</h3>
-        <div id="reserveDesc" style="color:var(--muted); margin-bottom:6px;">Descrição</div>
-      </div>
-
-      <form onsubmit="submitReserve(event)">
-        <input type="hidden" id="reserveItemId"/>
-        <input type="hidden" id="reserveItemName"/>
-
-        <label>Seu Nome</label>
-        <input id="guestName" required placeholder="Como você se chama?"/>
-
-        <label>Sua Data de Nascimento</label>
-        <input id="guestBirth" required placeholder="DD/MM/AAAA" maxlength="10" inputmode="numeric" oninput="formatDate(this)"/>
-        <div class="small">🔒 Usada para confirmar sua identidade ao cancelar</div>
-
-        <div style="margin-top:14px;">
-          <button class="btn" id="reserveBtn" type="submit">Reservar Presente</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL CONFIRMAÇÃO FOFA -->
-  <div class="backdrop" id="okBackdrop">
-    <div class="modal">
-      <button class="x" onclick="closeOk()">✕</button>
-
-      <div class="center">
-        <div style="font-size:56px;">🎉</div>
-        <h2 style="margin:6px 0 8px;">Presente Reservado!</h2>
-        <div style="font-size:26px;">❤️ 🏠 😊</div>
-
-        <div class="card" style="margin-top:14px; background:var(--soft);">
-          <div style="font-size:18px; line-height:1.4;">
-            <div style="font-weight:900; font-size:22px; margin-bottom:8px;" id="okName">Querido(a)</div>
-            Muito obrigado por fazer parte desse dia tão especial nas nossas vidas! ❤️
+        <div class="text-center max-w-2xl mx-auto animate-fade-in">
+          <div class="w-full mb-10 -mt-16 md:-mt-20">
+            <div class="w-full max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-xl" style="aspect-ratio:16/9">
+              <img
+                src="https://i.pinimg.com/736x/4a/6c/aa/4a6caa8efc074ac29335bff3410e8f7c.jpg"
+                alt="Juliana & Matheus"
+                class="w-full h-full object-cover"
+                onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=&quot;w-full h-full flex items-center justify-center text-6xl&quot; style=&quot;background-color:#EDE9E3;&quot;>💚</div>';"
+              />
+            </div>
           </div>
 
-          <div class="card" style="margin-top:12px; border:2px dashed var(--primary);">
-            <div style="color:var(--muted); font-weight:900;">🎁 Você reservou:</div>
-            <div id="okItem" style="font-size:22px; font-weight:900; margin-top:6px;">Item</div>
-          </div>
-
-          <p style="margin:12px 0; color:var(--text);">
-            Este item agora está <strong style="color:var(--primary);">bloqueado</strong> e reservado especialmente em seu nome! 🏠
-            Ninguém mais poderá escolhê-lo.
+          <p class="text-base md:text-lg tracking-[0.3em] uppercase mb-4" style="color:#6b9b5e">Chá de Casa Nova</p>
+          <h1 id="hero-title" class="font-heading text-6xl md:text-7xl lg:text-8xl font-medium mb-6 leading-tight" style="color:#5d4e37">
+            Juliana & Matheus
+          </h1>
+          <p id="hero-subtitle" class="text-2xl md:text-3xl lg:text-4xl font-heading italic mb-8" style="color:#8b7355">
+            Um novo lar, um novo começo
           </p>
 
-          <div class="notice">
-            ⚠️ <strong>Lembrete importante:</strong> Por favor, não se esqueça de levar o presente no dia do nosso Chá de Casa Nova!
-            Estamos super ansiosos para celebrar com você! 😊❤️
+          <!-- Countdown -->
+          <div class="mb-8 p-6 rounded-2xl" style="background-color:rgba(255,255,255,0.7); backdrop-filter: blur(10px)">
+            <p class="text-sm tracking-[0.2em] uppercase mb-4" style="color:#6b9b5e">⏰ Faltam</p>
+            <div id="countdown" class="flex justify-center gap-3 md:gap-6 mb-4">
+              <div class="text-center">
+                <div id="countdown-days" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
+                <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Dias</div>
+              </div>
+              <div class="font-heading text-3xl md:text-5xl" style="color:#6b9b5e">:</div>
+              <div class="text-center">
+                <div id="countdown-hours" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
+                <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Horas</div>
+              </div>
+              <div class="font-heading text-3xl md:text-5xl" style="color:#6b9b5e">:</div>
+              <div class="text-center">
+                <div id="countdown-minutes" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
+                <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Min</div>
+              </div>
+              <div class="font-heading text-3xl md:text-5xl" style="color:#6b9b5e">:</div>
+              <div class="text-center">
+                <div id="countdown-seconds" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
+                <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Seg</div>
+              </div>
+            </div>
+            <p class="font-heading text-2xl md:text-3xl font-medium" style="color:#5d4e37">
+              📅 08 de Fevereiro de 2026 • 15h
+            </p>
           </div>
 
-          <div class="card" style="border:1px solid #A8C3A0; background:#E8F5E9;">
-            🎁 <strong>Surpresa especial!</strong> Seu nome será incluído no nosso <strong>sorteio especial</strong> e confirmado no dia,
-            após a entrega do presente! 🍀❤️
+          <div class="mb-8 p-3 rounded-xl" style="background-color:rgba(107,155,94,0.1); border:1px dashed #6b9b5e">
+            <p class="text-base md:text-lg text-center" style="color:#5d4e37">
+              📍 <strong>Salão Torre Rubi</strong> – Cond. Side Barra Funda • Rua do Bosque, 980
+            </p>
+          </div>
+
+          <a href="#lista" class="inline-flex items-center gap-2 px-8 py-4 rounded-full text-white font-medium transition-all hover:shadow-lg hover:scale-105" style="background-color:#6b9b5e">
+            <span>Ver Lista de Presentes</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </a>
+        </div>
+      </section>
+
+      <!-- Welcome -->
+      <section class="py-20 px-6" style="background-color:#ffffff">
+        <div class="max-w-3xl mx-auto text-center">
+          <div class="mb-8"><span class="text-4xl">🏠</span></div>
+          <h2 class="font-heading text-4xl md:text-5xl mb-8" style="color:#5d4e37">Seja bem-vindo(a)!</h2>
+          <div class="text-xl md:text-2xl leading-relaxed" style="color:#6b5b4f">
+            <p class="mb-5">
+              Estamos muito felizes em compartilhar esse momento especial com vocês!
+              Estamos montando nosso primeiro cantinho juntos e preparamos com carinho
+              uma lista de itens que vão nos ajudar a transformar essa casa em um verdadeiro lar.
+            </p>
+            <p class="mb-5">Sua presença é muito importante para nós e fará esse momento ainda mais especial.</p>
+            <p class="mb-5">
+              Para nos ajudar a montar esse novo começo, pedimos que
+              <strong class="px-2 py-1 rounded" style="background-color:#fff9e6; color:#5d4e37; border-bottom:2px solid #6b9b5e">
+                cada convidado escolha um item da lista
+              </strong>,
+              para que todos possam participar.
+            </p>
+            <p>Escolhemos cada item pensando em nosso dia a dia e em criar memórias felizes nesse novo lar que está nascendo. 💚</p>
           </div>
         </div>
+      </section>
 
-        <button class="btn" style="margin-top:12px;" onclick="closeOk()">Fechar e Voltar à Lista</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL CANCELAMENTO -->
-  <div class="backdrop" id="cancelBackdrop">
-    <div class="modal">
-      <button class="x" onclick="closeCancel()">✕</button>
-
-      <div class="center">
-        <div style="font-size:46px;">😢</div>
-        <h2 style="margin:6px 0 10px;" id="cancelTitle">Cancelar Reserva</h2>
-        <div style="color:var(--muted); margin-bottom:8px;">Para cancelar sua reserva, confirme seus dados:</div>
-      </div>
-
-      <form onsubmit="submitCancel(event)">
-        <input type="hidden" id="cancelItemId"/>
-
-        <label>Data de nascimento usada na reserva</label>
-        <input id="cancelBirth" required placeholder="DD/MM/AAAA" maxlength="10" inputmode="numeric" oninput="formatDate(this)"/>
-
-        <div class="small" style="text-align:center; margin-top:10px;">
-          ⚠️ Ao cancelar, o item ficará disponível para outros convidados
+      <!-- How it works -->
+      <section class="py-20 px-6" style="background-color:#f5f2ed">
+        <div class="max-w-5xl mx-auto">
+          <div class="text-center mb-16">
+            <h2 class="font-heading text-4xl md:text-5xl mb-4" style="color:#5d4e37">Como Funciona</h2>
+            <p class="text-xl md:text-2xl" style="color:#8b7355">Simples e fácil, sem complicação!</p>
+          </div>
+          <div class="grid md:grid-cols-4 gap-8">
+            <div class="text-center animate-fade-in">
+              <div class="w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center mx-auto mb-5 text-white font-heading text-5xl md:text-6xl font-semibold" style="background-color:#6b9b5e">1</div>
+              <h3 class="font-heading text-2xl md:text-3xl mb-3" style="color:#5d4e37">Escolha</h3>
+              <p class="text-lg md:text-xl leading-relaxed" style="color:#8b7355">Navegue pela lista e escolha o presente que deseja dar</p>
+            </div>
+            <div class="text-center animate-fade-in" style="animation-delay:.1s">
+              <div class="w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center mx-auto mb-5 text-white font-heading text-5xl md:text-6xl font-semibold" style="background-color:#6b9b5e">2</div>
+              <h3 class="font-heading text-2xl md:text-3xl mb-3" style="color:#5d4e37">Reserve</h3>
+              <p class="text-lg md:text-xl leading-relaxed" style="color:#8b7355">Preencha seu nome e data de nascimento para garantir o item</p>
+            </div>
+            <div class="text-center animate-fade-in" style="animation-delay:.2s">
+              <div class="w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center mx-auto mb-5 text-white font-heading text-5xl md:text-6xl font-semibold" style="background-color:#6b9b5e">3</div>
+              <h3 class="font-heading text-2xl md:text-3xl mb-3" style="color:#5d4e37">Compre</h3>
+              <p class="text-lg md:text-xl leading-relaxed" style="color:#8b7355">Adquira onde preferir, no seu tempo</p>
+            </div>
+            <div class="text-center animate-fade-in" style="animation-delay:.3s">
+              <div class="w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center mx-auto mb-5 text-white font-heading text-5xl md:text-6xl font-semibold" style="background-color:#6b9b5e">4</div>
+              <h3 class="font-heading text-2xl md:text-3xl mb-3" style="color:#5d4e37">Entregue</h3>
+              <p class="text-lg md:text-xl leading-relaxed" style="color:#8b7355">Leve no dia do chá e celebre conosco!</p>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <div style="display:flex; gap:10px; margin-top:14px;">
-          <button type="button" class="btn" style="flex:1; background:var(--line); color:var(--text);" onclick="closeCancel()">Voltar</button>
-          <button type="submit" class="btn secondary" id="cancelBtn" style="flex:1;">Cancelar Reserva</button>
+      <!-- Gift List -->
+      <section id="lista" class="py-20 px-6" style="background-color:#f5f2ed">
+        <div class="max-w-6xl mx-auto">
+          <div class="text-center mb-10">
+            <span class="text-4xl mb-4 block">🎁</span>
+            <h2 class="font-heading text-4xl md:text-5xl mb-4" style="color:#5d4e37">Lista de Presentes</h2>
+            <p class="text-lg md:text-xl" style="color:#8b7355">Clique em um item para reservá-lo</p>
+            <p id="sync-status" class="text-sm mt-3" style="color:#8b7355">🔄 Carregando reservas...</p>
+          </div>
+
+          <!-- Category Tabs -->
+          <div class="flex flex-wrap justify-center gap-3 mb-12">
+            <button onclick="filterCategory('all')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="all" style="background-color:#6b9b5e; color:white">Todos</button>
+            <button onclick="filterCategory('utensilios')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="utensilios" style="background-color:#ede9e3; color:#5d4e37">🥄 Utensílios</button>
+            <button onclick="filterCategory('potes')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="potes" style="background-color:#ede9e3; color:#5d4e37">🫙 Potes</button>
+            <button onclick="filterCategory('cozinha')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="cozinha" style="background-color:#ede9e3; color:#5d4e37">🍳 Cozinha</button>
+            <button onclick="filterCategory('formas')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="formas" style="background-color:#ede9e3; color:#5d4e37">🎂 Formas</button>
+            <button onclick="filterCategory('banheiro')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="banheiro" style="background-color:#ede9e3; color:#5d4e37">🛁 Banheiro</button>
+            <button onclick="filterCategory('organizacao')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="organizacao" style="background-color:#ede9e3; color:#5d4e37">👔 Organização</button>
+          </div>
+
+          <div id="gift-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
-      </form>
+      </section>
+
+      <!-- Reservation Modal -->
+      <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background-color:rgba(0,0,0,0.5)">
+        <div class="bg-white rounded-2xl max-w-md w-full p-8 relative animate-fade-in" style="max-height:90%; overflow-y:auto">
+          <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="#8B7355" viewbox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <div class="text-center mb-6">
+            <div id="modal-icon-container" class="mb-4 flex justify-center"></div>
+            <h3 id="modal-title" class="font-heading text-2xl mb-2" style="color:#5d4e37">Nome do Presente</h3>
+            <p id="modal-description" class="text-sm" style="color:#8b7355">Descrição do item</p>
+          </div>
+
+          <form id="reservation-form" onsubmit="handleReservation(event)">
+            <input type="hidden" id="item-id" value="" />
+
+            <div class="mb-4">
+              <label for="guest-name" class="block text-sm font-medium mb-2" style="color:#5d4e37">Seu Nome</label>
+              <input type="text" id="guest-name" required placeholder="Como você se chama?"
+                class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
+                style="border-color:#ede9e3; background-color:#faf8f5"
+                onfocus="this.style.borderColor='#A8C3A0'" onblur="this.style.borderColor='#EDE9E3'" />
+            </div>
+
+            <div class="mb-2">
+              <label for="guest-birthdate" class="block text-sm font-medium mb-2" style="color:#5d4e37">Sua Data de Nascimento</label>
+              <input type="text" id="guest-birthdate" required placeholder="DD/MM/AAAA" maxlength="10" inputmode="numeric"
+                class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
+                style="border-color:#ede9e3; background-color:#faf8f5"
+                onfocus="this.style.borderColor='#A8C3A0'" onblur="this.style.borderColor='#EDE9E3'"
+                oninput="formatDateInput(this)" />
+              <p class="text-xs mt-2" style="color:#8b7355">🔒 Usada para confirmar sua identidade ao cancelar</p>
+            </div>
+
+            <button type="submit" id="submit-btn"
+              class="w-full py-4 rounded-full text-white font-medium transition-all hover:shadow-lg hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              style="background-color:#6b9b5e">
+              <span id="submit-text">Reservar Presente</span>
+              <span id="submit-loading" class="hidden">Reservando...</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Confirmation Modal -->
+      <div id="confirmation-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background-color:rgba(0,0,0,0.5)">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-8 relative animate-fade-in" style="max-height:90%; overflow-y:auto">
+          <div class="text-center">
+            <div class="mb-6">
+              <div class="text-6xl mb-4 celebration-pulse">🎉</div>
+              <h2 class="font-heading text-3xl md:text-4xl mb-3" style="color:#5d4e37">Presente Reservado!</h2>
+              <div class="flex justify-center gap-3 text-3xl">
+                <span class="confetti-icon" style="animation-delay:0s">❤️</span>
+                <span class="confetti-icon" style="animation-delay:.3s">🏠</span>
+                <span class="confetti-icon" style="animation-delay:.6s">😊</span>
+              </div>
+            </div>
+
+            <div class="rounded-2xl p-6 mb-6" style="background-color:#f5f2ed">
+              <p class="text-xl md:text-2xl mb-5 leading-relaxed" style="color:#5d4e37">
+                <span class="font-heading text-3xl md:text-4xl font-medium block mb-3" id="confirmation-guest-name">Querido(a)</span>
+                Muito obrigado por fazer parte desse dia tão especial nas nossas vidas! ❤️
+              </p>
+
+              <div class="rounded-xl p-5 mb-5" style="background-color:#ffffff; border:2px dashed #6b9b5e">
+                <p class="text-base md:text-lg mb-3 font-medium" style="color:#8b7355">🎁 Você reservou:</p>
+                <div id="confirmation-item-container" class="flex items-center justify-center mb-3"></div>
+                <p class="font-heading text-2xl md:text-3xl font-medium" style="color:#5d4e37" id="confirmation-item-name">Nome do Item</p>
+              </div>
+
+              <p class="text-lg md:text-xl mb-5 leading-relaxed" style="color:#6b5b4f">
+                Este item agora está <strong style="color:#6b9b5e">bloqueado</strong> e reservado especialmente em seu nome! 🏠
+              </p>
+
+              <div class="rounded-xl p-5 mb-5" style="background-color:#fff9e6; border:1px solid #f5e6b3">
+                <p class="text-base md:text-lg leading-relaxed" style="color:#8b6914">
+                  ⚠️ <strong>Lembrete importante:</strong> Por favor, não se esqueça de levar o presente no dia do nosso Chá de Casa Nova! 😊❤️
+                </p>
+              </div>
+
+              <div class="rounded-xl p-5" style="background-color:#e8f5e9; border:1px solid #a8c3a0">
+                <p class="text-base md:text-lg leading-relaxed" style="color:#2e7d32">
+                  🎁 <strong>Surpresa especial!</strong> Seu nome será incluído no nosso <strong>sorteio especial</strong> e confirmado no dia, após a entrega do presente! 🍀❤️
+                </p>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <p class="font-heading text-lg italic mb-2" style="color:#8b7355">Com muito amor e carinho,</p>
+              <p class="font-heading text-2xl font-medium" style="color:#5d4e37" id="confirmation-couple-names">Juliana & Matheus</p>
+              <div class="flex justify-center gap-3 mt-3 text-2xl"><span>💚</span><span>🏡</span><span>💚</span></div>
+            </div>
+
+            <button onclick="closeConfirmationModal()" class="w-full py-4 rounded-full text-white font-medium transition-all hover:shadow-lg hover:scale-[1.02]" style="background-color:#6b9b5e">
+              Fechar e Voltar à Lista
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cancel Modal -->
+      <div id="cancel-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background-color:rgba(0,0,0,0.5)">
+        <div class="bg-white rounded-2xl max-w-md w-full p-8 relative animate-fade-in">
+          <button onclick="closeCancelModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="#8B7355" viewbox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <div class="text-center mb-6">
+            <div class="text-5xl mb-4">😢</div>
+            <h3 id="cancel-modal-title" class="font-heading text-3xl md:text-4xl mb-3" style="color:#5d4e37">Cancelar Reserva</h3>
+            <p class="text-lg md:text-xl mb-5" style="color:#8b7355">Para cancelar sua reserva, confirme seus dados:</p>
+          </div>
+
+          <form id="cancel-form" onsubmit="handleCancelReservation(event)">
+            <input type="hidden" id="cancel-item-id" value="" />
+            <div class="mb-4">
+              <label for="cancel-birthdate" class="block text-base md:text-lg font-medium mb-3" style="color:#5d4e37">Data de nascimento usada na reserva</label>
+              <input type="text" id="cancel-birthdate" required placeholder="DD/MM/AAAA" maxlength="10" inputmode="numeric"
+                class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
+                style="border-color:#ede9e3; background-color:#faf8f5"
+                onfocus="this.style.borderColor='#D4A5A5'" onblur="this.style.borderColor='#EDE9E3'"
+                oninput="formatDateInput(this)" />
+            </div>
+            <p class="text-base md:text-lg mb-6 text-center" style="color:#8b7355">⚠️ Ao cancelar, o item ficará disponível para outros convidados</p>
+
+            <div class="flex gap-3">
+              <button type="button" onclick="closeCancelModal()" class="flex-1 py-4 rounded-full text-lg font-medium transition-all hover:shadow-md" style="background-color:#ede9e3; color:#5d4e37">
+                Voltar
+              </button>
+              <button type="submit" id="cancel-submit-btn" class="flex-1 py-4 rounded-full text-lg text-white font-medium transition-all hover:shadow-lg disabled:opacity-50" style="background-color:#d4a5a5">
+                <span id="cancel-submit-text">Cancelar Reserva</span>
+                <span id="cancel-submit-loading" class="hidden">Cancelando...</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Online Shopping -->
+      <section id="links" class="py-20 px-6" style="background-color:#f5f2ed">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <span class="text-4xl mb-4 flex justify-center gap-3">🛒🛍️</span>
+            <h2 class="font-heading text-4xl md:text-5xl mb-4" style="color:#5d4e37">Comprar Online</h2>
+            <p class="text-xl md:text-2xl" style="color:#8b7355">Caso prefira comprar online, você encontra o link de cada item aqui:</p>
+          </div>
+          <div id="links-list" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="py-16 px-6 text-center" style="background-color:#ffffff">
+        <div class="max-w-2xl mx-auto">
+          <div class="mb-6"><span class="text-5xl">💚</span></div>
+          <p id="footer-message" class="font-heading text-2xl md:text-3xl mb-6 italic" style="color:#5d4e37">
+            Obrigado por fazer parte desse momento tão especial. Cada gesto de carinho significa muito para nós!
+          </p>
+          <p class="font-heading text-xl md:text-2xl" style="color:#8b7355">Com carinho,</p>
+          <p id="footer-signature" class="font-heading text-3xl md:text-4xl mt-2" style="color:#5d4e37">Juliana & Matheus</p>
+          <div class="mt-8 flex justify-center gap-2 text-2xl opacity-50"><span>🌿</span><span>🏠</span><span>💚</span></div>
+        </div>
+      </footer>
     </div>
-  </div>
 
-  <script>
-    // ✅ SUA URL DO APPS SCRIPT (a nova)
-    const API_URL = "https://script.google.com/macros/s/AKfycbxmMyWFTWrHzj39YImVblKvDoSwEqUTeLN21i3sEaAAO4wjsW1RUEBH88g7aV_IL920BQ/exec";
+    <script>
+      // ============================
+      // CONFIG
+      // ============================
+      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyc9YOXMXk0tUGV6S4D30CSh5x7-qoJzwuExO0BGtvyg3qtk26As9gGqEzY6QBA5dddqA/exec";
 
-    // LISTA DE ITENS (você pode trocar depois com os seus itens reais)
-    // Para cada item: id, name, description, iconUrl (opcional)
-    const giftItems = [
-      { id:"utensilios-4", name:"Escorredor de Massa", description:"Para escorrer massas com praticidade", iconUrl:"" },
-      { id:"utensilios-13", name:"Pegador de sorvete em inox", description:"Bolas de sorvete perfeitas", iconUrl:"" },
-      { id:"cozinha-1", name:"Jarra de vidro", description:"Para sucos e bebidas", iconUrl:"" },
-      { id:"formas-1", name:"Forma de bolo redonda", description:"Para bolos tradicionais", iconUrl:"" },
-      { id:"banheiro-1", name:"Saboneteira", description:"Para organizar o sabonete", iconUrl:"" },
-      { id:"organizacao-1", name:"Cabides (kit)", description:"Para organizar o guarda-roupa", iconUrl:"" }
-    ];
+      const config = {
+        couple_names: "Juliana & Matheus",
+        event_subtitle: "Um novo lar, um novo começo",
+        footer_message: "Obrigado por fazer parte desse momento tão especial. Cada gesto de carinho significa muito para nós!",
+        background_color: "#FAF8F5",
+        surface_color: "#FFFFFF",
+        text_color: "#5D4E37",
+        primary_action_color: "#6B9B5E",
+        secondary_action_color: "#8B7355",
+      };
 
-    let reservations = []; // vem do Sheets
+      // ============================
+      // DADOS (seu array original)
+      // ============================
+      const giftItems = [
+        { id: "utensilios-1", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51wOKTjJouL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Colher de pau (kit)", description: "Kit completo de colheres de madeira", link: "https://www.amazon.com.br/s?k=colher+de+pau+kit" },
+        { id: "utensilios-2", category: "utensilios", icon: "https://ph-cdn3.ecosweb.com.br/imagens01/foto/utilidades-domesticas/talheres/kit-para-molho-com-concha-e-escumadeira-em-inox_140885_600_1.jpg", name: "Kit Concha e Escumadeira", description: "Dupla essencial para cozinhar", link: "https://www.amazon.com.br/s?k=kit+concha+escumadeira+inox" },
+        { id: "utensilios-3", category: "utensilios", icon: "https://i.pinimg.com/736x/0e/d0/be/0ed0bed0a8d2e82a0cdbe18d1a2e5a43.jpg", name: "Kit Pegador de Macarrão e Colher de Servir", description: "Para servir massas e refeições", link: "https://www.amazon.com.br/s?k=pegador+macarrao+colher+servir" },
+        { id: "utensilios-4", category: "utensilios", icon: "https://m.media-amazon.com/images/I/412rlg5x9LL._AC_SL1000_.jpg", name: "Escorredor de Massa", description: "Para escorrer massas com praticidade", link: "https://www.amazon.com.br/s?k=escorredor+de+massa" },
+        { id: "utensilios-5", category: "utensilios", icon: "https://m.media-amazon.com/images/I/611BlzyhyAL._AC_SX679_.jpg", name: "Ralador multifuncional", description: "Várias opções de corte", link: "https://www.amazon.com.br/s?k=ralador+multifuncional" },
+        { id: "utensilios-6", category: "utensilios", icon: "https://m.media-amazon.com/images/I/71+mE5Aqy9L._AC_SX679_.jpg", name: "Tábua de corte", description: "Para preparar os alimentos", link: "https://www.amazon.com.br/s?k=tabua+de+corte" },
+        { id: "utensilios-7", category: "utensilios", icon: "https://m.media-amazon.com/images/I/511XcDy06PL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Luva térmica", description: "Proteção para manusear panelas quentes", link: "https://www.amazon.com.br/s?k=luva+termica+cozinha" },
+        { id: "utensilios-8", category: "utensilios", icon: "https://m.media-amazon.com/images/I/71SY5kje0zL._AC_SX679_.jpg", name: "Descanso de panela", description: "Para apoiar panelas quentes", link: "https://www.amazon.com.br/s?k=descanso+de+panela" },
+        { id: "utensilios-9", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51Byq+vTy1L._AC_SX679_.jpg", name: "Tesoura para cozinha", description: "Multiuso para a cozinha", link: "https://www.amazon.com.br/s?k=tesoura+cozinha" },
+        { id: "utensilios-10", category: "utensilios", icon: "https://m.media-amazon.com/images/I/6155SEJ3rAL._AC_SX679_.jpg", name: "Faca para pão", description: "Com lâmina serrilhada", link: "https://www.amazon.com.br/s?k=faca+para+pao" },
+        { id: "utensilios-11", category: "utensilios", icon: "https://m.media-amazon.com/images/I/31fl2APEMIL._AC_SX679_.jpg", name: "Faca para carne", description: "Corte preciso para carnes", link: "https://www.amazon.com.br/s?k=faca+para+carne" },
+        { id: "utensilios-12", category: "utensilios", icon: "https://m.media-amazon.com/images/I/31YNXnO2m2L._AC_.jpg", name: "Espátula para bolo", description: "Para servir fatias perfeitas", link: "https://www.amazon.com.br/s?k=espatula+para+bolo" },
+        { id: "utensilios-13", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51sHeZrOspL._SX522_.jpg", name: "Pegador de sorvete em inox", description: "Bolas de sorvete perfeitas", link: "https://www.amazon.com.br/s?k=pegador+de+sorvete+inox" },
+        { id: "utensilios-14", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51ER0CKJZML._AC_SX679_.jpg", name: "Jogo de espátulas para patê", description: "Kit para pastas e patês", link: "https://www.amazon.com.br/s?k=espatula+para+pate" },
+        { id: "utensilios-15", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51+kZPH9VsL._AC_SX679_.jpg", name: "Kit utensílios de cozinha em silicone", description: "Conjunto moderno e prático", link: "https://www.amazon.com.br/s?k=kit+utensilios+silicone" },
+        { id: "utensilios-16", category: "utensilios", icon: "https://m.media-amazon.com/images/I/41NGbbQo5CL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Colher medidora (kit simples)", description: "Para receitas precisas", link: "https://www.amazon.com.br/s?k=colher+medidora+kit" },
 
-    // ======= Helpers (compatíveis com celular antigo) =======
-    function showToast(msg, type){
-      const t = document.getElementById("toast");
-      t.className = "toast" + (type === "error" ? " error" : "");
-      t.textContent = msg;
-      t.style.display = "block";
-      setTimeout(function(){ t.style.display = "none"; }, 2800);
-    }
+        { id: "potes-1", category: "potes", icon: "https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name: "Kit 2 Potes de Vidro Herméticos", description: "Para armazenar alimentos - opção 1", link: "https://a.co/d/gH9mf9o" },
+        { id: "potes-2", category: "potes", icon: "https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name: "Kit 2 Potes de Vidro Herméticos", description: "Para armazenar alimentos - opção 2", link: "https://a.co/d/gH9mf9o" },
+        { id: "potes-3", category: "potes", icon: "https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name: "Kit 2 Potes de Vidro Herméticos", description: "Para armazenar alimentos - opção 3", link: "https://a.co/d/gH9mf9o" },
+        { id: "potes-4", category: "potes", icon: "https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name: "Pote Hermético 1,5L", description: "Tamanho ideal - opção 1", link: "https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
+        { id: "potes-5", category: "potes", icon: "https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name: "Pote Hermético 1,5L", description: "Tamanho ideal - opção 2", link: "https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
+        { id: "potes-6", category: "potes", icon: "https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name: "Pote Hermético 1,5L", description: "Tamanho ideal - opção 3", link: "https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
+        { id: "potes-7", category: "potes", icon: "https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name: "Pote Hermético 1,5L", description: "Tamanho ideal - opção 4", link: "https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
+        { id: "potes-8", category: "potes", icon: "https://americanas.vtexassets.com/arquivos/ids/450651-1280-auto/2521891574_1SZ.webp", name: "Conjunto 4 Potes Herméticos 250ml", description: "Perfeitos para porções pequenas", link: "https://www.americanas.com.br/conjunto-de-4-potes-hermeticos-retangular-250ml-leve-4-pague-3-dup-2521891566/p" },
+        { id: "potes-9", category: "potes", icon: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ8BmqBG-obN7wY4VqwUNHEK48EzoXP9TnJyTVtL-7ShJ0FmfSkIQRLCTmvarQnqcjowwFYL-oz-YHhGqeS7a84VJr9id20vHW4X_n_dxfZ210_TZkD0Ura", name: "Conjunto 4 Potes Herméticos 500ml", description: "Tamanho médio versátil", link: "https://www.americanas.com.br/conjunto-4-potes-hermeticos-essencial-cristal-l4p3-500ml-dup/p" },
+        { id: "potes-10", category: "potes", icon: "https://m.media-amazon.com/images/I/61ecJ487YgL._AC_SX679_.jpg", name: "Kit Potes Herméticos Redondos", description: "Potes redondos para organização", link: "https://a.co/d/32dXOwk" },
 
-    function formatDate(input){
-      let v = (input.value || "").replace(/\D/g, "");
-      if(v.length >= 2) v = v.substring(0,2) + "/" + v.substring(2);
-      if(v.length >= 5) v = v.substring(0,5) + "/" + v.substring(5,9);
-      input.value = v;
-    }
+        { id: "cozinha-1", category: "cozinha", icon: "https://m.media-amazon.com/images/I/71jNQBr4mbL._AC_SX679_.jpg", name: "Jarra de vidro", description: "Para sucos e bebidas", link: "https://www.amazon.com.br/s?k=jarra+de+vidro" },
+        { id: "cozinha-2", category: "cozinha", icon: "https://m.media-amazon.com/images/I/51d+B8zoAvL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Leiteira", description: "Para aquecer leite e preparar bebidas", link: "https://www.amazon.com.br/s?k=leiteira+inox" },
+        { id: "cozinha-3", category: "cozinha", icon: "https://m.media-amazon.com/images/I/31TpUxJ4mHL._AC_SX679_.jpg", name: "Coador de café Melitta 103", description: "Café fresquinho todo dia", link: "https://www.amazon.com.br/s?k=coador+cafe+melitta+103" },
+        { id: "cozinha-4", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61+LfzcEVGL._AC_SX679_.jpg", name: "Kit peneiras em inox", description: "Vários tamanhos para peneirar", link: "https://www.amazon.com.br/s?k=kit+peneiras+inox" },
+        { id: "cozinha-5", category: "cozinha", icon: "https://m.media-amazon.com/images/I/41lQvVjbepL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Saladeira", description: "Para servir saladas com estilo", link: "https://www.amazon.com.br/s?k=saladeira" },
+        { id: "cozinha-6", category: "cozinha", icon: "https://m.media-amazon.com/images/I/41BvG7PiFGL._AC_SX679_.jpg", name: "Bowl de vidro grande", description: "Multiuso para preparo e servir", link: "https://www.amazon.com.br/s?k=bowl+vidro+grande" },
+        { id: "cozinha-7", category: "cozinha", icon: "https://m.media-amazon.com/images/I/51lCJHAgXSL._AC_SX679_.jpg", name: "Porta-guardanapo em inox", description: "Elegante para a mesa", link: "https://www.amazon.com.br/s?k=porta+guardanapo+inox" },
+        { id: "cozinha-8", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61xTgzfTp1L._AC_SX679_.jpg", name: "Saleiro e pimenteiro", description: "Dupla essencial para a mesa", link: "https://www.amazon.com.br/s?k=saleiro+pimenteiro" },
+        { id: "cozinha-9", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61vFMvBrCcL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Petisqueira 1", description: "Para servir aperitivos", link: "https://www.amazon.com.br/s?k=petisqueira" },
+        { id: "cozinha-10", category: "cozinha", icon: "https://m.media-amazon.com/images/I/41sABmlWy5L._AC_SX679_.jpg", name: "Petisqueira 2", description: "Para servir aperitivos", link: "https://www.amazon.com.br/s?k=petisqueira" },
+        { id: "cozinha-11", category: "cozinha", icon: "https://m.media-amazon.com/images/I/41fnZrY2myL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Jogo de xícaras de café (6 unidades)", description: "Para receber visitas especiais", link: "https://www.amazon.com.br/s?k=jogo+xicaras+cafe" },
 
-    function isValidDateBR(s){
-      const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(s);
-      if(!m) return false;
-      const d = parseInt(m[1],10), mo = parseInt(m[2],10), y = parseInt(m[3],10);
-      if(mo < 1 || mo > 12) return false;
-      if(d < 1 || d > 31) return false;
-      if(y < 1900 || y > 2100) return false;
-      return true;
-    }
+        { id: "formas-1", category: "formas", icon: "https://m.media-amazon.com/images/I/31DgHfr0lkL._AC_.jpg", name: "Forma de bolo redonda", description: "Para bolos tradicionais", link: "https://www.amazon.com.br/s?k=forma+bolo+redonda" },
+        { id: "formas-2", category: "formas", icon: "https://m.media-amazon.com/images/I/614ntxPcIsL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Forma de bolo com furo", description: "Para bolos tipo pudim", link: "https://www.amazon.com.br/s?k=forma+bolo+furo" },
+        { id: "formas-3", category: "formas", icon: "https://m.media-amazon.com/images/I/51cQ4Rp1B8L._AC_SX679_.jpg", name: "Forma retangular média (bolo/brownie)", description: "Versátil para bolos e brownies", link: "https://www.amazon.com.br/s?k=forma+retangular+bolo" },
+        { id: "formas-4", category: "formas", icon: "https://m.media-amazon.com/images/I/51h2IHO3cJS._AC_SX679_.jpg", name: "Forma de lasanha de vidro", description: "Vai do forno à mesa", link: "https://www.amazon.com.br/s?k=forma+lasanha+vidro" },
+        { id: "formas-5", category: "formas", icon: "https://m.media-amazon.com/images/I/71K7vZLMzUL._AC_SX679_.jpg", name: "Forma de pizza", description: "Para pizzas caseiras", link: "https://www.amazon.com.br/s?k=forma+pizza" },
 
-    // JSONP (evita CORS e funciona até em Android antigo)
-    function jsonp(params){
-      return new Promise(function(resolve, reject){
-        const cb = "cb_" + Date.now() + "_" + Math.floor(Math.random()*100000);
-        window[cb] = function(data){
-          try { delete window[cb]; } catch(e){ window[cb] = undefined; }
-          script.parentNode && script.parentNode.removeChild(script);
-          resolve(data);
-        };
+        { id: "banheiro-1", category: "banheiro", icon: "https://m.media-amazon.com/images/I/51zNDiujMCL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Saboneteira", description: "Para organizar o sabonete", link: "https://www.amazon.com.br/s?k=saboneteira" },
+        { id: "banheiro-2", category: "banheiro", icon: "https://m.media-amazon.com/images/I/61Y22+k1kAL._AC_SX679_.jpg", name: "Porta sabonete líquido", description: "Dispenser elegante", link: "https://www.amazon.com.br/s?k=porta+sabonete+liquido" },
+        { id: "banheiro-3", category: "banheiro", icon: "https://m.media-amazon.com/images/I/51sutAJ9eSL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Escova para vaso sanitário", description: "Com suporte higiênico", link: "https://www.amazon.com.br/s?k=escova+vaso+sanitario" },
+        { id: "banheiro-4", category: "banheiro", icon: "https://m.media-amazon.com/images/I/71ByWjXmOPL._AC_SX679_.jpg", name: "Toalha de rosto 1", description: "Macia e absorvente", link: "https://www.amazon.com.br/s?k=toalha+de+rosto" },
+        { id: "banheiro-5", category: "banheiro", icon: "https://m.media-amazon.com/images/I/51Qjx9m0JEL._AC_SX679_.jpg", name: "Toalha de rosto 2", description: "Macia e absorvente", link: "https://www.amazon.com.br/s?k=toalha+de+rosto" },
+
+        { id: "organizacao-1", category: "organizacao", icon: "https://m.media-amazon.com/images/I/71QBq-o+bZL._AC_SX300_SY300_QL70_ML2_.jpg", name: "Cabides (kit)", description: "Para organizar o guarda-roupa", link: "https://www.amazon.com.br/s?k=cabides+kit" },
+      ];
+
+      // ============================
+      // STATE
+      // ============================
+      let reservations = []; // vindo da planilha (action=list)
+      let currentCategory = "all";
+      let lastReservedItem = null;
+      let lastGuestName = "";
+
+      // ============================
+      // HELPERS
+      // ============================
+      function formatDateInput(input) {
+        let value = (input.value || "").replace(/\D/g, "");
+        if (value.length >= 2) value = value.substring(0,2) + "/" + value.substring(2);
+        if (value.length >= 5) value = value.substring(0,5) + "/" + value.substring(5,9);
+        input.value = value;
+      }
+
+      function isValidDate(dateStr) {
+        const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+        const match = String(dateStr || "").match(regex);
+        if (!match) return false;
+        const day = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10);
+        const year = parseInt(match[3], 10);
+        if (month < 1 || month > 12) return false;
+        if (day < 1 || day > 31) return false;
+        if (year < 1900 || year > 2100) return false;
+        return true;
+      }
+
+      function isImageUrl(icon) {
+        return icon && icon.indexOf("http") === 0;
+      }
+
+      function renderIcon(item, size) {
+        const sizeClass = size === "large" ? "w-24 h-24" : "w-20 h-20";
+        if (isImageUrl(item.icon)) {
+          return '<img src="' + item.icon + '" alt="' + item.name + '" class="' + sizeClass + ' object-contain mx-auto rounded-lg" onerror="this.onerror=null; this.outerHTML=\\'<span class=\\'text-4xl block\\'>🎁</span>\\'">';
+        }
+        return '<span class="text-4xl block">' + item.icon + "</span>";
+      }
+
+      function showToast(message, type) {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = "toast px-6 py-3 rounded-full shadow-lg text-white font-medium";
+        toast.style.backgroundColor = type === "success" ? "#6B9B5E" : "#D4A5A5";
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(function(){ toast.remove(); }, 3000);
+      }
+
+      function setSyncStatus(text) {
+        const el = document.getElementById("sync-status");
+        if (el) el.textContent = text;
+      }
+
+      // ============================
+      // JSONP (compatível com Android antigo e sem CORS)
+      // ============================
+      function jsonpRequest(params, onOk, onErr) {
+        const cbName = "__cb_" + String(Date.now()) + "_" + String(Math.floor(Math.random()*100000));
+        const timeoutMs = 15000;
+
+        const query = [];
+        for (var k in params) {
+          if (Object.prototype.hasOwnProperty.call(params, k)) {
+            query.push(encodeURIComponent(k) + "=" + encodeURIComponent(String(params[k])));
+          }
+        }
+        query.push("callback=" + encodeURIComponent(cbName));
+        const url = APPS_SCRIPT_URL + (APPS_SCRIPT_URL.indexOf("?") >= 0 ? "&" : "?") + query.join("&");
+
+        let done = false;
         const script = document.createElement("script");
-        const url = API_URL + (API_URL.indexOf("?")>-1 ? "&" : "?") + params + "&callback=" + cb;
-        script.src = url;
-        script.onerror = function(){
-          try { delete window[cb]; } catch(e){ window[cb] = undefined; }
-          script.parentNode && script.parentNode.removeChild(script);
-          reject(new Error("JSONP failed"));
+
+        const timer = setTimeout(function() {
+          if (done) return;
+          done = true;
+          cleanup();
+          if (onErr) onErr(new Error("Timeout"));
+        }, timeoutMs);
+
+        window[cbName] = function(data) {
+          if (done) return;
+          done = true;
+          cleanup();
+          if (onOk) onOk(data);
         };
+
+        function cleanup() {
+          clearTimeout(timer);
+          try { delete window[cbName]; } catch(e) { window[cbName] = undefined; }
+          if (script && script.parentNode) script.parentNode.removeChild(script);
+        }
+
+        script.onerror = function() {
+          if (done) return;
+          done = true;
+          cleanup();
+          if (onErr) onErr(new Error("Falha ao carregar JSONP"));
+        };
+
+        script.src = url;
         document.body.appendChild(script);
-      });
-    }
-
-    function scrollToList(){
-      const el = document.getElementById("lista");
-      if(el && el.scrollIntoView) el.scrollIntoView({behavior:"smooth"});
-    }
-
-    // ======= Render =======
-    function render(){
-      const grid = document.getElementById("grid");
-      if(!grid) return;
-
-      // Ordena: disponíveis primeiro, reservados por último
-      const available = [];
-      const reserved = [];
-      for(let i=0;i<giftItems.length;i++){
-        const it = giftItems[i];
-        const r = findReservation(it.id);
-        if(r) reserved.push(it);
-        else available.push(it);
       }
-      const items = available.concat(reserved);
 
-      let html = "";
-      for(let i=0;i<items.length;i++){
-        const it = items[i];
-        const r = findReservation(it.id);
-        const isRes = !!r;
+      // ============================
+      // API CALLS
+      // ============================
+      function fetchReservations() {
+        setSyncStatus("🔄 Atualizando reservas...");
+        jsonpRequest(
+          { action: "list" },
+          function(res) {
+            if (res && res.ok) {
+              reservations = res.reservations || [];
+              renderGiftGrid();
+              setSyncStatus("✅ Lista atualizada.");
+            } else {
+              setSyncStatus("⚠️ Erro ao carregar reservas.");
+              showToast((res && res.message) ? res.message : "Erro ao carregar reservas", "error");
+            }
+          },
+          function(err) {
+            setSyncStatus("⚠️ Falha de conexão ao carregar reservas.");
+            showToast("Falha ao carregar reservas. Verifique sua internet e tente novamente.", "error");
+            console.error(err);
+          }
+        );
+      }
 
-        html += '<div class="item">';
-        if(isRes) html += '<div class="tag">Reservado</div>';
+      function reserveItem(item, guestName, birthdate, onDone) {
+        jsonpRequest(
+          {
+            action: "reserve",
+            item_id: item.id,
+            item_name: item.name,
+            reserved_by: guestName,
+            reserved_birthdate: birthdate
+          },
+          function(res) {
+            if (res && res.ok) {
+              onDone(true, res);
+            } else {
+              onDone(false, res);
+            }
+          },
+          function(err) {
+            onDone(false, { ok:false, message:"Falha de conexão ao reservar." });
+            console.error(err);
+          }
+        );
+      }
 
-        html += '<div class="center">';
-        html += '<div class="imgbox">';
-        if(it.iconUrl){
-          html += '<img src="'+escapeHtml(it.iconUrl)+'" alt="'+escapeHtml(it.name)+'" onerror="this.style.display=\'none\'; this.parentNode.innerHTML=\'🎁\';"/>';
-        } else {
-          html += '🎁';
+      function cancelItem(itemId, birthdate, onDone) {
+        jsonpRequest(
+          { action: "cancel", item_id: itemId, reserved_birthdate: birthdate },
+          function(res) {
+            if (res && res.ok) onDone(true, res);
+            else onDone(false, res);
+          },
+          function(err) {
+            onDone(false, { ok:false, message:"Falha de conexão ao cancelar." });
+            console.error(err);
+          }
+        );
+      }
+
+      // ============================
+      // UI / RENDER
+      // ============================
+      function filterCategory(category) {
+        currentCategory = category;
+
+        const btns = document.querySelectorAll(".category-btn");
+        for (var i=0; i<btns.length; i++) {
+          const btn = btns[i];
+          if (btn.dataset.category === category) {
+            btn.style.backgroundColor = config.primary_action_color;
+            btn.style.color = "white";
+          } else {
+            btn.style.backgroundColor = "#EDE9E3";
+            btn.style.color = config.text_color;
+          }
         }
-        html += '</div>';
+        renderGiftGrid();
+      }
 
-        html += '<h3>'+escapeHtml(it.name)+'</h3>';
-        html += '<p>'+escapeHtml(it.description||"")+'</p>';
+      function renderGiftGrid() {
+        const grid = document.getElementById("gift-grid");
+        if (!grid) return;
 
-        if(isRes){
-          html += '<div class="by">Reservado por '+escapeHtml(r.reserved_by||"")+'</div>';
-          html += '<button class="btn secondary" onclick="openCancel(\''+escapeAttr(it.id)+'\', \''+escapeAttr(it.name)+'\')">Cancelar Reserva</button>';
-        } else {
-          html += '<button class="btn" onclick="openReserve(\''+escapeAttr(it.id)+'\', \''+escapeAttr(it.name)+'\', \''+escapeAttr(it.description||"")+'\')">Quero Presentear</button>';
+        const filteredItems = currentCategory === "all" ? giftItems : giftItems.filter(function(it){ return it.category === currentCategory; });
+
+        function isReserved(itemId) {
+          for (var i=0; i<reservations.length; i++) {
+            if (String(reservations[i].item_id) === String(itemId)) return true;
+          }
+          return false;
         }
 
-        html += '</div></div>';
-      }
-
-      grid.innerHTML = html;
-    }
-
-    function escapeHtml(s){
-      s = String(s||"");
-      return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-    }
-    function escapeAttr(s){
-      return escapeHtml(s).replace(/\n/g," ");
-    }
-
-    function findReservation(itemId){
-      for(let i=0;i<reservations.length;i++){
-        if(String(reservations[i].item_id) === String(itemId) && reservations[i].status === "reserved"){
-          return reservations[i];
+        function getReservation(itemId) {
+          for (var i=0; i<reservations.length; i++) {
+            if (String(reservations[i].item_id) === String(itemId)) return reservations[i];
+          }
+          return null;
         }
+
+        const availableItems = filteredItems.filter(function(it){ return !isReserved(it.id); });
+        const reservedItems = filteredItems.filter(function(it){ return isReserved(it.id); });
+        const sortedItems = availableItems.concat(reservedItems);
+
+        grid.innerHTML = sortedItems.map(function(item){
+          const reservation = getReservation(item.id);
+          const reserved = !!reservation;
+
+          return (
+            '<div class="card-hover rounded-2xl p-6 border-2 relative overflow-hidden ' + (reserved ? 'opacity-75' : '') + '"' +
+              ' style="background-color:' + config.surface_color + '; border-color:#EDE9E3;" data-item-id="' + item.id + '">' +
+
+              (reserved
+                ? '<div class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium text-white" style="background-color:' + config.secondary_action_color + '">Reservado</div>'
+                : ''
+              ) +
+
+              '<div class="text-center">' +
+                '<div class="mb-4 flex justify-center items-center" style="min-height:80px;">' + renderIcon(item) + '</div>' +
+                '<h3 class="font-heading text-2xl md:text-2xl mb-2" style="color:' + config.text_color + ';">' + item.name + '</h3>' +
+                '<p class="text-base md:text-lg mb-4" style="color:' + config.secondary_action_color + ';">' + item.description + '</p>' +
+
+                (reserved
+                  ? (
+                    '<p class="text-base italic mb-3" style="color:' + config.secondary_action_color + ';">Reservado por ' + (reservation.reserved_by || "alguém") + '</p>' +
+                    '<button onclick="openCancelModal(\'' + item.id + '\')" class="px-5 py-2 rounded-full text-sm font-medium transition-all hover:shadow-md" style="background-color:#FEE2E2; color:#DC2626;">Cancelar Reserva</button>'
+                  )
+                  : (
+                    '<button onclick="openModal(\'' + item.id + '\')" class="px-8 py-3 rounded-full text-white text-lg font-medium transition-all hover:shadow-md hover:scale-105" style="background-color:' + config.primary_action_color + ';">Quero Presentear</button>'
+                  )
+                ) +
+              '</div>' +
+            '</div>'
+          );
+        }).join("");
       }
-      return null;
-    }
 
-    // ======= Modais =======
-    function openReserve(id, name, desc){
-      document.getElementById("reserveItemId").value = id;
-      document.getElementById("reserveItemName").value = name;
-      document.getElementById("reserveTitle").textContent = name;
-      document.getElementById("reserveDesc").textContent = desc || "";
-      document.getElementById("guestName").value = "";
-      document.getElementById("guestBirth").value = "";
-      document.getElementById("reserveBackdrop").style.display = "flex";
-    }
-    function closeReserve(){ document.getElementById("reserveBackdrop").style.display = "none"; }
+      function openModal(itemId) {
+        const item = giftItems.filter(function(i){ return i.id === itemId; })[0];
+        if (!item) return;
 
-    function openOk(guestName, itemName){
-      document.getElementById("okName").textContent = guestName;
-      document.getElementById("okItem").textContent = itemName;
-      document.getElementById("okBackdrop").style.display = "flex";
-    }
-    function closeOk(){ document.getElementById("okBackdrop").style.display = "none"; }
+        document.getElementById("modal-icon-container").innerHTML = renderIcon(item, "large");
+        document.getElementById("modal-title").textContent = item.name;
+        document.getElementById("modal-description").textContent = item.description;
+        document.getElementById("item-id").value = itemId;
+        document.getElementById("guest-name").value = "";
+        document.getElementById("guest-birthdate").value = "";
 
-    function openCancel(id, name){
-      document.getElementById("cancelItemId").value = id;
-      document.getElementById("cancelTitle").textContent = "Cancelar: " + name;
-      document.getElementById("cancelBirth").value = "";
-      document.getElementById("cancelBackdrop").style.display = "flex";
-    }
-    function closeCancel(){ document.getElementById("cancelBackdrop").style.display = "none"; }
+        const modal = document.getElementById("modal");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
 
-    // ======= Ações =======
-    async function loadReservations(){
-      document.getElementById("loadingBanner").style.display = "block";
-      try{
-        const res = await jsonp("action=list");
-        if(res && res.ok){
-          reservations = res.reservations || [];
-          document.getElementById("loadingBanner").style.display = "none";
-          render();
-        } else {
-          document.getElementById("loadingBanner").style.display = "block";
-          showToast("Erro ao carregar. Recarregue a página.", "error");
+      function closeModal() {
+        const modal = document.getElementById("modal");
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }
+
+      function openConfirmationModal(item, guestName) {
+        document.getElementById("confirmation-guest-name").textContent = guestName;
+        document.getElementById("confirmation-item-name").textContent = item.name;
+        document.getElementById("confirmation-item-container").innerHTML = renderIcon(item, "large");
+        document.getElementById("confirmation-couple-names").textContent = config.couple_names;
+
+        const modal = document.getElementById("confirmation-modal");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
+
+      function closeConfirmationModal() {
+        const modal = document.getElementById("confirmation-modal");
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }
+
+      function openCancelModal(itemId) {
+        const item = giftItems.filter(function(i){ return i.id === itemId; })[0];
+        if (!item) return;
+
+        document.getElementById("cancel-modal-title").textContent = "Cancelar: " + item.name;
+        document.getElementById("cancel-item-id").value = itemId;
+        document.getElementById("cancel-birthdate").value = "";
+
+        const modal = document.getElementById("cancel-modal");
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      }
+
+      function closeCancelModal() {
+        const modal = document.getElementById("cancel-modal");
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }
+
+      // ============================
+      // RESERVAR / CANCELAR
+      // ============================
+      function handleReservation(event) {
+        if (event) { event.preventDefault(); event.stopPropagation(); }
+
+        if (!navigator.onLine) {
+          showToast("Você está sem internet no momento. Conecte e tente novamente.", "error");
+          return false;
         }
-      } catch(e){
-        document.getElementById("loadingBanner").style.display = "block";
-        showToast("Sem conexão com o sistema. Recarregue a página.", "error");
-      }
-    }
 
-    async function submitReserve(ev){
-      ev.preventDefault();
+        const submitBtn = document.getElementById("submit-btn");
+        const submitText = document.getElementById("submit-text");
+        const submitLoading = document.getElementById("submit-loading");
 
-      const btn = document.getElementById("reserveBtn");
-      btn.disabled = true;
+        const itemId = document.getElementById("item-id").value;
+        const name = (document.getElementById("guest-name").value || "").trim();
+        const birthdate = document.getElementById("guest-birthdate").value;
 
-      const itemId = document.getElementById("reserveItemId").value;
-      const itemName = document.getElementById("reserveItemName").value;
-      const name = (document.getElementById("guestName").value || "").trim();
-      const birth = (document.getElementById("guestBirth").value || "").trim();
-
-      if(!name || !birth){
-        btn.disabled = false;
-        return showToast("Por favor, preencha todos os campos", "error");
-      }
-      if(!isValidDateBR(birth)){
-        btn.disabled = false;
-        return showToast("Data inválida. Use DD/MM/AAAA", "error");
-      }
-      if(findReservation(itemId)){
-        btn.disabled = false;
-        closeReserve();
-        return showToast("Este item já foi reservado", "error");
-      }
-
-      try{
-        const params =
-          "action=reserve" +
-          "&item_id=" + encodeURIComponent(itemId) +
-          "&item_name=" + encodeURIComponent(itemName) +
-          "&reserved_by=" + encodeURIComponent(name) +
-          "&reserved_birthdate=" + encodeURIComponent(birth);
-
-        const res = await jsonp(params);
-
-        if(res && res.ok){
-          closeReserve();
-          await loadReservations();
-          openOk(name, itemName);
-        } else {
-          showToast((res && res.message) ? res.message : "Não foi possível reservar. Tente novamente.", "error");
+        if (!name || !birthdate) {
+          showToast("Por favor, preencha todos os campos", "error");
+          return false;
         }
-      } catch(e){
-        showToast("Erro ao processar. Tente novamente.", "error");
-      } finally{
-        btn.disabled = false;
-      }
-    }
-
-    async function submitCancel(ev){
-      ev.preventDefault();
-
-      const btn = document.getElementById("cancelBtn");
-      btn.disabled = true;
-
-      const itemId = document.getElementById("cancelItemId").value;
-      const birth = (document.getElementById("cancelBirth").value || "").trim();
-
-      if(!birth){
-        btn.disabled = false;
-        return showToast("Por favor, informe a data de nascimento", "error");
-      }
-      if(!isValidDateBR(birth)){
-        btn.disabled = false;
-        return showToast("Data inválida. Use DD/MM/AAAA", "error");
-      }
-
-      // validação local rápida
-      const r = findReservation(itemId);
-      if(!r){
-        btn.disabled = false;
-        closeCancel();
-        return showToast("Reserva não encontrada", "error");
-      }
-
-      try{
-        const params =
-          "action=cancel" +
-          "&item_id=" + encodeURIComponent(itemId) +
-          "&reserved_birthdate=" + encodeURIComponent(birth);
-
-        const res = await jsonp(params);
-        if(res && res.ok){
-          closeCancel();
-          await loadReservations();
-          showToast("Reserva cancelada com sucesso! 💚", "success");
-        } else {
-          showToast((res && res.message) ? res.message : "Erro ao cancelar. Tente novamente.", "error");
+        if (!isValidDate(birthdate)) {
+          showToast("Data inválida. Use DD/MM/AAAA", "error");
+          return false;
         }
-      } catch(e){
-        showToast("Erro ao cancelar. Tente novamente.", "error");
-      } finally{
-        btn.disabled = false;
+
+        // Se já aparece reservado no state atual, bloqueia
+        for (var i=0; i<reservations.length; i++) {
+          if (String(reservations[i].item_id) === String(itemId)) {
+            showToast("Este item já foi reservado", "error");
+            closeModal();
+            return false;
+          }
+        }
+
+        const item = giftItems.filter(function(i){ return i.id === itemId; })[0];
+        if (!item) {
+          showToast("Item não encontrado", "error");
+          return false;
+        }
+
+        lastReservedItem = item;
+        lastGuestName = name;
+
+        submitBtn.disabled = true;
+        submitText.classList.add("hidden");
+        submitLoading.classList.remove("hidden");
+
+        reserveItem(item, name, birthdate, function(ok, res){
+          submitBtn.disabled = false;
+          submitText.classList.remove("hidden");
+          submitLoading.classList.add("hidden");
+
+          if (ok) {
+            closeModal();
+            openConfirmationModal(item, name);
+            fetchReservations(); // puxa o estado atualizado da planilha
+          } else {
+            showToast((res && res.message) ? res.message : "Não foi possível reservar agora.", "error");
+            fetchReservations(); // mesmo em erro, atualiza lista (caso alguém tenha reservado antes)
+          }
+        });
+
+        return false;
       }
-    }
 
-    // ======= Countdown =======
-    function updateCountdown(){
-      // 08/02/2026 15:00 (São Paulo = UTC-3)
-      const eventDate = new Date("2026-02-08T18:00:00Z");
-      const now = new Date();
-      const diff = eventDate - now;
+      function handleCancelReservation(event) {
+        event.preventDefault();
+        event.stopPropagation();
 
-      if(diff <= 0){
-        document.getElementById("countdown").textContent = "0 dias 00:00:00";
-        return;
+        const itemId = document.getElementById("cancel-item-id").value;
+        const birthdate = document.getElementById("cancel-birthdate").value;
+
+        if (!birthdate) { showToast("Por favor, informe a data de nascimento", "error"); return false; }
+        if (!isValidDate(birthdate)) { showToast("Data inválida. Use DD/MM/AAAA", "error"); return false; }
+
+        // Confere se a reserva existe no state e bate a data
+        let reservation = null;
+        for (var i=0; i<reservations.length; i++) {
+          if (String(reservations[i].item_id) === String(itemId)) { reservation = reservations[i]; break; }
+        }
+        if (!reservation) { showToast("Reserva não encontrada", "error"); return false; }
+        if (String(reservation.reserved_birthdate || "").trim() !== String(birthdate || "").trim()) {
+          showToast("Data de nascimento não confere com a reserva", "error");
+          return false;
+        }
+
+        const submitBtn = document.getElementById("cancel-submit-btn");
+        const submitText = document.getElementById("cancel-submit-text");
+        const submitLoading = document.getElementById("cancel-submit-loading");
+
+        submitBtn.disabled = true;
+        submitText.classList.add("hidden");
+        submitLoading.classList.remove("hidden");
+
+        cancelItem(itemId, birthdate, function(ok, res){
+          submitBtn.disabled = false;
+          submitText.classList.remove("hidden");
+          submitLoading.classList.add("hidden");
+
+          if (ok) {
+            closeCancelModal();
+            showToast("Reserva cancelada com sucesso! O item está disponível novamente.", "success");
+            fetchReservations();
+          } else {
+            showToast((res && res.message) ? res.message : "Erro ao cancelar. Tente novamente.", "error");
+            fetchReservations();
+          }
+        });
+
+        return false;
       }
-      const days = Math.floor(diff / (1000*60*60*24));
-      const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-      const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
-      const secs = Math.floor((diff % (1000*60)) / 1000);
-      document.getElementById("countdown").textContent =
-        days + " dias " +
-        String(hours).padStart(2,"0") + ":" +
-        String(mins).padStart(2,"0") + ":" +
-        String(secs).padStart(2,"0");
-    }
 
-    // Init
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
-    loadReservations();
-  </script>
-</body>
+      // ============================
+      // LINKS LIST (igual ao seu)
+      // ============================
+      function renderLinksList() {
+        const container = document.getElementById("links-list");
+
+        const categories = {
+          utensilios: { name: "🥄 Utensílios de Cozinha", items: [] },
+          potes: { name: "🫙 Potes e Armazenamento", items: [] },
+          cozinha: { name: "🍳 Cozinha Geral", items: [] },
+          formas: { name: "🎂 Formas e Assadeiras", items: [] },
+          banheiro: { name: "🛁 Banheiro", items: [] },
+          organizacao: { name: "👔 Organização", items: [] },
+        };
+
+        for (var i=0; i<giftItems.length; i++) {
+          var item = giftItems[i];
+          if (item.link && categories[item.category]) categories[item.category].items.push(item);
+        }
+
+        function getStoreName(link) {
+          link = String(link || "");
+          if (link.indexOf("amazon") >= 0 || link.indexOf("a.co") >= 0) return "Ver na Amazon";
+          if (link.indexOf("mercadolivre") >= 0) return "Ver no Mercado Livre";
+          if (link.indexOf("americanas") >= 0) return "Ver nas Americanas";
+          return "Ver loja";
+        }
+
+        var html = "";
+        for (var key in categories) {
+          if (!Object.prototype.hasOwnProperty.call(categories, key)) continue;
+          var cat = categories[key];
+          if (!cat.items.length) continue;
+
+          html += '<div class="mb-8">';
+          html += '<h3 class="font-heading text-2xl md:text-3xl mb-4" style="color:' + config.text_color + ';">' + cat.name + "</h3>";
+          html += '<div class="grid gap-2">';
+
+          for (var j=0; j<cat.items.length; j++) {
+            var it = cat.items[j];
+            html +=
+              '<a href="' + it.link + '" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl transition-all hover:shadow-md" style="background-color:white; border:1px solid #EDE9E3;">' +
+                '<div class="flex items-center gap-3">' +
+                  '<div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center">' +
+                    (isImageUrl(it.icon) ? '<img src="' + it.icon + '" alt="' + it.name + '" class="w-full h-full object-contain" onerror="this.outerHTML=\\'🎁\\'">' : '<span class="text-lg">' + it.icon + "</span>") +
+                  "</div>" +
+                  '<span class="font-medium" style="color:' + config.text_color + ';">' + it.name + "</span>" +
+                "</div>" +
+                '<div class="flex items-center gap-2 text-sm" style="color:' + config.primary_action_color + ';">' +
+                  '<span class="hidden sm:inline">' + getStoreName(it.link) + "</span>" +
+                  '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>' +
+                "</div>" +
+              "</a>";
+          }
+
+          html += "</div></div>";
+        }
+
+        container.innerHTML = html;
+      }
+
+      // ============================
+      // COUNTDOWN
+      // ============================
+      function updateCountdown() {
+        const eventDate = new Date("2026-02-08T18:00:00Z");
+        const now = new Date();
+        const diff = eventDate - now;
+
+        if (diff <= 0) {
+          document.getElementById("countdown-days").textContent = "0";
+          document.getElementById("countdown-hours").textContent = "00";
+          document.getElementById("countdown-minutes").textContent = "00";
+          document.getElementById("countdown-seconds").textContent = "00";
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById("countdown-days").textContent = days;
+        document.getElementById("countdown-hours").textContent = String(hours).padStart(2, "0");
+        document.getElementById("countdown-minutes").textContent = String(minutes).padStart(2, "0");
+        document.getElementById("countdown-seconds").textContent = String(seconds).padStart(2, "0");
+      }
+
+      // ============================
+      // INIT
+      // ============================
+      function init() {
+        document.getElementById("hero-title").textContent = config.couple_names;
+        document.getElementById("hero-subtitle").textContent = config.event_subtitle;
+        document.getElementById("footer-message").textContent = config.footer_message;
+        document.getElementById("footer-signature").textContent = config.couple_names;
+
+        renderLinksList();
+        filterCategory("all");
+
+        // carrega reservas do Sheets
+        fetchReservations();
+
+        // countdown
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // refresh leve a cada 25s (pra sincronizar entre convidados)
+        setInterval(fetchReservations, 25000);
+      }
+
+      init();
+    </script>
+  </body>
 </html>
