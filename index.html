@@ -1,1036 +1,555 @@
 <!doctype html>
 <html lang="pt-BR" class="h-full">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chá de Casa Nova – Juliana & Matheus</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chá de Casa Nova – Juliana & Matheus</title>
 
-    <!-- Tailwind via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Questrial&display=swap"
-      rel="stylesheet"
-    />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Questrial&display=swap" rel="stylesheet" />
 
-    <style>
-      body { box-sizing: border-box; }
-      .font-heading { font-family: "Cormorant Garamond", Georgia, serif; }
-      .font-body { font-family: "Questrial", sans-serif; }
+  <style>
+    body { box-sizing: border-box; }
+    .font-heading { font-family: "Cormorant Garamond", Georgia, serif; }
+    .font-body { font-family: "Questrial", sans-serif; }
 
-      .hero-pattern {
-        background-image:
-          radial-gradient(ellipse at 20% 80%, rgba(195, 177, 160, 0.3) 0%, transparent 50%),
-          radial-gradient(ellipse at 80% 20%, rgba(168, 195, 160, 0.2) 0%, transparent 50%),
-          radial-gradient(ellipse at 50% 50%, rgba(210, 180, 140, 0.15) 0%, transparent 70%);
-      }
+    .hero-pattern {
+      background-image:
+        radial-gradient(ellipse at 20% 80%, rgba(195, 177, 160, 0.3) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(168, 195, 160, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(210, 180, 140, 0.15) 0%, transparent 70%);
+    }
 
-      .card-hover { transition: all 0.25s ease; }
-      .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+    .card-hover { transition: all 0.25s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
 
-      @keyframes fadeInUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-      .animate-fade-in { animation: fadeInUp 0.5s ease forwards; }
-      .scroll-smooth { scroll-behavior: smooth; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fadeInUp 0.5s ease forwards; }
 
-      .toast { animation: slideIn 0.25s ease, fadeOut 0.25s ease 2.7s forwards; }
-      @keyframes slideIn { from { transform: translateY(-80%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-      @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    .toast { animation: slideIn 0.25s ease, fadeOut 0.25s ease 2.7s forwards; }
+    @keyframes slideIn { from { transform: translateY(-80%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-      .celebration-pulse { animation: celebrationPulse 1s ease infinite; }
-      @keyframes celebrationPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    .celebration-pulse { animation: celebrationPulse 1s ease infinite; }
+    @keyframes celebrationPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 
-      .confetti-icon { animation: confetti 2s ease-in-out infinite; }
-      @keyframes confetti { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-18px) rotate(360deg); opacity: 0; } }
+    .confetti-icon { animation: confetti 2s ease-in-out infinite; }
+    @keyframes confetti { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-18px) rotate(360deg); opacity: 0; } }
 
-      img { max-width: 100%; height: auto; }
-      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-    </style>
-  </head>
+    img { max-width: 100%; height: auto; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
 
-  <body class="h-full font-body scroll-smooth">
-    <div id="app-wrapper" class="w-full h-full overflow-auto" style="background-color:#faf8f5">
-      <!-- Toast Container -->
-      <div id="toast-container" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"></div>
+<body class="h-full font-body">
+  <div id="app-wrapper" class="w-full h-full overflow-auto" style="background-color:#faf8f5">
 
-      <!-- Debug box (se algo quebrar, aparece aqui) -->
-      <div id="debug-box" class="hidden fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-[420px] z-50 p-4 rounded-xl shadow-lg"
-        style="background:#fff; border:1px solid #EDE9E3;">
-        <div class="flex items-start justify-between gap-3">
-          <div>
-            <div class="font-semibold" style="color:#5d4e37">⚠️ Algo deu errado no site</div>
-            <div id="debug-text" class="text-sm mt-1" style="color:#8b7355"></div>
-            <div class="text-xs mt-2 mono" style="color:#9a8f82" id="debug-hint"></div>
-          </div>
-          <button onclick="(function(){document.getElementById('debug-box').classList.add('hidden')})()"
-            class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">✕</button>
+    <!-- Toast -->
+    <div id="toast-container" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"></div>
+
+    <!-- Debug -->
+    <div id="debug-box" class="hidden fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-[420px] z-50 p-4 rounded-xl shadow-lg"
+      style="background:#fff; border:1px solid #EDE9E3;">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <div class="font-semibold" style="color:#5d4e37">⚠️ Algo deu errado no site</div>
+          <div id="debug-text" class="text-sm mt-1" style="color:#8b7355"></div>
+          <div class="text-xs mt-2 mono" style="color:#9a8f82" id="debug-hint"></div>
         </div>
+        <button onclick="(function(){document.getElementById('debug-box').className=document.getElementById('debug-box').className.replace(' hidden',''); document.getElementById('debug-box').classList && document.getElementById('debug-box').classList.add('hidden');})()"
+          class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">✕</button>
       </div>
-
-      <!-- Hero -->
-      <section class="hero-pattern min-h-screen flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
-        <div class="absolute top-10 left-10 text-4xl opacity-20 animate-fade-in">🌿</div>
-        <div class="absolute top-20 right-16 text-3xl opacity-15 animate-fade-in" style="animation-delay:.1s">🌱</div>
-        <div class="absolute bottom-20 left-20 text-3xl opacity-20 animate-fade-in" style="animation-delay:.2s">🍃</div>
-        <div class="absolute bottom-32 right-10 text-4xl opacity-15 animate-fade-in" style="animation-delay:.3s">🌿</div>
-
-        <div class="text-center max-w-2xl mx-auto animate-fade-in">
-          <div class="w-full mb-10 -mt-16 md:-mt-20">
-            <div class="w-full max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-xl" style="aspect-ratio:16/9">
-              <img
-                src="https://i.pinimg.com/736x/4a/6c/aa/4a6caa8efc074ac29335bff3410e8f7c.jpg"
-                alt="Juliana & Matheus"
-                class="w-full h-full object-cover"
-                onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=&quot;w-full h-full flex items-center justify-center text-6xl&quot; style=&quot;background-color:#EDE9E3;&quot;>💚</div>';"
-              />
-            </div>
-          </div>
-
-          <p class="text-base md:text-lg tracking-[0.3em] uppercase mb-4" style="color:#6b9b5e">Chá de Casa Nova</p>
-          <h1 id="hero-title" class="font-heading text-6xl md:text-7xl lg:text-8xl font-medium mb-6 leading-tight" style="color:#5d4e37">
-            Juliana & Matheus
-          </h1>
-          <p id="hero-subtitle" class="text-2xl md:text-3xl lg:text-4xl font-heading italic mb-8" style="color:#8b7355">
-            Um novo lar, um novo começo
-          </p>
-
-          <!-- Countdown -->
-          <div class="mb-8 p-6 rounded-2xl" style="background-color:rgba(255,255,255,0.7); backdrop-filter: blur(10px)">
-            <p class="text-sm tracking-[0.2em] uppercase mb-4" style="color:#6b9b5e">⏰ Faltam</p>
-            <div id="countdown" class="flex justify-center gap-3 md:gap-6 mb-4">
-              <div class="text-center">
-                <div id="countdown-days" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
-                <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Dias</div>
-              </div>
-              <div class="font-heading text-3xl md:text-5xl" style="color:#6b9b5e">:</div>
-              <div class="text-center">
-                <div id="countdown-hours" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
-                <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Horas</div>
-              </div>
-              <div class="font-heading text-3xl md:text-5xl" style="color:#6b9b5e">:</div>
-              <div class="text-center">
-                <div id="countdown-minutes" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
-                <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Min</div>
-              </div>
-              <div class="font-heading text-3xl md:text-5xl" style="color:#6b9b5e">:</div>
-              <div class="text-center">
-                <div id="countdown-seconds" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
-                <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Seg</div>
-              </div>
-            </div>
-            <p class="font-heading text-2xl md:text-3xl font-medium" style="color:#5d4e37">
-              📅 08 de Fevereiro de 2026 • 15h
-            </p>
-          </div>
-
-          <div class="mb-8 p-3 rounded-xl" style="background-color:rgba(107,155,94,0.1); border:1px dashed #6b9b5e">
-            <p class="text-base md:text-lg text-center" style="color:#5d4e37">
-              📍 <strong>Salão Torre Rubi</strong> – Cond. Side Barra Funda • Rua do Bosque, 980
-            </p>
-          </div>
-
-          <a href="#lista" class="inline-flex items-center gap-2 px-8 py-4 rounded-full text-white font-medium transition-all hover:shadow-lg hover:scale-105" style="background-color:#6b9b5e">
-            <span>Ver Lista de Presentes</span>
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </a>
-        </div>
-      </section>
-
-      <!-- Welcome -->
-      <section class="py-20 px-6" style="background-color:#ffffff">
-        <div class="max-w-3xl mx-auto text-center">
-          <div class="mb-8"><span class="text-4xl">🏠</span></div>
-          <h2 class="font-heading text-4xl md:text-5xl mb-8" style="color:#5d4e37">Seja bem-vindo(a)!</h2>
-          <div class="text-xl md:text-2xl leading-relaxed" style="color:#6b5b4f">
-            <p class="mb-5">
-              Estamos muito felizes em compartilhar esse momento especial com vocês!
-              Estamos montando nosso primeiro cantinho juntos e preparamos com carinho
-              uma lista de itens que vão nos ajudar a transformar essa casa em um verdadeiro lar.
-            </p>
-            <p class="mb-5">Sua presença é muito importante para nós e fará esse momento ainda mais especial.</p>
-            <p class="mb-5">
-              Para nos ajudar a montar esse novo começo, pedimos que
-              <strong class="px-2 py-1 rounded" style="background-color:#fff9e6; color:#5d4e37; border-bottom:2px solid #6b9b5e">
-                cada convidado escolha um item da lista
-              </strong>,
-              para que todos possam participar.
-            </p>
-            <p>Escolhemos cada item pensando em nosso dia a dia e em criar memórias felizes nesse novo lar que está nascendo. 💚</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- How it works -->
-      <section class="py-20 px-6" style="background-color:#f5f2ed">
-        <div class="max-w-5xl mx-auto">
-          <div class="text-center mb-16">
-            <h2 class="font-heading text-4xl md:text-5xl mb-4" style="color:#5d4e37">Como Funciona</h2>
-            <p class="text-xl md:text-2xl" style="color:#8b7355">Simples e fácil, sem complicação!</p>
-          </div>
-          <div class="grid md:grid-cols-4 gap-8">
-            <div class="text-center animate-fade-in">
-              <div class="w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center mx-auto mb-5 text-white font-heading text-5xl md:text-6xl font-semibold" style="background-color:#6b9b5e">1</div>
-              <h3 class="font-heading text-2xl md:text-3xl mb-3" style="color:#5d4e37">Escolha</h3>
-              <p class="text-lg md:text-xl leading-relaxed" style="color:#8b7355">Navegue pela lista e escolha o presente que deseja dar</p>
-            </div>
-            <div class="text-center animate-fade-in" style="animation-delay:.1s">
-              <div class="w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center mx-auto mb-5 text-white font-heading text-5xl md:text-6xl font-semibold" style="background-color:#6b9b5e">2</div>
-              <h3 class="font-heading text-2xl md:text-3xl mb-3" style="color:#5d4e37">Reserve</h3>
-              <p class="text-lg md:text-xl leading-relaxed" style="color:#8b7355">Preencha seu nome e data de nascimento para garantir o item</p>
-            </div>
-            <div class="text-center animate-fade-in" style="animation-delay:.2s">
-              <div class="w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center mx-auto mb-5 text-white font-heading text-5xl md:text-6xl font-semibold" style="background-color:#6b9b5e">3</div>
-              <h3 class="font-heading text-2xl md:text-3xl mb-3" style="color:#5d4e37">Compre</h3>
-              <p class="text-lg md:text-xl leading-relaxed" style="color:#8b7355">Adquira onde preferir, no seu tempo</p>
-            </div>
-            <div class="text-center animate-fade-in" style="animation-delay:.3s">
-              <div class="w-24 h-24 md:w-28 md:h-28 rounded-full flex items-center justify-center mx-auto mb-5 text-white font-heading text-5xl md:text-6xl font-semibold" style="background-color:#6b9b5e">4</div>
-              <h3 class="font-heading text-2xl md:text-3xl mb-3" style="color:#5d4e37">Entregue</h3>
-              <p class="text-lg md:text-xl leading-relaxed" style="color:#8b7355">Leve no dia do chá e celebre conosco!</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Gift List -->
-      <section id="lista" class="py-20 px-6" style="background-color:#f5f2ed">
-        <div class="max-w-6xl mx-auto">
-          <div class="text-center mb-10">
-            <span class="text-4xl mb-4 block">🎁</span>
-            <h2 class="font-heading text-4xl md:text-5xl mb-4" style="color:#5d4e37">Lista de Presentes</h2>
-            <p class="text-lg md:text-xl" style="color:#8b7355">Clique em um item para reservá-lo</p>
-            <p id="sync-status" class="text-sm mt-3" style="color:#8b7355">🔄 Preparando lista...</p>
-          </div>
-
-          <!-- Category Tabs -->
-          <div class="flex flex-wrap justify-center gap-3 mb-12">
-            <button onclick="filterCategory('all')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
-              data-category="all" style="background-color:#6b9b5e; color:white">Todos</button>
-            <button onclick="filterCategory('utensilios')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
-              data-category="utensilios" style="background-color:#ede9e3; color:#5d4e37">🥄 Utensílios</button>
-            <button onclick="filterCategory('potes')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
-              data-category="potes" style="background-color:#ede9e3; color:#5d4e37">🫙 Potes</button>
-            <button onclick="filterCategory('cozinha')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
-              data-category="cozinha" style="background-color:#ede9e3; color:#5d4e37">🍳 Cozinha</button>
-            <button onclick="filterCategory('formas')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
-              data-category="formas" style="background-color:#ede9e3; color:#5d4e37">🎂 Formas</button>
-            <button onclick="filterCategory('banheiro')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
-              data-category="banheiro" style="background-color:#ede9e3; color:#5d4e37">🛁 Banheiro</button>
-            <button onclick="filterCategory('organizacao')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
-              data-category="organizacao" style="background-color:#ede9e3; color:#5d4e37">👔 Organização</button>
-          </div>
-
-          <div id="gift-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </div>
-      </section>
-
-      <!-- Reservation Modal -->
-      <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background-color:rgba(0,0,0,0.5)">
-        <div class="bg-white rounded-2xl max-w-md w-full p-8 relative animate-fade-in" style="max-height:90%; overflow-y:auto">
-          <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="#8B7355" viewbox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-
-          <div class="text-center mb-6">
-            <div id="modal-icon-container" class="mb-4 flex justify-center"></div>
-            <h3 id="modal-title" class="font-heading text-2xl mb-2" style="color:#5d4e37">Nome do Presente</h3>
-            <p id="modal-description" class="text-sm" style="color:#8b7355">Descrição do item</p>
-          </div>
-
-          <form id="reservation-form" onsubmit="handleReservation(event)">
-            <input type="hidden" id="item-id" value="" />
-
-            <div class="mb-4">
-              <label for="guest-name" class="block text-sm font-medium mb-2" style="color:#5d4e37">Seu Nome</label>
-              <input type="text" id="guest-name" required placeholder="Como você se chama?"
-                class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style="border-color:#ede9e3; background-color:#faf8f5"
-                onfocus="this.style.borderColor='#A8C3A0'" onblur="this.style.borderColor='#EDE9E3'" />
-            </div>
-
-            <div class="mb-2">
-              <label for="guest-birthdate" class="block text-sm font-medium mb-2" style="color:#5d4e37">Sua Data de Nascimento</label>
-              <input type="text" id="guest-birthdate" required placeholder="DD/MM/AAAA" maxlength="10" inputmode="numeric"
-                class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style="border-color:#ede9e3; background-color:#faf8f5"
-                onfocus="this.style.borderColor='#A8C3A0'" onblur="this.style.borderColor='#EDE9E3'"
-                oninput="formatDateInput(this)" />
-              <p class="text-xs mt-2" style="color:#8b7355">🔒 Usada para confirmar sua identidade ao cancelar</p>
-            </div>
-
-            <button type="submit" id="submit-btn"
-              class="w-full py-4 rounded-full text-white font-medium transition-all hover:shadow-lg hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-              style="background-color:#6b9b5e">
-              <span id="submit-text">Reservar Presente</span>
-              <span id="submit-loading" class="hidden">Reservando...</span>
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <!-- Confirmation Modal -->
-      <div id="confirmation-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background-color:rgba(0,0,0,0.5)">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-8 relative animate-fade-in" style="max-height:90%; overflow-y:auto">
-          <div class="text-center">
-            <div class="mb-6">
-              <div class="text-6xl mb-4 celebration-pulse">🎉</div>
-              <h2 class="font-heading text-3xl md:text-4xl mb-3" style="color:#5d4e37">Presente Reservado!</h2>
-              <div class="flex justify-center gap-3 text-3xl">
-                <span class="confetti-icon" style="animation-delay:0s">❤️</span>
-                <span class="confetti-icon" style="animation-delay:.3s">🏠</span>
-                <span class="confetti-icon" style="animation-delay:.6s">😊</span>
-              </div>
-            </div>
-
-            <div class="rounded-2xl p-6 mb-6" style="background-color:#f5f2ed">
-              <p class="text-xl md:text-2xl mb-5 leading-relaxed" style="color:#5d4e37">
-                <span class="font-heading text-3xl md:text-4xl font-medium block mb-3" id="confirmation-guest-name">Querido(a)</span>
-                Muito obrigado por fazer parte desse dia tão especial nas nossas vidas! ❤️
-              </p>
-
-              <div class="rounded-xl p-5 mb-5" style="background-color:#ffffff; border:2px dashed #6b9b5e">
-                <p class="text-base md:text-lg mb-3 font-medium" style="color:#8b7355">🎁 Você reservou:</p>
-                <div id="confirmation-item-container" class="flex items-center justify-center mb-3"></div>
-                <p class="font-heading text-2xl md:text-3xl font-medium" style="color:#5d4e37" id="confirmation-item-name">Nome do Item</p>
-              </div>
-
-              <p class="text-lg md:text-xl mb-5 leading-relaxed" style="color:#6b5b4f">
-                Este item agora está <strong style="color:#6b9b5e">bloqueado</strong> e reservado especialmente em seu nome! 🏠
-              </p>
-
-              <div class="rounded-xl p-5 mb-5" style="background-color:#fff9e6; border:1px solid #f5e6b3">
-                <p class="text-base md:text-lg leading-relaxed" style="color:#8b6914">
-                  ⚠️ <strong>Lembrete importante:</strong> Por favor, não se esqueça de levar o presente no dia do nosso Chá de Casa Nova! 😊❤️
-                </p>
-              </div>
-
-              <div class="rounded-xl p-5" style="background-color:#e8f5e9; border:1px solid #a8c3a0">
-                <p class="text-base md:text-lg leading-relaxed" style="color:#2e7d32">
-                  🎁 <strong>Surpresa especial!</strong> Seu nome será incluído no nosso <strong>sorteio especial</strong> e confirmado no dia, após a entrega do presente! 🍀❤️
-                </p>
-              </div>
-            </div>
-
-            <div class="mb-6">
-              <p class="font-heading text-lg italic mb-2" style="color:#8b7355">Com muito amor e carinho,</p>
-              <p class="font-heading text-2xl font-medium" style="color:#5d4e37" id="confirmation-couple-names">Juliana & Matheus</p>
-              <div class="flex justify-center gap-3 mt-3 text-2xl"><span>💚</span><span>🏡</span><span>💚</span></div>
-            </div>
-
-            <button onclick="closeConfirmationModal()" class="w-full py-4 rounded-full text-white font-medium transition-all hover:shadow-lg hover:scale-[1.02]" style="background-color:#6b9b5e">
-              Fechar e Voltar à Lista
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cancel Modal -->
-      <div id="cancel-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background-color:rgba(0,0,0,0.5)">
-        <div class="bg-white rounded-2xl max-w-md w-full p-8 relative animate-fade-in">
-          <button onclick="closeCancelModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="#8B7355" viewbox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-
-          <div class="text-center mb-6">
-            <div class="text-5xl mb-4">😢</div>
-            <h3 id="cancel-modal-title" class="font-heading text-3xl md:text-4xl mb-3" style="color:#5d4e37">Cancelar Reserva</h3>
-            <p class="text-lg md:text-xl mb-5" style="color:#8b7355">Para cancelar sua reserva, confirme seus dados:</p>
-          </div>
-
-          <form id="cancel-form" onsubmit="handleCancelReservation(event)">
-            <input type="hidden" id="cancel-item-id" value="" />
-            <div class="mb-4">
-              <label for="cancel-birthdate" class="block text-base md:text-lg font-medium mb-3" style="color:#5d4e37">Data de nascimento usada na reserva</label>
-              <input type="text" id="cancel-birthdate" required placeholder="DD/MM/AAAA" maxlength="10" inputmode="numeric"
-                class="w-full px-4 py-3 rounded-lg border-2 focus:outline-none transition-colors"
-                style="border-color:#ede9e3; background-color:#faf8f5"
-                onfocus="this.style.borderColor='#D4A5A5'" onblur="this.style.borderColor='#EDE9E3'"
-                oninput="formatDateInput(this)" />
-            </div>
-            <p class="text-base md:text-lg mb-6 text-center" style="color:#8b7355">⚠️ Ao cancelar, o item ficará disponível para outros convidados</p>
-
-            <div class="flex gap-3">
-              <button type="button" onclick="closeCancelModal()" class="flex-1 py-4 rounded-full text-lg font-medium transition-all hover:shadow-md" style="background-color:#ede9e3; color:#5d4e37">
-                Voltar
-              </button>
-              <button type="submit" id="cancel-submit-btn" class="flex-1 py-4 rounded-full text-lg text-white font-medium transition-all hover:shadow-lg disabled:opacity-50" style="background-color:#d4a5a5">
-                <span id="cancel-submit-text">Cancelar Reserva</span>
-                <span id="cancel-submit-loading" class="hidden">Cancelando...</span>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- Online Shopping -->
-      <section id="links" class="py-20 px-6" style="background-color:#f5f2ed">
-        <div class="max-w-4xl mx-auto">
-          <div class="text-center mb-12">
-            <span class="text-4xl mb-4 flex justify-center gap-3">🛒🛍️</span>
-            <h2 class="font-heading text-4xl md:text-5xl mb-4" style="color:#5d4e37">Comprar Online</h2>
-            <p class="text-xl md:text-2xl" style="color:#8b7355">Caso prefira comprar online, você encontra o link de cada item aqui:</p>
-          </div>
-          <div id="links-list" class="space-y-3"></div>
-        </div>
-      </section>
-
-      <!-- Footer -->
-      <footer class="py-16 px-6 text-center" style="background-color:#ffffff">
-        <div class="max-w-2xl mx-auto">
-          <div class="mb-6"><span class="text-5xl">💚</span></div>
-          <p id="footer-message" class="font-heading text-2xl md:text-3xl mb-6 italic" style="color:#5d4e37">
-            Obrigado por fazer parte desse momento tão especial. Cada gesto de carinho significa muito para nós!
-          </p>
-          <p class="font-heading text-xl md:text-2xl" style="color:#8b7355">Com carinho,</p>
-          <p id="footer-signature" class="font-heading text-3xl md:text-4xl mt-2" style="color:#5d4e37">Juliana & Matheus</p>
-          <div class="mt-8 flex justify-center gap-2 text-2xl opacity-50"><span>🌿</span><span>🏠</span><span>💚</span></div>
-        </div>
-      </footer>
     </div>
 
-    <script>
-      // ============================
-      // CONFIG
-      // ============================
-      const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyc9YOXMXk0tUGV6S4D30CSh5x7-qoJzwuExO0BGtvyg3qtk26As9gGqEzY6QBA5dddqA/exec";
+    <!-- HERO -->
+    <section class="hero-pattern min-h-screen flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
+      <div class="text-center max-w-2xl mx-auto animate-fade-in">
+        <p class="text-base md:text-lg tracking-[0.3em] uppercase mb-4" style="color:#6b9b5e">Chá de Casa Nova</p>
+        <h1 id="hero-title" class="font-heading text-6xl md:text-7xl lg:text-8xl font-medium mb-6 leading-tight" style="color:#5d4e37">
+          Juliana & Matheus
+        </h1>
+        <p id="hero-subtitle" class="text-2xl md:text-3xl lg:text-4xl font-heading italic mb-8" style="color:#8b7355">
+          Um novo lar, um novo começo
+        </p>
 
-      const config = {
-        couple_names: "Juliana & Matheus",
-        event_subtitle: "Um novo lar, um novo começo",
-        footer_message: "Obrigado por fazer parte desse momento tão especial. Cada gesto de carinho significa muito para nós!",
-        text_color: "#5D4E37",
-        primary_action_color: "#6B9B5E",
-        secondary_action_color: "#8B7355",
+        <!-- Countdown -->
+        <div class="mb-8 p-6 rounded-2xl" style="background-color:rgba(255,255,255,0.7); backdrop-filter: blur(10px)">
+          <p class="text-sm tracking-[0.2em] uppercase mb-4" style="color:#6b9b5e">⏰ Faltam</p>
+          <div id="countdown" class="flex justify-center gap-3 md:gap-6 mb-4">
+            <div class="text-center">
+              <div id="countdown-days" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
+              <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Dias</div>
+            </div>
+            <div class="font-heading text-3xl md:text-5xl" style="color:#6b9b5e">:</div>
+            <div class="text-center">
+              <div id="countdown-hours" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
+              <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Horas</div>
+            </div>
+            <div class="font-heading text-3xl md:text-5xl" style="color:#6b9b5e">:</div>
+            <div class="text-center">
+              <div id="countdown-minutes" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
+              <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Min</div>
+            </div>
+            <div class="font-heading text-3xl md:text-5xl" style="color:#6b9b5e">:</div>
+            <div class="text-center">
+              <div id="countdown-seconds" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
+              <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Seg</div>
+            </div>
+          </div>
+          <p class="font-heading text-2xl md:text-3xl font-medium" style="color:#5d4e37">
+            📅 08 de Fevereiro de 2026 • 15h
+          </p>
+        </div>
+
+        <div class="mb-8 p-3 rounded-xl" style="background-color:rgba(107,155,94,0.1); border:1px dashed #6b9b5e">
+          <p class="text-base md:text-lg text-center" style="color:#5d4e37">
+            📍 <strong>Salão Torre Rubi</strong> – Cond. Side Barra Funda • Rua do Bosque, 980
+          </p>
+        </div>
+
+        <a href="#lista" class="inline-flex items-center gap-2 px-8 py-4 rounded-full text-white font-medium transition-all hover:shadow-lg hover:scale-105" style="background-color:#6b9b5e">
+          <span>Ver Lista de Presentes</span>
+          <span>↓</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- LISTA -->
+    <section id="lista" class="py-20 px-6" style="background-color:#f5f2ed">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-10">
+          <span class="text-4xl mb-4 block">🎁</span>
+          <h2 class="font-heading text-4xl md:text-5xl mb-4" style="color:#5d4e37">Lista de Presentes</h2>
+          <p class="text-lg md:text-xl" style="color:#8b7355">Clique em um item para reservá-lo</p>
+          <p id="sync-status" class="text-sm mt-3" style="color:#8b7355">🔄 Preparando lista...</p>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+          <button onclick="filterCategory('all')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="all"
+            style="background-color:#6b9b5e; color:white">Todos</button>
+          <button onclick="filterCategory('utensilios')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="utensilios"
+            style="background-color:#ede9e3; color:#5d4e37">🥄 Utensílios</button>
+          <button onclick="filterCategory('potes')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="potes"
+            style="background-color:#ede9e3; color:#5d4e37">🫙 Potes</button>
+          <button onclick="filterCategory('cozinha')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="cozinha"
+            style="background-color:#ede9e3; color:#5d4e37">🍳 Cozinha</button>
+          <button onclick="filterCategory('formas')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="formas"
+            style="background-color:#ede9e3; color:#5d4e37">🎂 Formas</button>
+          <button onclick="filterCategory('banheiro')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="banheiro"
+            style="background-color:#ede9e3; color:#5d4e37">🛁 Banheiro</button>
+          <button onclick="filterCategory('organizacao')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="organizacao"
+            style="background-color:#ede9e3; color:#5d4e37">🧺 Organização</button>
+        </div>
+
+        <div id="gift-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- COMPRAR ONLINE -->
+    <section id="links" class="py-20 px-6" style="background-color:#f5f2ed">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+          <span class="text-4xl mb-4 block">🛒🛍️</span>
+          <h2 class="font-heading text-4xl md:text-5xl mb-4" style="color:#5d4e37">Comprar Online</h2>
+          <p class="text-xl md:text-2xl" style="color:#8b7355">Caso prefira comprar online, você encontra o link de cada item aqui:</p>
+        </div>
+        <div id="links-list" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <footer class="py-16 px-6 text-center" style="background-color:#ffffff">
+      <div class="max-w-2xl mx-auto">
+        <div class="mb-6"><span class="text-5xl">💚</span></div>
+        <p class="font-heading text-2xl md:text-3xl mb-6 italic" style="color:#5d4e37">
+          Obrigado por fazer parte desse momento tão especial. Cada gesto de carinho significa muito para nós!
+        </p>
+        <p class="font-heading text-xl md:text-2xl" style="color:#8b7355">Com carinho,</p>
+        <p class="font-heading text-3xl md:text-4xl mt-2" style="color:#5d4e37">Juliana & Matheus</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // ============================
+    // CONFIG
+    // ============================
+    var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyc9YOXMXk0tUGV6S4D30CSh5x7-qoJzwuExO0BGtvyg3qtk26As9gGqEzY6QBA5dddqA/exec";
+
+    var config = {
+      couple_names: "Juliana & Matheus",
+      event_subtitle: "Um novo lar, um novo começo",
+      text_color: "#5D4E37",
+      primary_action_color: "#6B9B5E",
+      secondary_action_color: "#8B7355"
+    };
+
+    // ============================
+    // DADOS
+    // ============================
+    var giftItems = [
+      { id:"utensilios-4", category:"utensilios", icon:"https://m.media-amazon.com/images/I/412rlg5x9LL._AC_SL1000_.jpg", name:"Escorredor de Massa", description:"Para escorrer massas com praticidade", link:"https://www.amazon.com.br/s?k=escorredor+de+massa" },
+      { id:"utensilios-2", category:"utensilios", icon:"https://ph-cdn3.ecosweb.com.br/imagens01/foto/utilidades-domesticas/talheres/kit-para-molho-com-concha-e-escumadeira-em-inox_140885_600_1.jpg", name:"Kit Concha e Escumadeira", description:"Dupla essencial para cozinhar", link:"https://www.amazon.com.br/s?k=kit+concha+escumadeira+inox" },
+      { id:"potes-1", category:"potes", icon:"https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name:"Kit 2 Potes de Vidro Herméticos", description:"Para armazenar alimentos", link:"https://a.co/d/gH9mf9o" },
+      { id:"cozinha-3", category:"cozinha", icon:"https://m.media-amazon.com/images/I/31TpUxJ4mHL._AC_SX679_.jpg", name:"Coador de café Melitta 103", description:"Café fresquinho todo dia", link:"https://www.amazon.com.br/s?k=coador+cafe+melitta+103" },
+      { id:"formas-4", category:"formas", icon:"https://m.media-amazon.com/images/I/51h2IHO3cJS._AC_SX679_.jpg", name:"Forma de lasanha de vidro", description:"Vai do forno à mesa", link:"https://www.amazon.com.br/s?k=forma+lasanha+vidro" },
+      { id:"banheiro-1", category:"banheiro", icon:"https://m.media-amazon.com/images/I/51zNDiujMCL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Saboneteira", description:"Para organizar o sabonete", link:"https://www.amazon.com.br/s?k=saboneteira" },
+      { id:"organizacao-1", category:"organizacao", icon:"https://m.media-amazon.com/images/I/71QBq-o+bZL._AC_SX300_SY300_QL70_ML2_.jpg", name:"Cabides (kit)", description:"Para organizar o guarda-roupa", link:"https://www.amazon.com.br/s?k=cabides+kit" }
+    ];
+
+    // ============================
+    // STATE
+    // ============================
+    var reservations = [];
+    var currentCategory = "all";
+
+    // ============================
+    // HELPERS ES5
+    // ============================
+    function $(id){ return document.getElementById(id); }
+
+    function showDebug(message, hint) {
+      try {
+        $("debug-text").innerHTML = message || "Erro desconhecido";
+        $("debug-hint").innerHTML = hint || "";
+        $("debug-box").className = $("debug-box").className.replace(" hidden","");
+      } catch(e){}
+    }
+
+    function showToast(message, type) {
+      var container = $("toast-container");
+      if (!container) return;
+      var toast = document.createElement("div");
+      toast.className = "toast px-6 py-3 rounded-full shadow-lg text-white font-medium";
+      toast.style.backgroundColor = (type === "success") ? "#6B9B5E" : "#D4A5A5";
+      toast.innerHTML = message;
+      container.appendChild(toast);
+      setTimeout(function(){ try{ container.removeChild(toast); }catch(e){} }, 3000);
+    }
+
+    function setSyncStatus(text) {
+      var el = $("sync-status");
+      if (el) el.innerHTML = text;
+    }
+
+    function pad2(n) {
+      n = String(n);
+      return (n.length < 2) ? ("0" + n) : n;
+    }
+
+    function safeText(s) {
+      s = String(s || "");
+      s = s.replace(/&/g,"&amp;");
+      s = s.replace(/</g,"&lt;");
+      s = s.replace(/>/g,"&gt;");
+      s = s.replace(/"/g,"&quot;");
+      s = s.replace(/'/g,"&#039;");
+      return s;
+    }
+
+    function isImageUrl(u){ return u && String(u).indexOf("http") === 0; }
+
+    function renderIcon(item) {
+      if (isImageUrl(item.icon)) {
+        return '<img src="'+ item.icon +'" alt="'+ safeText(item.name) +'" class="w-20 h-20 object-contain mx-auto rounded-lg" loading="lazy" onerror="this.onerror=null; this.outerHTML=\'<span class=&quot;text-4xl block&quot;>🎁</span>\'">';
+      }
+      return '<span class="text-4xl block">🎁</span>';
+    }
+
+    // ============================
+    // JSONP
+    // ============================
+    function jsonpRequest(params, onOk, onErr) {
+      var cbName = "__cb_" + (new Date().getTime()) + "_" + Math.floor(Math.random()*100000);
+      params._ts = new Date().getTime();
+
+      var query = [];
+      for (var k in params) {
+        if (params.hasOwnProperty(k)) {
+          query.push(encodeURIComponent(k) + "=" + encodeURIComponent(String(params[k])));
+        }
+      }
+      query.push("callback=" + encodeURIComponent(cbName));
+
+      var url = APPS_SCRIPT_URL + (APPS_SCRIPT_URL.indexOf("?") >= 0 ? "&" : "?") + query.join("&");
+
+      var done = false;
+      var script = document.createElement("script");
+
+      var timer = setTimeout(function(){
+        if (done) return;
+        done = true;
+        cleanup();
+        if (onErr) onErr({ message: "Timeout" });
+      }, 15000);
+
+      window[cbName] = function(data){
+        if (done) return;
+        done = true;
+        cleanup();
+        if (onOk) onOk(data);
       };
 
-      // ============================
-      // DADOS (mesmo array de antes)
-      // ============================
-      const giftItems = [
-        { id: "utensilios-1", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51wOKTjJouL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Colher de pau (kit)", description: "Kit completo de colheres de madeira", link: "https://www.amazon.com.br/s?k=colher+de+pau+kit" },
-        { id: "utensilios-2", category: "utensilios", icon: "https://ph-cdn3.ecosweb.com.br/imagens01/foto/utilidades-domesticas/talheres/kit-para-molho-com-concha-e-escumadeira-em-inox_140885_600_1.jpg", name: "Kit Concha e Escumadeira", description: "Dupla essencial para cozinhar", link: "https://www.amazon.com.br/s?k=kit+concha+escumadeira+inox" },
-        { id: "utensilios-3", category: "utensilios", icon: "https://i.pinimg.com/736x/0e/d0/be/0ed0bed0a8d2e82a0cdbe18d1a2e5a43.jpg", name: "Kit Pegador de Macarrão e Colher de Servir", description: "Para servir massas e refeições", link: "https://www.amazon.com.br/s?k=pegador+macarrao+colher+servir" },
-        { id: "utensilios-4", category: "utensilios", icon: "https://m.media-amazon.com/images/I/412rlg5x9LL._AC_SL1000_.jpg", name: "Escorredor de Massa", description: "Para escorrer massas com praticidade", link: "https://www.amazon.com.br/s?k=escorredor+de+massa" },
-        { id: "utensilios-5", category: "utensilios", icon: "https://m.media-amazon.com/images/I/611BlzyhyAL._AC_SX679_.jpg", name: "Ralador multifuncional", description: "Várias opções de corte", link: "https://www.amazon.com.br/s?k=ralador+multifuncional" },
-        { id: "utensilios-6", category: "utensilios", icon: "https://m.media-amazon.com/images/I/71+mE5Aqy9L._AC_SX679_.jpg", name: "Tábua de corte", description: "Para preparar os alimentos", link: "https://www.amazon.com.br/s?k=tabua+de+corte" },
-        { id: "utensilios-7", category: "utensilios", icon: "https://m.media-amazon.com/images/I/511XcDy06PL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Luva térmica", description: "Proteção para manusear panelas quentes", link: "https://www.amazon.com.br/s?k=luva+termica+cozinha" },
-        { id: "utensilios-8", category: "utensilios", icon: "https://m.media-amazon.com/images/I/71SY5kje0zL._AC_SX679_.jpg", name: "Descanso de panela", description: "Para apoiar panelas quentes", link: "https://www.amazon.com.br/s?k=descanso+de+panela" },
-        { id: "utensilios-9", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51Byq+vTy1L._AC_SX679_.jpg", name: "Tesoura para cozinha", description: "Multiuso para a cozinha", link: "https://www.amazon.com.br/s?k=tesoura+cozinha" },
-        { id: "utensilios-10", category: "utensilios", icon: "https://m.media-amazon.com/images/I/6155SEJ3rAL._AC_SX679_.jpg", name: "Faca para pão", description: "Com lâmina serrilhada", link: "https://www.amazon.com.br/s?k=faca+para+pao" },
-        { id: "utensilios-11", category: "utensilios", icon: "https://m.media-amazon.com/images/I/31fl2APEMIL._AC_SX679_.jpg", name: "Faca para carne", description: "Corte preciso para carnes", link: "https://www.amazon.com.br/s?k=faca+para+carne" },
-        { id: "utensilios-12", category: "utensilios", icon: "https://m.media-amazon.com/images/I/31YNXnO2m2L._AC_.jpg", name: "Espátula para bolo", description: "Para servir fatias perfeitas", link: "https://www.amazon.com.br/s?k=espatula+para+bolo" },
-        { id: "utensilios-13", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51sHeZrOspL._SX522_.jpg", name: "Pegador de sorvete em inox", description: "Bolas de sorvete perfeitas", link: "https://www.amazon.com.br/s?k=pegador+de+sorvete+inox" },
-        { id: "utensilios-14", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51ER0CKJZML._AC_SX679_.jpg", name: "Jogo de espátulas para patê", description: "Kit para pastas e patês", link: "https://www.amazon.com.br/s?k=espatula+para+pate" },
-        { id: "utensilios-15", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51+kZPH9VsL._AC_SX679_.jpg", name: "Kit utensílios de cozinha em silicone", description: "Conjunto moderno e prático", link: "https://www.amazon.com.br/s?k=kit+utensilios+silicone" },
-        { id: "utensilios-16", category: "utensilios", icon: "https://m.media-amazon.com/images/I/41NGbbQo5CL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Colher medidora (kit simples)", description: "Para receitas precisas", link: "https://www.amazon.com.br/s?k=colher+medidora+kit" },
-
-        { id: "potes-1", category: "potes", icon: "https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name: "Kit 2 Potes de Vidro Herméticos", description: "Para armazenar alimentos - opção 1", link: "https://a.co/d/gH9mf9o" },
-        { id: "potes-2", category: "potes", icon: "https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name: "Kit 2 Potes de Vidro Herméticos", description: "Para armazenar alimentos - opção 2", link: "https://a.co/d/gH9mf9o" },
-        { id: "potes-3", category: "potes", icon: "https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name: "Kit 2 Potes de Vidro Herméticos", description: "Para armazenar alimentos - opção 3", link: "https://a.co/d/gH9mf9o" },
-        { id: "potes-4", category: "potes", icon: "https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name: "Pote Hermético 1,5L", description: "Tamanho ideal - opção 1", link: "https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
-        { id: "potes-5", category: "potes", icon: "https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name: "Pote Hermético 1,5L", description: "Tamanho ideal - opção 2", link: "https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
-        { id: "potes-6", category: "potes", icon: "https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name: "Pote Hermético 1,5L", description: "Tamanho ideal - opção 3", link: "https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
-        { id: "potes-7", category: "potes", icon: "https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name: "Pote Hermético 1,5L", description: "Tamanho ideal - opção 4", link: "https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
-        { id: "potes-8", category: "potes", icon: "https://americanas.vtexassets.com/arquivos/ids/450651-1280-auto/2521891574_1SZ.webp", name: "Conjunto 4 Potes Herméticos 250ml", description: "Perfeitos para porções pequenas", link: "https://www.americanas.com.br/conjunto-de-4-potes-hermeticos-retangular-250ml-leve-4-pague-3-dup-2521891566/p" },
-        { id: "potes-9", category: "potes", icon: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ8BmqBG-obN7wY4VqwUNHEK48EzoXP9TnJyTVtL-7ShJ0FmfSkIQRLCTmvarQnqcjowwFYL-oz-YHhGqeS7a84VJr9id20vHW4X_n_dxfZ210_TZkD0Ura", name: "Conjunto 4 Potes Herméticos 500ml", description: "Tamanho médio versátil", link: "https://www.americanas.com.br/conjunto-4-potes-hermeticos-essencial-cristal-l4p3-500ml-dup/p" },
-        { id: "potes-10", category: "potes", icon: "https://m.media-amazon.com/images/I/61ecJ487YgL._AC_SX679_.jpg", name: "Kit Potes Herméticos Redondos", description: "Potes redondos para organização", link: "https://a.co/d/32dXOwk" },
-
-        { id: "cozinha-1", category: "cozinha", icon: "https://m.media-amazon.com/images/I/71jNQBr4mbL._AC_SX679_.jpg", name: "Jarra de vidro", description: "Para sucos e bebidas", link: "https://www.amazon.com.br/s?k=jarra+de+vidro" },
-        { id: "cozinha-2", category: "cozinha", icon: "https://m.media-amazon.com/images/I/51d+B8zoAvL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Leiteira", description: "Para aquecer leite e preparar bebidas", link: "https://www.amazon.com.br/s?k=leiteira+inox" },
-        { id: "cozinha-3", category: "cozinha", icon: "https://m.media-amazon.com/images/I/31TpUxJ4mHL._AC_SX679_.jpg", name: "Coador de café Melitta 103", description: "Café fresquinho todo dia", link: "https://www.amazon.com.br/s?k=coador+cafe+melitta+103" },
-        { id: "cozinha-4", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61+LfzcEVGL._AC_SX679_.jpg", name: "Kit peneiras em inox", description: "Vários tamanhos para peneirar", link: "https://www.amazon.com.br/s?k=kit+peneiras+inox" },
-        { id: "cozinha-5", category: "cozinha", icon: "https://m.media-amazon.com/images/I/41lQvVjbepL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Saladeira", description: "Para servir saladas com estilo", link: "https://www.amazon.com.br/s?k=saladeira" },
-        { id: "cozinha-6", category: "cozinha", icon: "https://m.media-amazon.com/images/I/41BvG7PiFGL._AC_SX679_.jpg", name: "Bowl de vidro grande", description: "Multiuso para preparo e servir", link: "https://www.amazon.com.br/s?k=bowl+vidro+grande" },
-        { id: "cozinha-7", category: "cozinha", icon: "https://m.media-amazon.com/images/I/51lCJHAgXSL._AC_SX679_.jpg", name: "Porta-guardanapo em inox", description: "Elegante para a mesa", link: "https://www.amazon.com.br/s?k=porta+guardanapo+inox" },
-        { id: "cozinha-8", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61xTgzfTp1L._AC_SX679_.jpg", name: "Saleiro e pimenteiro", description: "Dupla essencial para a mesa", link: "https://www.amazon.com.br/s?k=saleiro+pimenteiro" },
-        { id: "cozinha-9", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61vFMvBrCcL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Petisqueira 1", description: "Para servir aperitivos", link: "https://www.amazon.com.br/s?k=petisqueira" },
-        { id: "cozinha-10", category: "cozinha", icon: "https://m.media-amazon.com/images/I/41sABmlWy5L._AC_SX679_.jpg", name: "Petisqueira 2", description: "Para servir aperitivos", link: "https://www.amazon.com.br/s?k=petisqueira" },
-        { id: "cozinha-11", category: "cozinha", icon: "https://m.media-amazon.com/images/I/41fnZrY2myL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Jogo de xícaras de café (6 unidades)", description: "Para receber visitas especiais", link: "https://www.amazon.com.br/s?k=jogo+xicaras+cafe" },
-
-        { id: "formas-1", category: "formas", icon: "https://m.media-amazon.com/images/I/31DgHfr0lkL._AC_.jpg", name: "Forma de bolo redonda", description: "Para bolos tradicionais", link: "https://www.amazon.com.br/s?k=forma+bolo+redonda" },
-        { id: "formas-2", category: "formas", icon: "https://m.media-amazon.com/images/I/614ntxPcIsL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Forma de bolo com furo", description: "Para bolos tipo pudim", link: "https://www.amazon.com.br/s?k=forma+bolo+furo" },
-        { id: "formas-3", category: "formas", icon: "https://m.media-amazon.com/images/I/51cQ4Rp1B8L._AC_SX679_.jpg", name: "Forma retangular média (bolo/brownie)", description: "Versátil para bolos e brownies", link: "https://www.amazon.com.br/s?k=forma+retangular+bolo" },
-        { id: "formas-4", category: "formas", icon: "https://m.media-amazon.com/images/I/51h2IHO3cJS._AC_SX679_.jpg", name: "Forma de lasanha de vidro", description: "Vai do forno à mesa", link: "https://www.amazon.com.br/s?k=forma+lasanha+vidro" },
-        { id: "formas-5", category: "formas", icon: "https://m.media-amazon.com/images/I/71K7vZLMzUL._AC_SX679_.jpg", name: "Forma de pizza", description: "Para pizzas caseiras", link: "https://www.amazon.com.br/s?k=forma+pizza" },
-
-        { id: "banheiro-1", category: "banheiro", icon: "https://m.media-amazon.com/images/I/51zNDiujMCL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Saboneteira", description: "Para organizar o sabonete", link: "https://www.amazon.com.br/s?k=saboneteira" },
-        { id: "banheiro-2", category: "banheiro", icon: "https://m.media-amazon.com/images/I/61Y22+k1kAL._AC_SX679_.jpg", name: "Porta sabonete líquido", description: "Dispenser elegante", link: "https://www.amazon.com.br/s?k=porta+sabonete+liquido" },
-        { id: "banheiro-3", category: "banheiro", icon: "https://m.media-amazon.com/images/I/51sutAJ9eSL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Escova para vaso sanitário", description: "Com suporte higiênico", link: "https://www.amazon.com.br/s?k=escova+vaso+sanitario" },
-        { id: "banheiro-4", category: "banheiro", icon: "https://m.media-amazon.com/images/I/71ByWjXmOPL._AC_SX679_.jpg", name: "Toalha de rosto 1", description: "Macia e absorvente", link: "https://www.amazon.com.br/s?k=toalha+de+rosto" },
-        { id: "banheiro-5", category: "banheiro", icon: "https://m.media-amazon.com/images/I/51Qjx9m0JEL._AC_SX679_.jpg", name: "Toalha de rosto 2", description: "Macia e absorvente", link: "https://www.amazon.com.br/s?k=toalha+de+rosto" },
-
-        { id: "organizacao-1", category: "organizacao", icon: "https://m.media-amazon.com/images/I/71QBq-o+bZL._AC_SX300_SY300_QL70_ML2_.jpg", name: "Cabides (kit)", description: "Para organizar o guarda-roupa", link: "https://www.amazon.com.br/s?k=cabides+kit" },
-      ];
-
-      // ============================
-      // STATE
-      // ============================
-      let reservations = [];
-      let currentCategory = "all";
-
-      // ============================
-      // UI HELPERS
-      // ============================
-      function showDebug(message, hint) {
-        const box = document.getElementById("debug-box");
-        const text = document.getElementById("debug-text");
-        const h = document.getElementById("debug-hint");
-        text.textContent = message || "Erro desconhecido";
-        h.textContent = hint || "";
-        box.classList.remove("hidden");
+      function cleanup() {
+        clearTimeout(timer);
+        try { window[cbName] = null; } catch(e){}
+        try { if (script && script.parentNode) script.parentNode.removeChild(script); } catch(e){}
       }
 
-      function showToast(message, type) {
-        const container = document.getElementById("toast-container");
-        const toast = document.createElement("div");
-        toast.className = "toast px-6 py-3 rounded-full shadow-lg text-white font-medium";
-        toast.style.backgroundColor = type === "success" ? "#6B9B5E" : "#D4A5A5";
-        toast.textContent = message;
-        container.appendChild(toast);
-        setTimeout(function(){ toast.remove(); }, 3000);
-      }
+      script.onerror = function(){
+        if (done) return;
+        done = true;
+        cleanup();
+        if (onErr) onErr({ message: "Falha ao carregar JSONP" });
+      };
 
-      function setSyncStatus(text) {
-        const el = document.getElementById("sync-status");
-        if (el) el.textContent = text;
-      }
+      script.src = url;
+      document.body.appendChild(script);
+    }
 
-      function formatDateInput(input) {
-        let value = (input.value || "").replace(/\D/g, "");
-        if (value.length >= 2) value = value.substring(0,2) + "/" + value.substring(2);
-        if (value.length >= 5) value = value.substring(0,5) + "/" + value.substring(5,9);
-        input.value = value;
+    // ============================
+    // RESERVAS
+    // ============================
+    function isReserved(itemId) {
+      for (var i=0; i<reservations.length; i++) {
+        if (String(reservations[i].item_id) === String(itemId)) return true;
       }
+      return false;
+    }
 
-      function isValidDate(dateStr) {
-        const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-        const match = String(dateStr || "").match(regex);
-        if (!match) return false;
-        const day = parseInt(match[1], 10);
-        const month = parseInt(match[2], 10);
-        const year = parseInt(match[3], 10);
-        if (month < 1 || month > 12) return false;
-        if (day < 1 || day > 31) return false;
-        if (year < 1900 || year > 2100) return false;
-        return true;
+    function getReservation(itemId) {
+      for (var i=0; i<reservations.length; i++) {
+        if (String(reservations[i].item_id) === String(itemId)) return reservations[i];
       }
+      return null;
+    }
 
-      function isImageUrl(icon) {
-        return icon && icon.indexOf("http") === 0;
-      }
+    // ============================
+    // RENDER GRID
+    // ============================
+    function renderGiftGrid() {
+      var grid = $("gift-grid");
+      if (!grid) return;
 
-      function safeText(s) {
-        return String(s || "")
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
-      }
-
-      function renderIcon(item, size) {
-        const sizeClass = size === "large" ? "w-24 h-24" : "w-20 h-20";
-        if (isImageUrl(item.icon)) {
-          return (
-            '<img src="' + item.icon + '" alt="' + safeText(item.name) + '" class="' + sizeClass +
-            ' object-contain mx-auto rounded-lg" loading="lazy" ' +
-            'onerror="this.onerror=null; this.outerHTML=\\'<span class=\\'text-4xl block\\'>🎁</span>\\'">'
-          );
+      var items = [];
+      for (var i=0; i<giftItems.length; i++) {
+        var it = giftItems[i];
+        if (currentCategory === "all" || it.category === currentCategory) {
+          items.push(it);
         }
-        return '<span class="text-4xl block">' + safeText(item.icon) + "</span>";
       }
 
-      // ============================
-      // JSONP (ROBUSTO)
-      // ============================
-      function jsonpRequest(params, onOk, onErr) {
-        const cbName = "__cb_" + String(Date.now()) + "_" + String(Math.floor(Math.random()*100000));
-        const timeoutMs = 15000;
+      // ordena: disponíveis primeiro
+      var available = [];
+      var reserved = [];
+      for (var j=0; j<items.length; j++) {
+        if (isReserved(items[j].id)) reserved.push(items[j]);
+        else available.push(items[j]);
+      }
 
-        // cache buster
-        params._ts = Date.now();
+      var sorted = available.concat(reserved);
+      var html = "";
 
-        const query = [];
-        for (var k in params) {
-          if (Object.prototype.hasOwnProperty.call(params, k)) {
-            query.push(encodeURIComponent(k) + "=" + encodeURIComponent(String(params[k])));
-          }
-        }
-        query.push("callback=" + encodeURIComponent(cbName));
-        const url = APPS_SCRIPT_URL + (APPS_SCRIPT_URL.indexOf("?") >= 0 ? "&" : "?") + query.join("&");
+      for (var k=0; k<sorted.length; k++) {
+        var item = sorted[k];
+        var res = getReservation(item.id);
+        var r = !!res;
 
-        let done = false;
-        const script = document.createElement("script");
+        html += '<div class="card-hover rounded-2xl p-6 border-2 relative overflow-hidden" style="background-color:#fff; border-color:#EDE9E3;">';
 
-        const timer = setTimeout(function() {
-          if (done) return;
-          done = true;
-          cleanup();
-          if (onErr) onErr(new Error("Timeout"));
-        }, timeoutMs);
-
-        window[cbName] = function(data) {
-          if (done) return;
-          done = true;
-          cleanup();
-          if (onOk) onOk(data);
-        };
-
-        function cleanup() {
-          clearTimeout(timer);
-          try { delete window[cbName]; } catch(e) { window[cbName] = undefined; }
-          if (script && script.parentNode) script.parentNode.removeChild(script);
+        if (r) {
+          html += '<div class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium text-white" style="background-color:'+ config.secondary_action_color +'">Reservado</div>';
         }
 
-        script.onerror = function() {
-          if (done) return;
-          done = true;
-          cleanup();
-          if (onErr) onErr(new Error("Falha ao carregar JSONP"));
-        };
+        html += '<div class="text-center">';
+        html += '<div class="mb-4 flex justify-center items-center" style="min-height:80px;">'+ renderIcon(item) +'</div>';
+        html += '<h3 class="font-heading text-2xl mb-2" style="color:'+ config.text_color +'">'+ safeText(item.name) +'</h3>';
+        html += '<p class="text-base mb-4" style="color:'+ config.secondary_action_color +'">'+ safeText(item.description) +'</p>';
 
-        script.src = url;
-        document.body.appendChild(script);
-      }
-
-      // ============================
-      // RENDER: LISTA PRESENTES
-      // ============================
-      function isReserved(itemId) {
-        for (var i=0; i<reservations.length; i++) {
-          if (String(reservations[i].item_id) === String(itemId)) return true;
+        if (!r) {
+          html += '<div class="text-sm" style="color:#6b9b5e">✅ Disponível</div>';
+        } else {
+          html += '<div class="text-sm italic" style="color:#8b7355">Reservado por '+ safeText(res.reserved_by || "alguém") +'</div>';
         }
-        return false;
+
+        html += '</div></div>';
       }
 
-      function getReservation(itemId) {
-        for (var i=0; i<reservations.length; i++) {
-          if (String(reservations[i].item_id) === String(itemId)) return reservations[i];
+      grid.innerHTML = html;
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+
+      var btns = document.getElementsByClassName("category-btn");
+      for (var i=0; i<btns.length; i++) {
+        var btn = btns[i];
+        var c = btn.getAttribute("data-category");
+        if (c === cat) {
+          btn.style.backgroundColor = config.primary_action_color;
+          btn.style.color = "white";
+        } else {
+          btn.style.backgroundColor = "#EDE9E3";
+          btn.style.color = config.text_color;
         }
-        return null;
       }
 
-      function renderGiftGrid() {
-        const grid = document.getElementById("gift-grid");
-        if (!grid) return;
+      renderGiftGrid();
+    }
 
-        const filteredItems =
-          currentCategory === "all"
-            ? giftItems
-            : giftItems.filter(function(it){ return it.category === currentCategory; });
+    // ============================
+    // RENDER LINKS
+    // ============================
+    function renderLinksList() {
+      var container = $("links-list");
+      if (!container) return;
 
-        const availableItems = filteredItems.filter(function(it){ return !isReserved(it.id); });
-        const reservedItems = filteredItems.filter(function(it){ return isReserved(it.id); });
-        const sortedItems = availableItems.concat(reservedItems);
+      var cats = {
+        utensilios: { title: "🥄 Utensílios de Cozinha", items: [] },
+        potes: { title: "🫙 Potes e Armazenamento", items: [] },
+        cozinha: { title: "🍳 Cozinha Geral", items: [] },
+        formas: { title: "🎂 Formas e Assadeiras", items: [] },
+        banheiro: { title: "🛁 Banheiro", items: [] },
+        organizacao: { title: "🧺 Organização", items: [] }
+      };
 
-        grid.innerHTML = sortedItems.map(function(item){
-          const reservation = getReservation(item.id);
-          const reserved = !!reservation;
-
-          return (
-            '<div class="card-hover rounded-2xl p-6 border-2 relative overflow-hidden ' + (reserved ? 'opacity-75' : '') + '"' +
-              ' style="background-color:#fff; border-color:#EDE9E3;" data-item-id="' + safeText(item.id) + '">' +
-
-              (reserved
-                ? '<div class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium text-white" style="background-color:' + config.secondary_action_color + '">Reservado</div>'
-                : ''
-              ) +
-
-              '<div class="text-center">' +
-                '<div class="mb-4 flex justify-center items-center" style="min-height:80px;">' + renderIcon(item) + '</div>' +
-                '<h3 class="font-heading text-2xl md:text-2xl mb-2" style="color:' + config.text_color + ';">' + safeText(item.name) + '</h3>' +
-                '<p class="text-base md:text-lg mb-4" style="color:' + config.secondary_action_color + ';">' + safeText(item.description) + '</p>' +
-
-                (reserved
-                  ? (
-                    '<p class="text-base italic mb-3" style="color:' + config.secondary_action_color + ';">Reservado por ' + safeText(reservation.reserved_by || "alguém") + '</p>' +
-                    '<button onclick="openCancelModal(\'' + String(item.id).replace(/'/g,"\\'") + '\')" class="px-5 py-2 rounded-full text-sm font-medium transition-all hover:shadow-md" style="background-color:#FEE2E2; color:#DC2626;">Cancelar Reserva</button>'
-                  )
-                  : (
-                    '<button onclick="openModal(\'' + String(item.id).replace(/'/g,"\\'") + '\')" class="px-8 py-3 rounded-full text-white text-lg font-medium transition-all hover:shadow-md hover:scale-105" style="background-color:' + config.primary_action_color + ';">Quero Presentear</button>'
-                  )
-                ) +
-              '</div>' +
-            '</div>'
-          );
-        }).join("");
+      for (var i=0; i<giftItems.length; i++) {
+        var it = giftItems[i];
+        if (it.link && cats[it.category]) cats[it.category].items.push(it);
       }
 
-      function filterCategory(category) {
-        currentCategory = category;
+      function storeName(link) {
+        link = String(link || "");
+        if (link.indexOf("amazon") >= 0 || link.indexOf("a.co") >= 0) return "Ver na Amazon";
+        if (link.indexOf("mercadolivre") >= 0) return "Ver no Mercado Livre";
+        if (link.indexOf("americanas") >= 0) return "Ver nas Americanas";
+        return "Ver loja";
+      }
 
-        const btns = document.querySelectorAll(".category-btn");
-        for (var i=0; i<btns.length; i++) {
-          const btn = btns[i];
-          if (btn.dataset.category === category) {
-            btn.style.backgroundColor = config.primary_action_color;
-            btn.style.color = "white";
+      var html = "";
+      for (var key in cats) {
+        if (!cats.hasOwnProperty(key)) continue;
+        var cat = cats[key];
+        if (!cat.items.length) continue;
+
+        html += '<div class="mb-8">';
+        html += '<h3 class="font-heading text-2xl md:text-3xl mb-4" style="color:'+ config.text_color +'">'+ cat.title +'</h3>';
+
+        for (var j=0; j<cat.items.length; j++) {
+          var item = cat.items[j];
+          html += '<a href="'+ item.link +'" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl transition-all hover:shadow-md" style="background-color:white; border:1px solid #EDE9E3;">';
+          html += '<div class="flex items-center gap-3">';
+          html += '<div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center">';
+          html += (isImageUrl(item.icon) ? '<img src="'+ item.icon +'" class="w-full h-full object-contain" loading="lazy" onerror="this.outerHTML=\'🎁\'">' : '🎁');
+          html += '</div>';
+          html += '<span class="font-medium" style="color:'+ config.text_color +'">'+ safeText(item.name) +'</span>';
+          html += '</div>';
+          html += '<div class="text-sm" style="color:'+ config.primary_action_color +'">'+ storeName(item.link) +'</div>';
+          html += '</a>';
+        }
+
+        html += '</div>';
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ============================
+    // COUNTDOWN (ES5)
+    // ============================
+    function updateCountdown() {
+      try {
+        // 08/02/2026 15:00 -03:00
+        var eventDate = new Date("2026-02-08T15:00:00-03:00");
+        var now = new Date();
+        var diff = eventDate.getTime() - now.getTime();
+
+        if (diff <= 0) diff = 0;
+
+        var days = Math.floor(diff / (1000*60*60*24));
+        var hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+        var minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+        var seconds = Math.floor((diff % (1000*60)) / 1000);
+
+        $("countdown-days").innerHTML = String(days);
+        $("countdown-hours").innerHTML = pad2(hours);
+        $("countdown-minutes").innerHTML = pad2(minutes);
+        $("countdown-seconds").innerHTML = pad2(seconds);
+      } catch(e) {
+        // se der qualquer erro, não trava o resto
+      }
+    }
+
+    // ============================
+    // FETCH RESERVAS
+    // ============================
+    function fetchReservations() {
+      setSyncStatus("🔄 Carregando reservas...");
+
+      jsonpRequest(
+        { action:"list" },
+        function(res) {
+          if (res && res.ok) {
+            reservations = res.reservations || [];
+            renderGiftGrid();
+            setSyncStatus("✅ Reservas carregadas.");
           } else {
-            btn.style.backgroundColor = "#EDE9E3";
-            btn.style.color = config.text_color;
+            renderGiftGrid();
+            setSyncStatus("⚠️ Não foi possível carregar reservas agora.");
           }
+        },
+        function(err) {
+          renderGiftGrid();
+          setSyncStatus("⚠️ Falha ao carregar reservas.");
         }
-        renderGiftGrid();
-      }
+      );
+    }
 
-      // ============================
-      // LINKS LIST
-      // ============================
-      function renderLinksList() {
-        const container = document.getElementById("links-list");
-        if (!container) return;
+    // ============================
+    // INIT
+    // ============================
+    function init() {
+      try {
+        $("hero-title").innerHTML = config.couple_names;
+        $("hero-subtitle").innerHTML = config.event_subtitle;
 
-        const categories = {
-          utensilios: { name: "🥄 Utensílios de Cozinha", items: [] },
-          potes: { name: "🫙 Potes e Armazenamento", items: [] },
-          cozinha: { name: "🍳 Cozinha Geral", items: [] },
-          formas: { name: "🎂 Formas e Assadeiras", items: [] },
-          banheiro: { name: "🛁 Banheiro", items: [] },
-          organizacao: { name: "👔 Organização", items: [] },
-        };
+        // renderiza imediatamente (sem esperar Apps Script)
+        renderLinksList();
+        filterCategory("all");
 
-        for (var i=0; i<giftItems.length; i++) {
-          var item = giftItems[i];
-          if (item.link && categories[item.category]) categories[item.category].items.push(item);
-        }
+        // countdown
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
 
-        function getStoreName(link) {
-          link = String(link || "");
-          if (link.indexOf("amazon") >= 0 || link.indexOf("a.co") >= 0) return "Ver na Amazon";
-          if (link.indexOf("mercadolivre") >= 0) return "Ver no Mercado Livre";
-          if (link.indexOf("americanas") >= 0) return "Ver nas Americanas";
-          return "Ver loja";
-        }
+        // reservas
+        fetchReservations();
+        setInterval(fetchReservations, 25000);
 
-        var html = "";
-        for (var key in categories) {
-          if (!Object.prototype.hasOwnProperty.call(categories, key)) continue;
-          var cat = categories[key];
-          if (!cat.items.length) continue;
-
-          html += '<div class="mb-8">';
-          html += '<h3 class="font-heading text-2xl md:text-3xl mb-4" style="color:' + config.text_color + ';">' + cat.name + "</h3>";
-          html += '<div class="grid gap-2">';
-
-          for (var j=0; j<cat.items.length; j++) {
-            var it = cat.items[j];
-            html +=
-              '<a href="' + it.link + '" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl transition-all hover:shadow-md" style="background-color:white; border:1px solid #EDE9E3;">' +
-                '<div class="flex items-center gap-3">' +
-                  '<div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center">' +
-                    (isImageUrl(it.icon)
-                      ? '<img src="' + it.icon + '" alt="' + safeText(it.name) + '" class="w-full h-full object-contain" loading="lazy" onerror="this.outerHTML=\\'🎁\\'">'
-                      : '<span class="text-lg">🎁</span>'
-                    ) +
-                  "</div>" +
-                  '<span class="font-medium" style="color:' + config.text_color + ';">' + safeText(it.name) + "</span>" +
-                "</div>" +
-                '<div class="flex items-center gap-2 text-sm" style="color:' + config.primary_action_color + ';">' +
-                  '<span class="hidden sm:inline">' + getStoreName(it.link) + "</span>" +
-                  '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>' +
-                "</div>" +
-              "</a>";
-          }
-
-          html += "</div></div>";
-        }
-
-        container.innerHTML = html;
-      }
-
-      // ============================
-      // MODAIS
-      // ============================
-      function openModal(itemId) {
-        const item = giftItems.filter(function(i){ return i.id === itemId; })[0];
-        if (!item) return;
-
-        document.getElementById("modal-icon-container").innerHTML = renderIcon(item, "large");
-        document.getElementById("modal-title").textContent = item.name;
-        document.getElementById("modal-description").textContent = item.description;
-        document.getElementById("item-id").value = itemId;
-        document.getElementById("guest-name").value = "";
-        document.getElementById("guest-birthdate").value = "";
-
-        const modal = document.getElementById("modal");
-        modal.classList.remove("hidden");
-        modal.classList.add("flex");
-      }
-
-      function closeModal() {
-        const modal = document.getElementById("modal");
-        modal.classList.add("hidden");
-        modal.classList.remove("flex");
-      }
-
-      function openConfirmationModal(item, guestName) {
-        document.getElementById("confirmation-guest-name").textContent = guestName;
-        document.getElementById("confirmation-item-name").textContent = item.name;
-        document.getElementById("confirmation-item-container").innerHTML = renderIcon(item, "large");
-        document.getElementById("confirmation-couple-names").textContent = config.couple_names;
-
-        const modal = document.getElementById("confirmation-modal");
-        modal.classList.remove("hidden");
-        modal.classList.add("flex");
-      }
-
-      function closeConfirmationModal() {
-        const modal = document.getElementById("confirmation-modal");
-        modal.classList.add("hidden");
-        modal.classList.remove("flex");
-      }
-
-      function openCancelModal(itemId) {
-        const item = giftItems.filter(function(i){ return i.id === itemId; })[0];
-        if (!item) return;
-
-        document.getElementById("cancel-modal-title").textContent = "Cancelar: " + item.name;
-        document.getElementById("cancel-item-id").value = itemId;
-        document.getElementById("cancel-birthdate").value = "";
-
-        const modal = document.getElementById("cancel-modal");
-        modal.classList.remove("hidden");
-        modal.classList.add("flex");
-      }
-
-      function closeCancelModal() {
-        const modal = document.getElementById("cancel-modal");
-        modal.classList.add("hidden");
-        modal.classList.remove("flex");
-      }
-
-      // ============================
-      // API CALLS
-      // ============================
-      function fetchReservations() {
-        setSyncStatus("🔄 Carregando reservas...");
-
-        jsonpRequest(
-          { action: "list" },
-          function(res) {
-            if (res && res.ok) {
-              reservations = res.reservations || [];
-              renderGiftGrid();
-              setSyncStatus("✅ Reservas carregadas.");
-            } else {
-              // Fallback: mantém a lista renderizada, mas avisa
-              renderGiftGrid();
-              setSyncStatus("⚠️ Não foi possível carregar reservas agora.");
-              showToast((res && res.message) ? res.message : "Erro ao carregar reservas", "error");
-            }
-          },
-          function(err) {
-            renderGiftGrid(); // garante lista mesmo sem reserva
-            setSyncStatus("⚠️ Falha de conexão ao carregar reservas.");
-            console.error(err);
-          }
+        setSyncStatus("✅ Lista pronta! (reservas atualizando)");
+      } catch(e) {
+        showDebug(
+          "O JavaScript do site falhou ao iniciar. A lista e a contagem podem não aparecer.",
+          "Me mande um print do Console (F12 > Console) e eu ajusto em 1 minuto."
         );
       }
+    }
 
-      function reserveItem(item, guestName, birthdate, onDone) {
-        jsonpRequest(
-          {
-            action: "reserve",
-            item_id: item.id,
-            item_name: item.name,
-            reserved_by: guestName,
-            reserved_birthdate: birthdate
-          },
-          function(res) { onDone(!!(res && res.ok), res); },
-          function(err) {
-            console.error(err);
-            onDone(false, { ok:false, message:"Falha de conexão ao reservar." });
-          }
-        );
+    // DOM ready (compatível)
+    (function(){
+      if (document.readyState === "complete" || document.readyState === "interactive") {
+        setTimeout(init, 1);
+      } else if (document.addEventListener) {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        // fallback super antigo
+        window.attachEvent && window.attachEvent("onload", init);
       }
-
-      function cancelItem(itemId, birthdate, onDone) {
-        jsonpRequest(
-          { action: "cancel", item_id: itemId, reserved_birthdate: birthdate },
-          function(res) { onDone(!!(res && res.ok), res); },
-          function(err) {
-            console.error(err);
-            onDone(false, { ok:false, message:"Falha de conexão ao cancelar." });
-          }
-        );
-      }
-
-      // ============================
-      // SUBMITS
-      // ============================
-      function handleReservation(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const submitBtn = document.getElementById("submit-btn");
-        const submitText = document.getElementById("submit-text");
-        const submitLoading = document.getElementById("submit-loading");
-
-        const itemId = document.getElementById("item-id").value;
-        const name = (document.getElementById("guest-name").value || "").trim();
-        const birthdate = document.getElementById("guest-birthdate").value;
-
-        if (!name || !birthdate) { showToast("Por favor, preencha todos os campos", "error"); return false; }
-        if (!isValidDate(birthdate)) { showToast("Data inválida. Use DD/MM/AAAA", "error"); return false; }
-
-        if (isReserved(itemId)) {
-          showToast("Este item já foi reservado", "error");
-          closeModal();
-          return false;
-        }
-
-        const item = giftItems.filter(function(i){ return i.id === itemId; })[0];
-        if (!item) { showToast("Item não encontrado", "error"); return false; }
-
-        submitBtn.disabled = true;
-        submitText.classList.add("hidden");
-        submitLoading.classList.remove("hidden");
-
-        reserveItem(item, name, birthdate, function(ok, res){
-          submitBtn.disabled = false;
-          submitText.classList.remove("hidden");
-          submitLoading.classList.add("hidden");
-
-          if (ok) {
-            closeModal();
-            openConfirmationModal(item, name);
-            fetchReservations();
-          } else {
-            showToast((res && res.message) ? res.message : "Não foi possível reservar agora.", "error");
-            fetchReservations();
-          }
-        });
-
-        return false;
-      }
-
-      function handleCancelReservation(event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const itemId = document.getElementById("cancel-item-id").value;
-        const birthdate = document.getElementById("cancel-birthdate").value;
-
-        if (!birthdate) { showToast("Por favor, informe a data de nascimento", "error"); return false; }
-        if (!isValidDate(birthdate)) { showToast("Data inválida. Use DD/MM/AAAA", "error"); return false; }
-
-        const reservation = getReservation(itemId);
-        if (!reservation) { showToast("Reserva não encontrada", "error"); return false; }
-        if (String(reservation.reserved_birthdate || "").trim() !== String(birthdate || "").trim()) {
-          showToast("Data de nascimento não confere com a reserva", "error");
-          return false;
-        }
-
-        const submitBtn = document.getElementById("cancel-submit-btn");
-        const submitText = document.getElementById("cancel-submit-text");
-        const submitLoading = document.getElementById("cancel-submit-loading");
-
-        submitBtn.disabled = true;
-        submitText.classList.add("hidden");
-        submitLoading.classList.remove("hidden");
-
-        cancelItem(itemId, birthdate, function(ok, res){
-          submitBtn.disabled = false;
-          submitText.classList.remove("hidden");
-          submitLoading.classList.add("hidden");
-
-          if (ok) {
-            closeCancelModal();
-            showToast("Reserva cancelada com sucesso! O item está disponível novamente.", "success");
-            fetchReservations();
-          } else {
-            showToast((res && res.message) ? res.message : "Erro ao cancelar. Tente novamente.", "error");
-            fetchReservations();
-          }
-        });
-
-        return false;
-      }
-
-      // ============================
-      // COUNTDOWN (BR -03:00)
-      // ============================
-      function updateCountdown() {
-        // 08/02/2026 15:00 no Brasil (-03:00)
-        const eventDate = new Date("2026-02-08T15:00:00-03:00");
-        const now = new Date();
-        const diff = eventDate.getTime() - now.getTime();
-
-        if (diff <= 0) {
-          document.getElementById("countdown-days").textContent = "0";
-          document.getElementById("countdown-hours").textContent = "00";
-          document.getElementById("countdown-minutes").textContent = "00";
-          document.getElementById("countdown-seconds").textContent = "00";
-          return;
-        }
-
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-        document.getElementById("countdown-days").textContent = String(days);
-        document.getElementById("countdown-hours").textContent = String(hours).padStart(2, "0");
-        document.getElementById("countdown-minutes").textContent = String(minutes).padStart(2, "0");
-        document.getElementById("countdown-seconds").textContent = String(seconds).padStart(2, "0");
-      }
-
-      // ============================
-      // INIT (AGORA DO JEITO CERTO)
-      // ============================
-      function init() {
-        try {
-          document.getElementById("hero-title").textContent = config.couple_names;
-          document.getElementById("hero-subtitle").textContent = config.event_subtitle;
-          document.getElementById("footer-message").textContent = config.footer_message;
-          document.getElementById("footer-signature").textContent = config.couple_names;
-
-          // Renderiza imediatamente (sem depender do Apps Script)
-          renderLinksList();
-          filterCategory("all"); // isso já chama renderGiftGrid()
-
-          // Agora busca reservas
-          fetchReservations();
-
-          // Countdown
-          updateCountdown();
-          setInterval(updateCountdown, 1000);
-
-          // Refresh de reservas (leve)
-          setInterval(fetchReservations, 25000);
-
-          setSyncStatus("✅ Lista pronta! Carregando reservas...");
-        } catch (e) {
-          console.error(e);
-          showDebug(
-            "O JavaScript do site falhou ao iniciar. A lista e a contagem podem não aparecer.",
-            "Abra o site e me mande um print do Console (F12 > Console) ou me diga se aparece a caixinha de erro."
-          );
-        }
-      }
-
-      // garante que só inicia depois que o HTML existe
-      document.addEventListener("DOMContentLoaded", function() {
-        // captura qualquer erro global e mostra caixa
-        window.addEventListener("error", function(ev){
-          try {
-            showDebug(
-              "O site encontrou um erro e travou antes de renderizar.",
-              (ev && ev.message) ? ("Erro: " + ev.message) : "Erro desconhecido"
-            );
-          } catch(_) {}
-        });
-
-        init();
-      });
-    </script>
-  </body>
+    })();
+  </script>
+</body>
 </html>
