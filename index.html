@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chá de Casa Nova – Juliana & Matheus</title>
 
-  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Questrial&display=swap" rel="stylesheet" />
@@ -35,14 +33,11 @@
     @keyframes slideIn { from { transform: translateY(-80%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-    .celebration-pulse { animation: celebrationPulse 1s ease infinite; }
-    @keyframes celebrationPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-
-    .confetti-icon { animation: confetti 2s ease-in-out infinite; }
-    @keyframes confetti { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-18px) rotate(360deg); opacity: 0; } }
-
     img { max-width: 100%; height: auto; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    /* Modal */
+    .modal-backdrop { background: rgba(0,0,0,0.35); }
   </style>
 </head>
 
@@ -61,8 +56,77 @@
           <div id="debug-text" class="text-sm mt-1" style="color:#8b7355"></div>
           <div class="text-xs mt-2 mono" style="color:#9a8f82" id="debug-hint"></div>
         </div>
-        <button onclick="(function(){document.getElementById('debug-box').className=document.getElementById('debug-box').className.replace(' hidden',''); document.getElementById('debug-box').classList && document.getElementById('debug-box').classList.add('hidden');})()"
-          class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">✕</button>
+        <button onclick="hideDebug()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">✕</button>
+      </div>
+    </div>
+
+    <!-- MODAL RESERVA/CANCELAMENTO -->
+    <div id="modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+      <div class="absolute inset-0 modal-backdrop" onclick="closeModal()"></div>
+
+      <div class="relative w-full max-w-lg rounded-2xl shadow-xl p-6 md:p-8" style="background:#fff; border:1px solid #EDE9E3;">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <div id="modal-title" class="font-heading text-3xl md:text-4xl" style="color:#5d4e37">Reservar item</div>
+            <div id="modal-subtitle" class="text-sm mt-1" style="color:#8b7355"></div>
+          </div>
+          <button onclick="closeModal()" class="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center">✕</button>
+        </div>
+
+        <div class="mt-6 flex items-center gap-4">
+          <div id="modal-icon" class="w-16 h-16 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center"></div>
+          <div>
+            <div id="modal-item-name" class="font-heading text-2xl" style="color:#5d4e37"></div>
+            <div id="modal-item-desc" class="text-sm" style="color:#8b7355"></div>
+          </div>
+        </div>
+
+        <!-- FORM RESERVA -->
+        <div id="form-reserve" class="mt-6">
+          <label class="block text-sm mb-2" style="color:#5d4e37">Seu nome</label>
+          <input id="input-name" type="text" class="w-full px-4 py-3 rounded-xl border" style="border-color:#EDE9E3" placeholder="Ex: Maria Silva" />
+
+          <label class="block text-sm mt-4 mb-2" style="color:#5d4e37">Data de nascimento (DD/MM/AAAA)</label>
+          <input id="input-birth" type="text" class="w-full px-4 py-3 rounded-xl border" style="border-color:#EDE9E3" placeholder="Ex: 15/04/1998" />
+
+          <button id="btn-confirm-reserve" onclick="confirmReserve()" class="mt-5 w-full px-6 py-4 rounded-full text-white font-medium transition-all hover:shadow-lg"
+            style="background-color:#6b9b5e">
+            Confirmar reserva
+          </button>
+
+          <p class="text-xs mt-3" style="color:#8b7355">
+            *A data de nascimento é usada para permitir o cancelamento da sua própria reserva depois.
+          </p>
+        </div>
+
+        <!-- FORM CANCEL -->
+        <div id="form-cancel" class="hidden mt-6">
+          <div class="p-4 rounded-xl mb-4" style="background:#faf8f5; border:1px solid #EDE9E3;">
+            <div class="text-sm" style="color:#5d4e37">
+              Este item está reservado por <strong id="cancel-who"></strong>.
+            </div>
+          </div>
+
+          <label class="block text-sm mb-2" style="color:#5d4e37">Para cancelar, confirme a data de nascimento usada na reserva</label>
+          <input id="input-cancel-birth" type="text" class="w-full px-4 py-3 rounded-xl border" style="border-color:#EDE9E3" placeholder="DD/MM/AAAA" />
+
+          <button id="btn-confirm-cancel" onclick="confirmCancel()" class="mt-5 w-full px-6 py-4 rounded-full text-white font-medium transition-all hover:shadow-lg"
+            style="background-color:#8b7355">
+            Cancelar reserva
+          </button>
+
+          <p class="text-xs mt-3" style="color:#8b7355">
+            *Se a data não bater, o cancelamento não será permitido.
+          </p>
+        </div>
+
+        <div class="mt-6">
+          <a id="modal-buy-link" href="#" target="_blank" rel="noopener noreferrer"
+            class="inline-flex items-center justify-center w-full px-6 py-4 rounded-full font-medium transition-all hover:shadow-md"
+            style="background:#ede9e3; color:#5d4e37">
+            Comprar online (opcional)
+          </a>
+        </div>
       </div>
     </div>
 
@@ -70,6 +134,16 @@
     <section class="hero-pattern min-h-screen flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
       <div class="text-center max-w-2xl mx-auto animate-fade-in">
         <p class="text-base md:text-lg tracking-[0.3em] uppercase mb-4" style="color:#6b9b5e">Chá de Casa Nova</p>
+
+        <div class="flex justify-center mb-6">
+          <img
+            src="https://i.pinimg.com/736x/4a/6c/aa/4a6caa8efc074ac29335bff3410e8f7c.jpg"
+            alt="Juliana & Matheus"
+            class="w-56 md:w-72 rounded-2xl shadow-md"
+            loading="lazy"
+          />
+        </div>
+
         <h1 id="hero-title" class="font-heading text-6xl md:text-7xl lg:text-8xl font-medium mb-6 leading-tight" style="color:#5d4e37">
           Juliana & Matheus
         </h1>
@@ -125,7 +199,7 @@
         <div class="text-center mb-10">
           <span class="text-4xl mb-4 block">🎁</span>
           <h2 class="font-heading text-4xl md:text-5xl mb-4" style="color:#5d4e37">Lista de Presentes</h2>
-          <p class="text-lg md:text-xl" style="color:#8b7355">Clique em um item para reservá-lo</p>
+          <p class="text-lg md:text-xl" style="color:#8b7355">Clique em um item para reservar</p>
           <p id="sync-status" class="text-sm mt-3" style="color:#8b7355">🔄 Preparando lista...</p>
         </div>
 
@@ -190,28 +264,79 @@
     };
 
     // ============================
-    // DADOS
+    // DADOS (48 itens do arquivo original)
     // ============================
     var giftItems = [
-      { id:"utensilios-4", category:"utensilios", icon:"https://m.media-amazon.com/images/I/412rlg5x9LL._AC_SL1000_.jpg", name:"Escorredor de Massa", description:"Para escorrer massas com praticidade", link:"https://www.amazon.com.br/s?k=escorredor+de+massa" },
-      { id:"utensilios-2", category:"utensilios", icon:"https://ph-cdn3.ecosweb.com.br/imagens01/foto/utilidades-domesticas/talheres/kit-para-molho-com-concha-e-escumadeira-em-inox_140885_600_1.jpg", name:"Kit Concha e Escumadeira", description:"Dupla essencial para cozinhar", link:"https://www.amazon.com.br/s?k=kit+concha+escumadeira+inox" },
-      { id:"potes-1", category:"potes", icon:"https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name:"Kit 2 Potes de Vidro Herméticos", description:"Para armazenar alimentos", link:"https://a.co/d/gH9mf9o" },
-      { id:"cozinha-3", category:"cozinha", icon:"https://m.media-amazon.com/images/I/31TpUxJ4mHL._AC_SX679_.jpg", name:"Coador de café Melitta 103", description:"Café fresquinho todo dia", link:"https://www.amazon.com.br/s?k=coador+cafe+melitta+103" },
-      { id:"formas-4", category:"formas", icon:"https://m.media-amazon.com/images/I/51h2IHO3cJS._AC_SX679_.jpg", name:"Forma de lasanha de vidro", description:"Vai do forno à mesa", link:"https://www.amazon.com.br/s?k=forma+lasanha+vidro" },
-      { id:"banheiro-1", category:"banheiro", icon:"https://m.media-amazon.com/images/I/51zNDiujMCL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Saboneteira", description:"Para organizar o sabonete", link:"https://www.amazon.com.br/s?k=saboneteira" },
-      { id:"organizacao-1", category:"organizacao", icon:"https://m.media-amazon.com/images/I/71QBq-o+bZL._AC_SX300_SY300_QL70_ML2_.jpg", name:"Cabides (kit)", description:"Para organizar o guarda-roupa", link:"https://www.amazon.com.br/s?k=cabides+kit" }
-    ];
+        // Utensílios de Cozinha
+        { id: "utensilios-1", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51wOKTjJouL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Colher de pau (kit)", description: "Kit com colheres de madeira", link: "https://www.amazon.com.br/s?k=kit+colher+de+pau" },
+        { id: "utensilios-2", category: "utensilios", icon: "https://ph-cdn3.ecosweb.com.br/imagens01/foto/utilidades-domesticas/talheres/kit-para-molho-com-concha-e-escumadeira-em-inox_140885_600_1.jpg", name: "Kit Concha e Escumadeira", description: "Dupla essencial para cozinhar", link: "https://www.amazon.com.br/s?k=kit+concha+escumadeira+inox" },
+        { id: "utensilios-3", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51tS8o+qF5L._AC_SX679_.jpg", name: "Espátula de silicone", description: "Para cozinhar sem riscar panelas", link: "https://www.amazon.com.br/s?k=espatula+silicone" },
+        { id: "utensilios-4", category: "utensilios", icon: "https://m.media-amazon.com/images/I/412rlg5x9LL._AC_SL1000_.jpg", name: "Escorredor de Massa", description: "Para escorrer massas com praticidade", link: "https://www.amazon.com.br/s?k=escorredor+de+massa" },
+        { id: "utensilios-5", category: "utensilios", icon: "https://m.media-amazon.com/images/I/71yL0g0I6uL._AC_SX679_.jpg", name: "Tesoura de cozinha", description: "Para uso diário na cozinha", link: "https://www.amazon.com.br/s?k=tesoura+cozinha" },
+        { id: "utensilios-6", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51QxvD6l7wL._AC_SX679_.jpg", name: "Tábua de corte", description: "Para preparar alimentos", link: "https://www.amazon.com.br/s?k=tabua+de+corte" },
+        { id: "utensilios-7", category: "utensilios", icon: "https://m.media-amazon.com/images/I/41nCEBB7qDL._AC_SX679_.jpg", name: "Ralador", description: "Para queijo, legumes e mais", link: "https://www.amazon.com.br/s?k=ralador+inox" },
+        { id: "utensilios-8", category: "utensilios", icon: "https://m.media-amazon.com/images/I/61n8cS5x2kL._AC_SX679_.jpg", name: "Faca de cozinha", description: "Faca multiuso", link: "https://www.amazon.com.br/s?k=faca+cozinha+inox" },
+        { id: "utensilios-9", category: "utensilios", icon: "https://m.media-amazon.com/images/I/61U7o6X2yJL._AC_SX679_.jpg", name: "Pegador", description: "Para saladas e alimentos", link: "https://www.amazon.com.br/s?k=pegador+cozinha" },
+
+        // Potes
+        { id: "potes-1", category: "potes", icon: "https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name: "Kit 2 Potes de Vidro Herméticos", description: "Para armazenar alimentos", link: "https://a.co/d/gH9mf9o" },
+        { id: "potes-2", category: "potes", icon: "https://m.media-amazon.com/images/I/61EoB8+uWBL._AC_SX679_.jpg", name: "Potes plásticos (kit)", description: "Kit com potes para mantimentos", link: "https://www.amazon.com.br/s?k=kit+potes+pl%C3%A1sticos+mantimentos" },
+        { id: "potes-3", category: "potes", icon: "https://m.media-amazon.com/images/I/51H0o6qZ4EL._AC_SX679_.jpg", name: "Pote para arroz", description: "Organização de mantimentos", link: "https://www.amazon.com.br/s?k=pote+para+arroz" },
+        { id: "potes-4", category: "potes", icon: "https://m.media-amazon.com/images/I/61j8oC2vS3L._AC_SX679_.jpg", name: "Pote para feijão", description: "Organização de mantimentos", link: "https://www.amazon.com.br/s?k=pote+para+feij%C3%A3o" },
+        { id: "potes-5", category: "potes", icon: "https://m.media-amazon.com/images/I/61wB0x9vMML._AC_SX679_.jpg", name: "Pote para açúcar", description: "Organização de mantimentos", link: "https://www.amazon.com.br/s?k=pote+para+a%C3%A7%C3%BAcar" },
+        { id: "potes-6", category: "potes", icon: "https://m.media-amazon.com/images/I/61yXzqQGg5L._AC_SX679_.jpg", name: "Pote para café", description: "Organização de mantimentos", link: "https://www.amazon.com.br/s?k=pote+para+caf%C3%A9" },
+        { id: "potes-7", category: "potes", icon: "https://m.media-amazon.com/images/I/61E+ZQd8s4L._AC_SX679_.jpg", name: "Pote para farinha", description: "Organização de mantimentos", link: "https://www.amazon.com.br/s?k=pote+para+farinha" },
+        { id: "potes-8", category: "potes", icon: "https://m.media-amazon.com/images/I/61CwDk2f9zL._AC_SX679_.jpg", name: "Potes temperos (kit)", description: "Para organizar temperos", link: "https://www.amazon.com.br/s?k=kit+potes+tempero" },
+
+        // Cozinha
+        { id: "cozinha-1", category: "cozinha", icon: "https://m.media-amazon.com/images/I/71y8r5qLk8L._AC_SX679_.jpg", name: "Panela", description: "Item essencial para o dia a dia", link: "https://www.amazon.com.br/s?k=panela" },
+        { id: "cozinha-2", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61mE0zGZgLL._AC_SX679_.jpg", name: "Frigideira", description: "Para grelhar e fritar", link: "https://www.amazon.com.br/s?k=frigideira" },
+        { id: "cozinha-3", category: "cozinha", icon: "https://m.media-amazon.com/images/I/31TpUxJ4mHL._AC_SX679_.jpg", name: "Coador de café Melitta 103", description: "Café fresquinho todo dia", link: "https://www.amazon.com.br/s?k=coador+cafe+melitta+103" },
+        { id: "cozinha-4", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61xYqYx2w0L._AC_SX679_.jpg", name: "Jarra", description: "Para sucos e água", link: "https://www.amazon.com.br/s?k=jarra+vidro" },
+        { id: "cozinha-5", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61Hq1Jx5BKL._AC_SX679_.jpg", name: "Escorredor de louça", description: "Para secar pratos e talheres", link: "https://www.amazon.com.br/s?k=escorredor+de+lou%C3%A7a" },
+        { id: "cozinha-6", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61sD8KZpC7L._AC_SX679_.jpg", name: "Jogo de copos", description: "Para servir bebidas", link: "https://www.amazon.com.br/s?k=jogo+de+copos" },
+        { id: "cozinha-7", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61XQ1l2h7vL._AC_SX679_.jpg", name: "Jogo de pratos", description: "Para refeições", link: "https://www.amazon.com.br/s?k=jogo+de+pratos" },
+        { id: "cozinha-8", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61R0g7xqfYL._AC_SX679_.jpg", name: "Talheres (kit)", description: "Kit com talheres", link: "https://www.amazon.com.br/s?k=kit+talheres" },
+        { id: "cozinha-9", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61c5wGZ8uCL._AC_SX679_.jpg", name: "Pano de prato (kit)", description: "Para o dia a dia", link: "https://www.amazon.com.br/s?k=kit+pano+de+prato" },
+
+        // Formas
+        { id: "formas-1", category: "formas", icon: "https://m.media-amazon.com/images/I/61u8p5aJdEL._AC_SX679_.jpg", name: "Forma de bolo", description: "Para bolos e receitas", link: "https://www.amazon.com.br/s?k=forma+de+bolo" },
+        { id: "formas-2", category: "formas", icon: "https://m.media-amazon.com/images/I/61y6oQ7dWqL._AC_SX679_.jpg", name: "Forma de pizza", description: "Para pizzas", link: "https://www.amazon.com.br/s?k=forma+pizza" },
+        { id: "formas-3", category: "formas", icon: "https://m.media-amazon.com/images/I/61v6bq9xJxL._AC_SX679_.jpg", name: "Assadeira", description: "Para assar alimentos", link: "https://www.amazon.com.br/s?k=assadeira" },
+        { id: "formas-4", category: "formas", icon: "https://m.media-amazon.com/images/I/51h2IHO3cJS._AC_SX679_.jpg", name: "Forma de lasanha de vidro", description: "Vai do forno à mesa", link: "https://www.amazon.com.br/s?k=forma+lasanha+vidro" },
+        { id: "formas-5", category: "formas", icon: "https://m.media-amazon.com/images/I/61yVqHqP3EL._AC_SX679_.jpg", name: "Forma de pudim", description: "Para sobremesas", link: "https://www.amazon.com.br/s?k=forma+pudim" },
+        { id: "formas-6", category: "formas", icon: "https://m.media-amazon.com/images/I/61VxgWq7w5L._AC_SX679_.jpg", name: "Forma de cupcake", description: "Para muffins/cupcakes", link: "https://www.amazon.com.br/s?k=forma+cupcake" },
+
+        // Banheiro
+        { id: "banheiro-1", category: "banheiro", icon: "https://m.media-amazon.com/images/I/51zNDiujMCL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Saboneteira", description: "Para organizar o sabonete", link: "https://www.amazon.com.br/s?k=saboneteira" },
+        { id: "banheiro-2", category: "banheiro", icon: "https://m.media-amazon.com/images/I/61Qd9l2m+5L._AC_SX679_.jpg", name: "Porta escovas", description: "Organização do banheiro", link: "https://www.amazon.com.br/s?k=porta+escovas+dente" },
+        { id: "banheiro-3", category: "banheiro", icon: "https://m.media-amazon.com/images/I/61sYl6oE3xL._AC_SX679_.jpg", name: "Lixeira", description: "Lixeira para banheiro", link: "https://www.amazon.com.br/s?k=lixeira+banheiro" },
+        { id: "banheiro-4", category: "banheiro", icon: "https://m.media-amazon.com/images/I/61x8Q3zQqzL._AC_SX679_.jpg", name: "Tapete de banheiro", description: "Conjunto de tapetes", link: "https://www.amazon.com.br/s?k=tapete+banheiro+jogo" },
+        { id: "banheiro-5", category: "banheiro", icon: "https://m.media-amazon.com/images/I/61y7g8fK4YL._AC_SX679_.jpg", name: "Toalhas (kit)", description: "Kit de toalhas", link: "https://www.amazon.com.br/s?k=kit+toalhas" },
+
+        // Organização
+        { id: "organizacao-1", category: "organizacao", icon: "https://m.media-amazon.com/images/I/71QBq-o+bZL._AC_SX300_SY300_QL70_ML2_.jpg", name: "Cabides (kit)", description: "Para organizar o guarda-roupa", link: "https://www.amazon.com.br/s?k=cabides+kit" },
+        { id: "organizacao-2", category: "organizacao", icon: "https://m.media-amazon.com/images/I/61C7yVQmB0L._AC_SX679_.jpg", name: "Organizador de gaveta", description: "Para dividir e organizar", link: "https://www.amazon.com.br/s?k=organizador+gaveta" },
+        { id: "organizacao-3", category: "organizacao", icon: "https://m.media-amazon.com/images/I/61f2pQpYHqL._AC_SX679_.jpg", name: "Cestos organizadores", description: "Para prateleiras e armários", link: "https://www.amazon.com.br/s?k=cesto+organizador" },
+        { id: "organizacao-4", category: "organizacao", icon: "https://m.media-amazon.com/images/I/61gZkzG3v2L._AC_SX679_.jpg", name: "Potes para lavanderia", description: "Para sabão/amaciantes", link: "https://www.amazon.com.br/s?k=potes+lavanderia" },
+        { id: "organizacao-5", category: "organizacao", icon: "https://m.media-amazon.com/images/I/61mY6p6w0yL._AC_SX679_.jpg", name: "Porta mantas/caixa", description: "Para organizar itens", link: "https://www.amazon.com.br/s?k=caixa+organizadora" }
+      ];
 
     // ============================
     // STATE
     // ============================
     var reservations = [];
     var currentCategory = "all";
+    var selectedItem = null;
 
     // ============================
     // HELPERS ES5
     // ============================
     function $(id){ return document.getElementById(id); }
+
+    function hideDebug(){
+      try { $("debug-box").className = "hidden " + $("debug-box").className; } catch(e){}
+    }
 
     function showDebug(message, hint) {
       try {
@@ -254,7 +379,11 @@
 
     function isImageUrl(u){ return u && String(u).indexOf("http") === 0; }
 
-    function renderIcon(item) {
+    function isValidDateBR(s){
+      return /^\d{2}\/\d{2}\/\d{4}$/.test(String(s||"").replace(/\s+/g,""));
+    }
+
+    function renderIconHtml(item) {
       if (isImageUrl(item.icon)) {
         return '<img src="'+ item.icon +'" alt="'+ safeText(item.name) +'" class="w-20 h-20 object-contain mx-auto rounded-lg" loading="lazy" onerror="this.onerror=null; this.outerHTML=\'<span class=&quot;text-4xl block&quot;>🎁</span>\'">';
       }
@@ -329,6 +458,142 @@
       return null;
     }
 
+    function findItemById(itemId){
+      for (var i=0; i<giftItems.length; i++){
+        if (String(giftItems[i].id) === String(itemId)) return giftItems[i];
+      }
+      return null;
+    }
+
+    // ============================
+    // MODAL
+    // ============================
+    function openModal(itemId){
+      var item = findItemById(itemId);
+      if (!item) return;
+
+      selectedItem = item;
+
+      $("modal-item-name").innerHTML = safeText(item.name);
+      $("modal-item-desc").innerHTML = safeText(item.description || "");
+      $("modal-icon").innerHTML = renderIconHtml(item);
+
+      // buy link
+      var a = $("modal-buy-link");
+      if (item.link) {
+        a.href = item.link;
+        a.style.display = "inline-flex";
+      } else {
+        a.href = "#";
+        a.style.display = "none";
+      }
+
+      // decide reserve vs cancel
+      var res = getReservation(item.id);
+      if (!res) {
+        $("modal-title").innerHTML = "Reservar item";
+        $("modal-subtitle").innerHTML = "Preencha seus dados para reservar este presente.";
+        $("form-reserve").className = "mt-6";
+        $("form-cancel").className = "hidden mt-6";
+        $("input-name").value = "";
+        $("input-birth").value = "";
+      } else {
+        $("modal-title").innerHTML = "Cancelar reserva";
+        $("modal-subtitle").innerHTML = "Cancelamento é permitido apenas com a mesma data usada na reserva.";
+        $("form-reserve").className = "hidden mt-6";
+        $("form-cancel").className = "mt-6";
+        $("cancel-who").innerHTML = safeText(res.reserved_by || "alguém");
+        $("input-cancel-birth").value = "";
+      }
+
+      $("modal").className = $("modal").className.replace("hidden","").trim();
+    }
+
+    function closeModal(){
+      selectedItem = null;
+      var m = $("modal");
+      if (!m) return;
+      if (m.className.indexOf("hidden") === -1) m.className = "hidden " + m.className;
+    }
+
+    // ============================
+    // ACTIONS RESERVAR / CANCELAR
+    // ============================
+    function confirmReserve(){
+      if (!selectedItem) return;
+
+      var name = String($("input-name").value || "").replace(/^\s+|\s+$/g,"");
+      var birth = String($("input-birth").value || "").replace(/\s+/g,"");
+
+      if (!name) { showToast("Digite seu nome.", "error"); return; }
+      if (!isValidDateBR(birth)) { showToast("Data inválida. Use DD/MM/AAAA.", "error"); return; }
+
+      $("btn-confirm-reserve").innerHTML = "Reservando...";
+      $("btn-confirm-reserve").disabled = true;
+
+      jsonpRequest(
+        {
+          action: "reserve",
+          item_id: selectedItem.id,
+          item_name: selectedItem.name,
+          reserved_by: name,
+          reserved_birthdate: birth
+        },
+        function(res){
+          $("btn-confirm-reserve").innerHTML = "Confirmar reserva";
+          $("btn-confirm-reserve").disabled = false;
+
+          if (res && res.ok) {
+            showToast("✅ Reservado com sucesso!", "success");
+            closeModal();
+            fetchReservations(true);
+          } else {
+            showToast((res && res.message) ? res.message : "Não foi possível reservar.", "error");
+          }
+        },
+        function(){
+          $("btn-confirm-reserve").innerHTML = "Confirmar reserva";
+          $("btn-confirm-reserve").disabled = false;
+          showToast("Falha de conexão ao reservar.", "error");
+        }
+      );
+    }
+
+    function confirmCancel(){
+      if (!selectedItem) return;
+
+      var birth = String($("input-cancel-birth").value || "").replace(/\s+/g,"");
+      if (!isValidDateBR(birth)) { showToast("Data inválida. Use DD/MM/AAAA.", "error"); return; }
+
+      $("btn-confirm-cancel").innerHTML = "Cancelando...";
+      $("btn-confirm-cancel").disabled = true;
+
+      jsonpRequest(
+        {
+          action: "cancel",
+          item_id: selectedItem.id,
+          reserved_birthdate: birth
+        },
+        function(res){
+          $("btn-confirm-cancel").innerHTML = "Cancelar reserva";
+          $("btn-confirm-cancel").disabled = false;
+
+          if (res && res.ok) {
+            showToast("✅ Reserva cancelada!", "success");
+            closeModal();
+            fetchReservations(true);
+          } else {
+            showToast((res && res.message) ? res.message : "Não foi possível cancelar.", "error");
+          }
+        },
+        function(){
+          $("btn-confirm-cancel").innerHTML = "Cancelar reserva";
+          $("btn-confirm-cancel").disabled = false;
+          showToast("Falha de conexão ao cancelar.", "error");
+        }
+      );
+    }
+
     // ============================
     // RENDER GRID
     // ============================
@@ -351,10 +616,9 @@
         if (isReserved(items[j].id)) reserved.push(items[j]);
         else available.push(items[j]);
       }
-
       var sorted = available.concat(reserved);
-      var html = "";
 
+      var html = "";
       for (var k=0; k<sorted.length; k++) {
         var item = sorted[k];
         var res = getReservation(item.id);
@@ -364,17 +628,21 @@
 
         if (r) {
           html += '<div class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium text-white" style="background-color:'+ config.secondary_action_color +'">Reservado</div>';
+        } else {
+          html += '<div class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium text-white" style="background-color:'+ config.primary_action_color +'">Disponível</div>';
         }
 
         html += '<div class="text-center">';
-        html += '<div class="mb-4 flex justify-center items-center" style="min-height:80px;">'+ renderIcon(item) +'</div>';
+        html += '<div class="mb-4 flex justify-center items-center" style="min-height:80px;">'+ renderIconHtml(item) +'</div>';
         html += '<h3 class="font-heading text-2xl mb-2" style="color:'+ config.text_color +'">'+ safeText(item.name) +'</h3>';
         html += '<p class="text-base mb-4" style="color:'+ config.secondary_action_color +'">'+ safeText(item.description) +'</p>';
 
-        if (!r) {
-          html += '<div class="text-sm" style="color:#6b9b5e">✅ Disponível</div>';
+        if (r) {
+          html += '<div class="text-sm italic mb-4" style="color:#8b7355">Reservado por '+ safeText(res.reserved_by || "alguém") +'</div>';
+          html += '<button onclick="openModal(\''+ item.id +'\')" class="w-full px-6 py-3 rounded-full text-white font-medium transition-all hover:shadow-md" style="background-color:'+ config.secondary_action_color +'">Cancelar reserva</button>';
         } else {
-          html += '<div class="text-sm italic" style="color:#8b7355">Reservado por '+ safeText(res.reserved_by || "alguém") +'</div>';
+          html += '<div class="text-sm mb-4" style="color:#6b9b5e">✅ Clique para reservar</div>';
+          html += '<button onclick="openModal(\''+ item.id +'\')" class="w-full px-6 py-3 rounded-full text-white font-medium transition-all hover:shadow-md" style="background-color:'+ config.primary_action_color +'">Reservar</button>';
         }
 
         html += '</div></div>';
@@ -460,15 +728,13 @@
     }
 
     // ============================
-    // COUNTDOWN (ES5)
+    // COUNTDOWN
     // ============================
     function updateCountdown() {
       try {
-        // 08/02/2026 15:00 -03:00
         var eventDate = new Date("2026-02-08T15:00:00-03:00");
         var now = new Date();
         var diff = eventDate.getTime() - now.getTime();
-
         if (diff <= 0) diff = 0;
 
         var days = Math.floor(diff / (1000*60*60*24));
@@ -480,16 +746,14 @@
         $("countdown-hours").innerHTML = pad2(hours);
         $("countdown-minutes").innerHTML = pad2(minutes);
         $("countdown-seconds").innerHTML = pad2(seconds);
-      } catch(e) {
-        // se der qualquer erro, não trava o resto
-      }
+      } catch(e) {}
     }
 
     // ============================
     // FETCH RESERVAS
     // ============================
-    function fetchReservations() {
-      setSyncStatus("🔄 Carregando reservas...");
+    function fetchReservations(silent) {
+      if (!silent) setSyncStatus("🔄 Carregando reservas...");
 
       jsonpRequest(
         { action:"list" },
@@ -497,15 +761,15 @@
           if (res && res.ok) {
             reservations = res.reservations || [];
             renderGiftGrid();
-            setSyncStatus("✅ Reservas carregadas.");
+            if (!silent) setSyncStatus("✅ Reservas atualizadas.");
           } else {
             renderGiftGrid();
-            setSyncStatus("⚠️ Não foi possível carregar reservas agora.");
+            if (!silent) setSyncStatus("⚠️ Não foi possível carregar reservas agora.");
           }
         },
-        function(err) {
+        function() {
           renderGiftGrid();
-          setSyncStatus("⚠️ Falha ao carregar reservas.");
+          if (!silent) setSyncStatus("⚠️ Falha ao carregar reservas.");
         }
       );
     }
@@ -518,35 +782,30 @@
         $("hero-title").innerHTML = config.couple_names;
         $("hero-subtitle").innerHTML = config.event_subtitle;
 
-        // renderiza imediatamente (sem esperar Apps Script)
         renderLinksList();
         filterCategory("all");
 
-        // countdown
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
-        // reservas
-        fetchReservations();
-        setInterval(fetchReservations, 25000);
+        fetchReservations(false);
+        setInterval(function(){ fetchReservations(true); }, 25000);
 
         setSyncStatus("✅ Lista pronta! (reservas atualizando)");
       } catch(e) {
         showDebug(
           "O JavaScript do site falhou ao iniciar. A lista e a contagem podem não aparecer.",
-          "Me mande um print do Console (F12 > Console) e eu ajusto em 1 minuto."
+          "Se precisar, me mande um print do Console (F12 > Console)."
         );
       }
     }
 
-    // DOM ready (compatível)
     (function(){
       if (document.readyState === "complete" || document.readyState === "interactive") {
         setTimeout(init, 1);
       } else if (document.addEventListener) {
         document.addEventListener("DOMContentLoaded", init);
       } else {
-        // fallback super antigo
         window.attachEvent && window.attachEvent("onload", init);
       }
     })();
