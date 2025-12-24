@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chá de Casa Nova – Juliana & Matheus</title>
 
-    <!-- Tailwind via CDN (mantém o visual do seu original) -->
+    <!-- Tailwind via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Fonts -->
@@ -31,7 +31,6 @@
       .card-hover { transition: all 0.25s ease; }
       .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
 
-      /* animações leves (mantém bonito sem pesar tanto) */
       @keyframes fadeInUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
       .animate-fade-in { animation: fadeInUp 0.5s ease forwards; }
       .scroll-smooth { scroll-behavior: smooth; }
@@ -46,8 +45,8 @@
       .confetti-icon { animation: confetti 2s ease-in-out infinite; }
       @keyframes confetti { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-18px) rotate(360deg); opacity: 0; } }
 
-      /* pequenos ajustes pro “mobile antigo” */
       img { max-width: 100%; height: auto; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
     </style>
   </head>
 
@@ -55,6 +54,20 @@
     <div id="app-wrapper" class="w-full h-full overflow-auto" style="background-color:#faf8f5">
       <!-- Toast Container -->
       <div id="toast-container" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"></div>
+
+      <!-- Debug box (se algo quebrar, aparece aqui) -->
+      <div id="debug-box" class="hidden fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-[420px] z-50 p-4 rounded-xl shadow-lg"
+        style="background:#fff; border:1px solid #EDE9E3;">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div class="font-semibold" style="color:#5d4e37">⚠️ Algo deu errado no site</div>
+            <div id="debug-text" class="text-sm mt-1" style="color:#8b7355"></div>
+            <div class="text-xs mt-2 mono" style="color:#9a8f82" id="debug-hint"></div>
+          </div>
+          <button onclick="(function(){document.getElementById('debug-box').classList.add('hidden')})()"
+            class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">✕</button>
+        </div>
+      </div>
 
       <!-- Hero -->
       <section class="hero-pattern min-h-screen flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
@@ -190,18 +203,25 @@
             <span class="text-4xl mb-4 block">🎁</span>
             <h2 class="font-heading text-4xl md:text-5xl mb-4" style="color:#5d4e37">Lista de Presentes</h2>
             <p class="text-lg md:text-xl" style="color:#8b7355">Clique em um item para reservá-lo</p>
-            <p id="sync-status" class="text-sm mt-3" style="color:#8b7355">🔄 Carregando reservas...</p>
+            <p id="sync-status" class="text-sm mt-3" style="color:#8b7355">🔄 Preparando lista...</p>
           </div>
 
           <!-- Category Tabs -->
           <div class="flex flex-wrap justify-center gap-3 mb-12">
-            <button onclick="filterCategory('all')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="all" style="background-color:#6b9b5e; color:white">Todos</button>
-            <button onclick="filterCategory('utensilios')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="utensilios" style="background-color:#ede9e3; color:#5d4e37">🥄 Utensílios</button>
-            <button onclick="filterCategory('potes')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="potes" style="background-color:#ede9e3; color:#5d4e37">🫙 Potes</button>
-            <button onclick="filterCategory('cozinha')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="cozinha" style="background-color:#ede9e3; color:#5d4e37">🍳 Cozinha</button>
-            <button onclick="filterCategory('formas')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="formas" style="background-color:#ede9e3; color:#5d4e37">🎂 Formas</button>
-            <button onclick="filterCategory('banheiro')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="banheiro" style="background-color:#ede9e3; color:#5d4e37">🛁 Banheiro</button>
-            <button onclick="filterCategory('organizacao')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="organizacao" style="background-color:#ede9e3; color:#5d4e37">👔 Organização</button>
+            <button onclick="filterCategory('all')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
+              data-category="all" style="background-color:#6b9b5e; color:white">Todos</button>
+            <button onclick="filterCategory('utensilios')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
+              data-category="utensilios" style="background-color:#ede9e3; color:#5d4e37">🥄 Utensílios</button>
+            <button onclick="filterCategory('potes')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
+              data-category="potes" style="background-color:#ede9e3; color:#5d4e37">🫙 Potes</button>
+            <button onclick="filterCategory('cozinha')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
+              data-category="cozinha" style="background-color:#ede9e3; color:#5d4e37">🍳 Cozinha</button>
+            <button onclick="filterCategory('formas')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
+              data-category="formas" style="background-color:#ede9e3; color:#5d4e37">🎂 Formas</button>
+            <button onclick="filterCategory('banheiro')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
+              data-category="banheiro" style="background-color:#ede9e3; color:#5d4e37">🛁 Banheiro</button>
+            <button onclick="filterCategory('organizacao')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg"
+              data-category="organizacao" style="background-color:#ede9e3; color:#5d4e37">👔 Organização</button>
           </div>
 
           <div id="gift-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -386,15 +406,13 @@
         couple_names: "Juliana & Matheus",
         event_subtitle: "Um novo lar, um novo começo",
         footer_message: "Obrigado por fazer parte desse momento tão especial. Cada gesto de carinho significa muito para nós!",
-        background_color: "#FAF8F5",
-        surface_color: "#FFFFFF",
         text_color: "#5D4E37",
         primary_action_color: "#6B9B5E",
         secondary_action_color: "#8B7355",
       };
 
       // ============================
-      // DADOS (seu array original)
+      // DADOS (mesmo array de antes)
       // ============================
       const giftItems = [
         { id: "utensilios-1", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51wOKTjJouL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Colher de pau (kit)", description: "Kit completo de colheres de madeira", link: "https://www.amazon.com.br/s?k=colher+de+pau+kit" },
@@ -455,14 +473,36 @@
       // ============================
       // STATE
       // ============================
-      let reservations = []; // vindo da planilha (action=list)
+      let reservations = [];
       let currentCategory = "all";
-      let lastReservedItem = null;
-      let lastGuestName = "";
 
       // ============================
-      // HELPERS
+      // UI HELPERS
       // ============================
+      function showDebug(message, hint) {
+        const box = document.getElementById("debug-box");
+        const text = document.getElementById("debug-text");
+        const h = document.getElementById("debug-hint");
+        text.textContent = message || "Erro desconhecido";
+        h.textContent = hint || "";
+        box.classList.remove("hidden");
+      }
+
+      function showToast(message, type) {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = "toast px-6 py-3 rounded-full shadow-lg text-white font-medium";
+        toast.style.backgroundColor = type === "success" ? "#6B9B5E" : "#D4A5A5";
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(function(){ toast.remove(); }, 3000);
+      }
+
+      function setSyncStatus(text) {
+        const el = document.getElementById("sync-status");
+        if (el) el.textContent = text;
+      }
+
       function formatDateInput(input) {
         let value = (input.value || "").replace(/\D/g, "");
         if (value.length >= 2) value = value.substring(0,2) + "/" + value.substring(2);
@@ -487,35 +527,36 @@
         return icon && icon.indexOf("http") === 0;
       }
 
+      function safeText(s) {
+        return String(s || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
       function renderIcon(item, size) {
         const sizeClass = size === "large" ? "w-24 h-24" : "w-20 h-20";
         if (isImageUrl(item.icon)) {
-          return '<img src="' + item.icon + '" alt="' + item.name + '" class="' + sizeClass + ' object-contain mx-auto rounded-lg" onerror="this.onerror=null; this.outerHTML=\\'<span class=\\'text-4xl block\\'>🎁</span>\\'">';
+          return (
+            '<img src="' + item.icon + '" alt="' + safeText(item.name) + '" class="' + sizeClass +
+            ' object-contain mx-auto rounded-lg" loading="lazy" ' +
+            'onerror="this.onerror=null; this.outerHTML=\\'<span class=\\'text-4xl block\\'>🎁</span>\\'">'
+          );
         }
-        return '<span class="text-4xl block">' + item.icon + "</span>";
-      }
-
-      function showToast(message, type) {
-        const container = document.getElementById("toast-container");
-        const toast = document.createElement("div");
-        toast.className = "toast px-6 py-3 rounded-full shadow-lg text-white font-medium";
-        toast.style.backgroundColor = type === "success" ? "#6B9B5E" : "#D4A5A5";
-        toast.textContent = message;
-        container.appendChild(toast);
-        setTimeout(function(){ toast.remove(); }, 3000);
-      }
-
-      function setSyncStatus(text) {
-        const el = document.getElementById("sync-status");
-        if (el) el.textContent = text;
+        return '<span class="text-4xl block">' + safeText(item.icon) + "</span>";
       }
 
       // ============================
-      // JSONP (compatível com Android antigo e sem CORS)
+      // JSONP (ROBUSTO)
       // ============================
       function jsonpRequest(params, onOk, onErr) {
         const cbName = "__cb_" + String(Date.now()) + "_" + String(Math.floor(Math.random()*100000));
         const timeoutMs = 15000;
+
+        // cache buster
+        params._ts = Date.now();
 
         const query = [];
         for (var k in params) {
@@ -561,70 +602,68 @@
       }
 
       // ============================
-      // API CALLS
+      // RENDER: LISTA PRESENTES
       // ============================
-      function fetchReservations() {
-        setSyncStatus("🔄 Atualizando reservas...");
-        jsonpRequest(
-          { action: "list" },
-          function(res) {
-            if (res && res.ok) {
-              reservations = res.reservations || [];
-              renderGiftGrid();
-              setSyncStatus("✅ Lista atualizada.");
-            } else {
-              setSyncStatus("⚠️ Erro ao carregar reservas.");
-              showToast((res && res.message) ? res.message : "Erro ao carregar reservas", "error");
-            }
-          },
-          function(err) {
-            setSyncStatus("⚠️ Falha de conexão ao carregar reservas.");
-            showToast("Falha ao carregar reservas. Verifique sua internet e tente novamente.", "error");
-            console.error(err);
-          }
-        );
+      function isReserved(itemId) {
+        for (var i=0; i<reservations.length; i++) {
+          if (String(reservations[i].item_id) === String(itemId)) return true;
+        }
+        return false;
       }
 
-      function reserveItem(item, guestName, birthdate, onDone) {
-        jsonpRequest(
-          {
-            action: "reserve",
-            item_id: item.id,
-            item_name: item.name,
-            reserved_by: guestName,
-            reserved_birthdate: birthdate
-          },
-          function(res) {
-            if (res && res.ok) {
-              onDone(true, res);
-            } else {
-              onDone(false, res);
-            }
-          },
-          function(err) {
-            onDone(false, { ok:false, message:"Falha de conexão ao reservar." });
-            console.error(err);
-          }
-        );
+      function getReservation(itemId) {
+        for (var i=0; i<reservations.length; i++) {
+          if (String(reservations[i].item_id) === String(itemId)) return reservations[i];
+        }
+        return null;
       }
 
-      function cancelItem(itemId, birthdate, onDone) {
-        jsonpRequest(
-          { action: "cancel", item_id: itemId, reserved_birthdate: birthdate },
-          function(res) {
-            if (res && res.ok) onDone(true, res);
-            else onDone(false, res);
-          },
-          function(err) {
-            onDone(false, { ok:false, message:"Falha de conexão ao cancelar." });
-            console.error(err);
-          }
-        );
+      function renderGiftGrid() {
+        const grid = document.getElementById("gift-grid");
+        if (!grid) return;
+
+        const filteredItems =
+          currentCategory === "all"
+            ? giftItems
+            : giftItems.filter(function(it){ return it.category === currentCategory; });
+
+        const availableItems = filteredItems.filter(function(it){ return !isReserved(it.id); });
+        const reservedItems = filteredItems.filter(function(it){ return isReserved(it.id); });
+        const sortedItems = availableItems.concat(reservedItems);
+
+        grid.innerHTML = sortedItems.map(function(item){
+          const reservation = getReservation(item.id);
+          const reserved = !!reservation;
+
+          return (
+            '<div class="card-hover rounded-2xl p-6 border-2 relative overflow-hidden ' + (reserved ? 'opacity-75' : '') + '"' +
+              ' style="background-color:#fff; border-color:#EDE9E3;" data-item-id="' + safeText(item.id) + '">' +
+
+              (reserved
+                ? '<div class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium text-white" style="background-color:' + config.secondary_action_color + '">Reservado</div>'
+                : ''
+              ) +
+
+              '<div class="text-center">' +
+                '<div class="mb-4 flex justify-center items-center" style="min-height:80px;">' + renderIcon(item) + '</div>' +
+                '<h3 class="font-heading text-2xl md:text-2xl mb-2" style="color:' + config.text_color + ';">' + safeText(item.name) + '</h3>' +
+                '<p class="text-base md:text-lg mb-4" style="color:' + config.secondary_action_color + ';">' + safeText(item.description) + '</p>' +
+
+                (reserved
+                  ? (
+                    '<p class="text-base italic mb-3" style="color:' + config.secondary_action_color + ';">Reservado por ' + safeText(reservation.reserved_by || "alguém") + '</p>' +
+                    '<button onclick="openCancelModal(\'' + String(item.id).replace(/'/g,"\\'") + '\')" class="px-5 py-2 rounded-full text-sm font-medium transition-all hover:shadow-md" style="background-color:#FEE2E2; color:#DC2626;">Cancelar Reserva</button>'
+                  )
+                  : (
+                    '<button onclick="openModal(\'' + String(item.id).replace(/'/g,"\\'") + '\')" class="px-8 py-3 rounded-full text-white text-lg font-medium transition-all hover:shadow-md hover:scale-105" style="background-color:' + config.primary_action_color + ';">Quero Presentear</button>'
+                  )
+                ) +
+              '</div>' +
+            '</div>'
+          );
+        }).join("");
       }
 
-      // ============================
-      // UI / RENDER
-      // ============================
       function filterCategory(category) {
         currentCategory = category;
 
@@ -642,63 +681,74 @@
         renderGiftGrid();
       }
 
-      function renderGiftGrid() {
-        const grid = document.getElementById("gift-grid");
-        if (!grid) return;
+      // ============================
+      // LINKS LIST
+      // ============================
+      function renderLinksList() {
+        const container = document.getElementById("links-list");
+        if (!container) return;
 
-        const filteredItems = currentCategory === "all" ? giftItems : giftItems.filter(function(it){ return it.category === currentCategory; });
+        const categories = {
+          utensilios: { name: "🥄 Utensílios de Cozinha", items: [] },
+          potes: { name: "🫙 Potes e Armazenamento", items: [] },
+          cozinha: { name: "🍳 Cozinha Geral", items: [] },
+          formas: { name: "🎂 Formas e Assadeiras", items: [] },
+          banheiro: { name: "🛁 Banheiro", items: [] },
+          organizacao: { name: "👔 Organização", items: [] },
+        };
 
-        function isReserved(itemId) {
-          for (var i=0; i<reservations.length; i++) {
-            if (String(reservations[i].item_id) === String(itemId)) return true;
-          }
-          return false;
+        for (var i=0; i<giftItems.length; i++) {
+          var item = giftItems[i];
+          if (item.link && categories[item.category]) categories[item.category].items.push(item);
         }
 
-        function getReservation(itemId) {
-          for (var i=0; i<reservations.length; i++) {
-            if (String(reservations[i].item_id) === String(itemId)) return reservations[i];
-          }
-          return null;
+        function getStoreName(link) {
+          link = String(link || "");
+          if (link.indexOf("amazon") >= 0 || link.indexOf("a.co") >= 0) return "Ver na Amazon";
+          if (link.indexOf("mercadolivre") >= 0) return "Ver no Mercado Livre";
+          if (link.indexOf("americanas") >= 0) return "Ver nas Americanas";
+          return "Ver loja";
         }
 
-        const availableItems = filteredItems.filter(function(it){ return !isReserved(it.id); });
-        const reservedItems = filteredItems.filter(function(it){ return isReserved(it.id); });
-        const sortedItems = availableItems.concat(reservedItems);
+        var html = "";
+        for (var key in categories) {
+          if (!Object.prototype.hasOwnProperty.call(categories, key)) continue;
+          var cat = categories[key];
+          if (!cat.items.length) continue;
 
-        grid.innerHTML = sortedItems.map(function(item){
-          const reservation = getReservation(item.id);
-          const reserved = !!reservation;
+          html += '<div class="mb-8">';
+          html += '<h3 class="font-heading text-2xl md:text-3xl mb-4" style="color:' + config.text_color + ';">' + cat.name + "</h3>";
+          html += '<div class="grid gap-2">';
 
-          return (
-            '<div class="card-hover rounded-2xl p-6 border-2 relative overflow-hidden ' + (reserved ? 'opacity-75' : '') + '"' +
-              ' style="background-color:' + config.surface_color + '; border-color:#EDE9E3;" data-item-id="' + item.id + '">' +
+          for (var j=0; j<cat.items.length; j++) {
+            var it = cat.items[j];
+            html +=
+              '<a href="' + it.link + '" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl transition-all hover:shadow-md" style="background-color:white; border:1px solid #EDE9E3;">' +
+                '<div class="flex items-center gap-3">' +
+                  '<div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center">' +
+                    (isImageUrl(it.icon)
+                      ? '<img src="' + it.icon + '" alt="' + safeText(it.name) + '" class="w-full h-full object-contain" loading="lazy" onerror="this.outerHTML=\\'🎁\\'">'
+                      : '<span class="text-lg">🎁</span>'
+                    ) +
+                  "</div>" +
+                  '<span class="font-medium" style="color:' + config.text_color + ';">' + safeText(it.name) + "</span>" +
+                "</div>" +
+                '<div class="flex items-center gap-2 text-sm" style="color:' + config.primary_action_color + ';">' +
+                  '<span class="hidden sm:inline">' + getStoreName(it.link) + "</span>" +
+                  '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>' +
+                "</div>" +
+              "</a>";
+          }
 
-              (reserved
-                ? '<div class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium text-white" style="background-color:' + config.secondary_action_color + '">Reservado</div>'
-                : ''
-              ) +
+          html += "</div></div>";
+        }
 
-              '<div class="text-center">' +
-                '<div class="mb-4 flex justify-center items-center" style="min-height:80px;">' + renderIcon(item) + '</div>' +
-                '<h3 class="font-heading text-2xl md:text-2xl mb-2" style="color:' + config.text_color + ';">' + item.name + '</h3>' +
-                '<p class="text-base md:text-lg mb-4" style="color:' + config.secondary_action_color + ';">' + item.description + '</p>' +
-
-                (reserved
-                  ? (
-                    '<p class="text-base italic mb-3" style="color:' + config.secondary_action_color + ';">Reservado por ' + (reservation.reserved_by || "alguém") + '</p>' +
-                    '<button onclick="openCancelModal(\'' + item.id + '\')" class="px-5 py-2 rounded-full text-sm font-medium transition-all hover:shadow-md" style="background-color:#FEE2E2; color:#DC2626;">Cancelar Reserva</button>'
-                  )
-                  : (
-                    '<button onclick="openModal(\'' + item.id + '\')" class="px-8 py-3 rounded-full text-white text-lg font-medium transition-all hover:shadow-md hover:scale-105" style="background-color:' + config.primary_action_color + ';">Quero Presentear</button>'
-                  )
-                ) +
-              '</div>' +
-            '</div>'
-          );
-        }).join("");
+        container.innerHTML = html;
       }
 
+      // ============================
+      // MODAIS
+      // ============================
       function openModal(itemId) {
         const item = giftItems.filter(function(i){ return i.id === itemId; })[0];
         if (!item) return;
@@ -758,15 +808,67 @@
       }
 
       // ============================
-      // RESERVAR / CANCELAR
+      // API CALLS
+      // ============================
+      function fetchReservations() {
+        setSyncStatus("🔄 Carregando reservas...");
+
+        jsonpRequest(
+          { action: "list" },
+          function(res) {
+            if (res && res.ok) {
+              reservations = res.reservations || [];
+              renderGiftGrid();
+              setSyncStatus("✅ Reservas carregadas.");
+            } else {
+              // Fallback: mantém a lista renderizada, mas avisa
+              renderGiftGrid();
+              setSyncStatus("⚠️ Não foi possível carregar reservas agora.");
+              showToast((res && res.message) ? res.message : "Erro ao carregar reservas", "error");
+            }
+          },
+          function(err) {
+            renderGiftGrid(); // garante lista mesmo sem reserva
+            setSyncStatus("⚠️ Falha de conexão ao carregar reservas.");
+            console.error(err);
+          }
+        );
+      }
+
+      function reserveItem(item, guestName, birthdate, onDone) {
+        jsonpRequest(
+          {
+            action: "reserve",
+            item_id: item.id,
+            item_name: item.name,
+            reserved_by: guestName,
+            reserved_birthdate: birthdate
+          },
+          function(res) { onDone(!!(res && res.ok), res); },
+          function(err) {
+            console.error(err);
+            onDone(false, { ok:false, message:"Falha de conexão ao reservar." });
+          }
+        );
+      }
+
+      function cancelItem(itemId, birthdate, onDone) {
+        jsonpRequest(
+          { action: "cancel", item_id: itemId, reserved_birthdate: birthdate },
+          function(res) { onDone(!!(res && res.ok), res); },
+          function(err) {
+            console.error(err);
+            onDone(false, { ok:false, message:"Falha de conexão ao cancelar." });
+          }
+        );
+      }
+
+      // ============================
+      // SUBMITS
       // ============================
       function handleReservation(event) {
-        if (event) { event.preventDefault(); event.stopPropagation(); }
-
-        if (!navigator.onLine) {
-          showToast("Você está sem internet no momento. Conecte e tente novamente.", "error");
-          return false;
-        }
+        event.preventDefault();
+        event.stopPropagation();
 
         const submitBtn = document.getElementById("submit-btn");
         const submitText = document.getElementById("submit-text");
@@ -776,32 +878,17 @@
         const name = (document.getElementById("guest-name").value || "").trim();
         const birthdate = document.getElementById("guest-birthdate").value;
 
-        if (!name || !birthdate) {
-          showToast("Por favor, preencha todos os campos", "error");
-          return false;
-        }
-        if (!isValidDate(birthdate)) {
-          showToast("Data inválida. Use DD/MM/AAAA", "error");
-          return false;
-        }
+        if (!name || !birthdate) { showToast("Por favor, preencha todos os campos", "error"); return false; }
+        if (!isValidDate(birthdate)) { showToast("Data inválida. Use DD/MM/AAAA", "error"); return false; }
 
-        // Se já aparece reservado no state atual, bloqueia
-        for (var i=0; i<reservations.length; i++) {
-          if (String(reservations[i].item_id) === String(itemId)) {
-            showToast("Este item já foi reservado", "error");
-            closeModal();
-            return false;
-          }
+        if (isReserved(itemId)) {
+          showToast("Este item já foi reservado", "error");
+          closeModal();
+          return false;
         }
 
         const item = giftItems.filter(function(i){ return i.id === itemId; })[0];
-        if (!item) {
-          showToast("Item não encontrado", "error");
-          return false;
-        }
-
-        lastReservedItem = item;
-        lastGuestName = name;
+        if (!item) { showToast("Item não encontrado", "error"); return false; }
 
         submitBtn.disabled = true;
         submitText.classList.add("hidden");
@@ -815,10 +902,10 @@
           if (ok) {
             closeModal();
             openConfirmationModal(item, name);
-            fetchReservations(); // puxa o estado atualizado da planilha
+            fetchReservations();
           } else {
             showToast((res && res.message) ? res.message : "Não foi possível reservar agora.", "error");
-            fetchReservations(); // mesmo em erro, atualiza lista (caso alguém tenha reservado antes)
+            fetchReservations();
           }
         });
 
@@ -835,11 +922,7 @@
         if (!birthdate) { showToast("Por favor, informe a data de nascimento", "error"); return false; }
         if (!isValidDate(birthdate)) { showToast("Data inválida. Use DD/MM/AAAA", "error"); return false; }
 
-        // Confere se a reserva existe no state e bate a data
-        let reservation = null;
-        for (var i=0; i<reservations.length; i++) {
-          if (String(reservations[i].item_id) === String(itemId)) { reservation = reservations[i]; break; }
-        }
+        const reservation = getReservation(itemId);
         if (!reservation) { showToast("Reserva não encontrada", "error"); return false; }
         if (String(reservation.reserved_birthdate || "").trim() !== String(birthdate || "").trim()) {
           showToast("Data de nascimento não confere com a reserva", "error");
@@ -873,73 +956,13 @@
       }
 
       // ============================
-      // LINKS LIST (igual ao seu)
-      // ============================
-      function renderLinksList() {
-        const container = document.getElementById("links-list");
-
-        const categories = {
-          utensilios: { name: "🥄 Utensílios de Cozinha", items: [] },
-          potes: { name: "🫙 Potes e Armazenamento", items: [] },
-          cozinha: { name: "🍳 Cozinha Geral", items: [] },
-          formas: { name: "🎂 Formas e Assadeiras", items: [] },
-          banheiro: { name: "🛁 Banheiro", items: [] },
-          organizacao: { name: "👔 Organização", items: [] },
-        };
-
-        for (var i=0; i<giftItems.length; i++) {
-          var item = giftItems[i];
-          if (item.link && categories[item.category]) categories[item.category].items.push(item);
-        }
-
-        function getStoreName(link) {
-          link = String(link || "");
-          if (link.indexOf("amazon") >= 0 || link.indexOf("a.co") >= 0) return "Ver na Amazon";
-          if (link.indexOf("mercadolivre") >= 0) return "Ver no Mercado Livre";
-          if (link.indexOf("americanas") >= 0) return "Ver nas Americanas";
-          return "Ver loja";
-        }
-
-        var html = "";
-        for (var key in categories) {
-          if (!Object.prototype.hasOwnProperty.call(categories, key)) continue;
-          var cat = categories[key];
-          if (!cat.items.length) continue;
-
-          html += '<div class="mb-8">';
-          html += '<h3 class="font-heading text-2xl md:text-3xl mb-4" style="color:' + config.text_color + ';">' + cat.name + "</h3>";
-          html += '<div class="grid gap-2">';
-
-          for (var j=0; j<cat.items.length; j++) {
-            var it = cat.items[j];
-            html +=
-              '<a href="' + it.link + '" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl transition-all hover:shadow-md" style="background-color:white; border:1px solid #EDE9E3;">' +
-                '<div class="flex items-center gap-3">' +
-                  '<div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center">' +
-                    (isImageUrl(it.icon) ? '<img src="' + it.icon + '" alt="' + it.name + '" class="w-full h-full object-contain" onerror="this.outerHTML=\\'🎁\\'">' : '<span class="text-lg">' + it.icon + "</span>") +
-                  "</div>" +
-                  '<span class="font-medium" style="color:' + config.text_color + ';">' + it.name + "</span>" +
-                "</div>" +
-                '<div class="flex items-center gap-2 text-sm" style="color:' + config.primary_action_color + ';">' +
-                  '<span class="hidden sm:inline">' + getStoreName(it.link) + "</span>" +
-                  '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>' +
-                "</div>" +
-              "</a>";
-          }
-
-          html += "</div></div>";
-        }
-
-        container.innerHTML = html;
-      }
-
-      // ============================
-      // COUNTDOWN
+      // COUNTDOWN (BR -03:00)
       // ============================
       function updateCountdown() {
-        const eventDate = new Date("2026-02-08T18:00:00Z");
+        // 08/02/2026 15:00 no Brasil (-03:00)
+        const eventDate = new Date("2026-02-08T15:00:00-03:00");
         const now = new Date();
-        const diff = eventDate - now;
+        const diff = eventDate.getTime() - now.getTime();
 
         if (diff <= 0) {
           document.getElementById("countdown-days").textContent = "0";
@@ -954,36 +977,60 @@
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-        document.getElementById("countdown-days").textContent = days;
+        document.getElementById("countdown-days").textContent = String(days);
         document.getElementById("countdown-hours").textContent = String(hours).padStart(2, "0");
         document.getElementById("countdown-minutes").textContent = String(minutes).padStart(2, "0");
         document.getElementById("countdown-seconds").textContent = String(seconds).padStart(2, "0");
       }
 
       // ============================
-      // INIT
+      // INIT (AGORA DO JEITO CERTO)
       // ============================
       function init() {
-        document.getElementById("hero-title").textContent = config.couple_names;
-        document.getElementById("hero-subtitle").textContent = config.event_subtitle;
-        document.getElementById("footer-message").textContent = config.footer_message;
-        document.getElementById("footer-signature").textContent = config.couple_names;
+        try {
+          document.getElementById("hero-title").textContent = config.couple_names;
+          document.getElementById("hero-subtitle").textContent = config.event_subtitle;
+          document.getElementById("footer-message").textContent = config.footer_message;
+          document.getElementById("footer-signature").textContent = config.couple_names;
 
-        renderLinksList();
-        filterCategory("all");
+          // Renderiza imediatamente (sem depender do Apps Script)
+          renderLinksList();
+          filterCategory("all"); // isso já chama renderGiftGrid()
 
-        // carrega reservas do Sheets
-        fetchReservations();
+          // Agora busca reservas
+          fetchReservations();
 
-        // countdown
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+          // Countdown
+          updateCountdown();
+          setInterval(updateCountdown, 1000);
 
-        // refresh leve a cada 25s (pra sincronizar entre convidados)
-        setInterval(fetchReservations, 25000);
+          // Refresh de reservas (leve)
+          setInterval(fetchReservations, 25000);
+
+          setSyncStatus("✅ Lista pronta! Carregando reservas...");
+        } catch (e) {
+          console.error(e);
+          showDebug(
+            "O JavaScript do site falhou ao iniciar. A lista e a contagem podem não aparecer.",
+            "Abra o site e me mande um print do Console (F12 > Console) ou me diga se aparece a caixinha de erro."
+          );
+        }
       }
 
-      init();
+      // garante que só inicia depois que o HTML existe
+      document.addEventListener("DOMContentLoaded", function() {
+        // captura qualquer erro global e mostra caixa
+        window.addEventListener("error", function(ev){
+          try {
+            showDebug(
+              "O site encontrou um erro e travou antes de renderizar.",
+              (ev && ev.message) ? ("Erro: " + ev.message) : "Erro desconhecido"
+            );
+          } catch(_) {}
+        });
+
+        init();
+      });
     </script>
   </body>
 </html>
