@@ -34,10 +34,12 @@
     @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
     img { max-width: 100%; height: auto; }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
 
     /* Modal */
     .modal-backdrop { background: rgba(0,0,0,0.35); }
+
+    /* small helper */
+    .hint { color:#8b7355; font-size:12px; }
   </style>
 </head>
 
@@ -46,19 +48,6 @@
 
     <!-- Toast -->
     <div id="toast-container" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"></div>
-
-    <!-- Debug -->
-    <div id="debug-box" class="hidden fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-[420px] z-50 p-4 rounded-xl shadow-lg"
-      style="background:#fff; border:1px solid #EDE9E3;">
-      <div class="flex items-start justify-between gap-3">
-        <div>
-          <div class="font-semibold" style="color:#5d4e37">⚠️ Algo deu errado no site</div>
-          <div id="debug-text" class="text-sm mt-1" style="color:#8b7355"></div>
-          <div class="text-xs mt-2 mono" style="color:#9a8f82" id="debug-hint"></div>
-        </div>
-        <button onclick="hideDebug()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">✕</button>
-      </div>
-    </div>
 
     <!-- MODAL RESERVA/CANCELAMENTO -->
     <div id="modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
@@ -86,8 +75,11 @@
           <label class="block text-sm mb-2" style="color:#5d4e37">Seu nome</label>
           <input id="input-name" type="text" class="w-full px-4 py-3 rounded-xl border" style="border-color:#EDE9E3" placeholder="Ex: Maria Silva" />
 
-          <label class="block text-sm mt-4 mb-2" style="color:#5d4e37">Data de nascimento (DD/MM/AAAA)</label>
-          <input id="input-birth" type="text" class="w-full px-4 py-3 rounded-xl border" style="border-color:#EDE9E3" placeholder="Ex: 15/04/1998" />
+          <label class="block text-sm mt-4 mb-2" style="color:#5d4e37">Data de nascimento</label>
+          <input id="input-birth" type="text" inputmode="numeric" autocomplete="bday" maxlength="10"
+                 class="w-full px-4 py-3 rounded-xl border" style="border-color:#EDE9E3"
+                 placeholder="DD/MM/AAAA" />
+          <div class="hint mt-2">Você pode digitar só números. Ex: 15041998 → vira 15/04/1998 automaticamente.</div>
 
           <button id="btn-confirm-reserve" onclick="confirmReserve()" class="mt-5 w-full px-6 py-4 rounded-full text-white font-medium transition-all hover:shadow-lg"
             style="background-color:#6b9b5e">
@@ -108,7 +100,10 @@
           </div>
 
           <label class="block text-sm mb-2" style="color:#5d4e37">Para cancelar, confirme a data de nascimento usada na reserva</label>
-          <input id="input-cancel-birth" type="text" class="w-full px-4 py-3 rounded-xl border" style="border-color:#EDE9E3" placeholder="DD/MM/AAAA" />
+          <input id="input-cancel-birth" type="text" inputmode="numeric" maxlength="10"
+                 class="w-full px-4 py-3 rounded-xl border" style="border-color:#EDE9E3"
+                 placeholder="DD/MM/AAAA" />
+          <div class="hint mt-2">Pode digitar só números também. Ex: 15041998.</div>
 
           <button id="btn-confirm-cancel" onclick="confirmCancel()" class="mt-5 w-full px-6 py-4 rounded-full text-white font-medium transition-all hover:shadow-lg"
             style="background-color:#8b7355">
@@ -144,10 +139,10 @@
           />
         </div>
 
-        <h1 id="hero-title" class="font-heading text-6xl md:text-7xl lg:text-8xl font-medium mb-6 leading-tight" style="color:#5d4e37">
+        <h1 class="font-heading text-6xl md:text-7xl lg:text-8xl font-medium mb-6 leading-tight" style="color:#5d4e37">
           Juliana & Matheus
         </h1>
-        <p id="hero-subtitle" class="text-2xl md:text-3xl lg:text-4xl font-heading italic mb-8" style="color:#8b7355">
+        <p class="text-2xl md:text-3xl lg:text-4xl font-heading italic mb-8" style="color:#8b7355">
           Um novo lar, um novo começo
         </p>
 
@@ -256,71 +251,77 @@
     var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyc9YOXMXk0tUGV6S4D30CSh5x7-qoJzwuExO0BGtvyg3qtk26As9gGqEzY6QBA5dddqA/exec";
 
     var config = {
-      couple_names: "Juliana & Matheus",
-      event_subtitle: "Um novo lar, um novo começo",
       text_color: "#5D4E37",
       primary_action_color: "#6B9B5E",
       secondary_action_color: "#8B7355"
     };
 
     // ============================
-    // DADOS (48 itens do arquivo original)
+    // ITENS (EXATAMENTE como você colou: imagem + link)
     // ============================
     var giftItems = [
-        // Utensílios de Cozinha
-        { id: "utensilios-1", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51wOKTjJouL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Colher de pau (kit)", description: "Kit com colheres de madeira", link: "https://www.amazon.com.br/s?k=kit+colher+de+pau" },
-        { id: "utensilios-2", category: "utensilios", icon: "https://ph-cdn3.ecosweb.com.br/imagens01/foto/utilidades-domesticas/talheres/kit-para-molho-com-concha-e-escumadeira-em-inox_140885_600_1.jpg", name: "Kit Concha e Escumadeira", description: "Dupla essencial para cozinhar", link: "https://www.amazon.com.br/s?k=kit+concha+escumadeira+inox" },
-        { id: "utensilios-3", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51tS8o+qF5L._AC_SX679_.jpg", name: "Espátula de silicone", description: "Para cozinhar sem riscar panelas", link: "https://www.amazon.com.br/s?k=espatula+silicone" },
-        { id: "utensilios-4", category: "utensilios", icon: "https://m.media-amazon.com/images/I/412rlg5x9LL._AC_SL1000_.jpg", name: "Escorredor de Massa", description: "Para escorrer massas com praticidade", link: "https://www.amazon.com.br/s?k=escorredor+de+massa" },
-        { id: "utensilios-5", category: "utensilios", icon: "https://m.media-amazon.com/images/I/71yL0g0I6uL._AC_SX679_.jpg", name: "Tesoura de cozinha", description: "Para uso diário na cozinha", link: "https://www.amazon.com.br/s?k=tesoura+cozinha" },
-        { id: "utensilios-6", category: "utensilios", icon: "https://m.media-amazon.com/images/I/51QxvD6l7wL._AC_SX679_.jpg", name: "Tábua de corte", description: "Para preparar alimentos", link: "https://www.amazon.com.br/s?k=tabua+de+corte" },
-        { id: "utensilios-7", category: "utensilios", icon: "https://m.media-amazon.com/images/I/41nCEBB7qDL._AC_SX679_.jpg", name: "Ralador", description: "Para queijo, legumes e mais", link: "https://www.amazon.com.br/s?k=ralador+inox" },
-        { id: "utensilios-8", category: "utensilios", icon: "https://m.media-amazon.com/images/I/61n8cS5x2kL._AC_SX679_.jpg", name: "Faca de cozinha", description: "Faca multiuso", link: "https://www.amazon.com.br/s?k=faca+cozinha+inox" },
-        { id: "utensilios-9", category: "utensilios", icon: "https://m.media-amazon.com/images/I/61U7o6X2yJL._AC_SX679_.jpg", name: "Pegador", description: "Para saladas e alimentos", link: "https://www.amazon.com.br/s?k=pegador+cozinha" },
+      // Utensílios
+      { id:"utensilios-01", category:"utensilios", icon:"https://m.media-amazon.com/images/I/51wOKTjJouL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Colher de pau (kit)", description:"", link:"https://www.amazon.com.br/s?k=colher+de+pau+kit" },
+      { id:"utensilios-02", category:"utensilios", icon:"https://ph-cdn3.ecosweb.com.br/imagens01/foto/utilidades-domesticas/talheres/kit-para-molho-com-concha-e-escumadeira-em-inox_140885_600_1.jpg", name:"Kit Concha e Escumadeira", description:"", link:"https://www.amazon.com.br/s?k=kit+concha+escumadeira+inox" },
+      { id:"utensilios-03", category:"utensilios", icon:"https://i.pinimg.com/736x/0e/d0/be/0ed0bed0a8d2e82a0cdbe18d1a2e5a43.jpg", name:"Kit Pegador de Macarrão e Colher de Servir", description:"", link:"https://www.amazon.com.br/s?k=pegador+macarrao+colher+servir" },
+      { id:"utensilios-04", category:"utensilios", icon:"https://m.media-amazon.com/images/I/412rlg5x9LL._AC_SL1000_.jpg", name:"Escorredor de Massa", description:"", link:"https://www.amazon.com.br/s?k=escorredor+de+massa" },
+      { id:"utensilios-05", category:"utensilios", icon:"https://m.media-amazon.com/images/I/611BlzyhyAL._AC_SX679_.jpg", name:"Ralador multifuncional", description:"", link:"https://www.amazon.com.br/s?k=ralador+multifuncional" },
+      { id:"utensilios-06", category:"utensilios", icon:"https://m.media-amazon.com/images/I/71+mE5Aqy9L._AC_SX679_.jpg", name:"Tábua de corte", description:"", link:"https://www.amazon.com.br/s?k=tabua+de+corte" },
+      { id:"utensilios-07", category:"utensilios", icon:"https://m.media-amazon.com/images/I/511XcDy06PL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Luva térmica", description:"", link:"https://www.amazon.com.br/s?k=luva+termica+cozinha" },
+      { id:"utensilios-08", category:"utensilios", icon:"https://m.media-amazon.com/images/I/71SY5kje0zL._AC_SX679_.jpg", name:"Descanso de panela", description:"", link:"https://www.amazon.com.br/s?k=descanso+de+panela" },
+      { id:"utensilios-09", category:"utensilios", icon:"https://m.media-amazon.com/images/I/51Byq+vTy1L._AC_SX679_.jpg", name:"Tesoura para cozinha", description:"", link:"https://www.amazon.com.br/s?k=tesoura+cozinha" },
+      { id:"utensilios-10", category:"utensilios", icon:"https://m.media-amazon.com/images/I/6155SEJ3rAL._AC_SX679_.jpg", name:"Faca para pão", description:"", link:"https://www.amazon.com.br/s?k=faca+para+pao" },
+      { id:"utensilios-11", category:"utensilios", icon:"https://m.media-amazon.com/images/I/31fl2APEMIL._AC_SX679_.jpg", name:"Faca para carne", description:"", link:"https://www.amazon.com.br/s?k=faca+para+carne" },
+      { id:"utensilios-12", category:"utensilios", icon:"https://m.media-amazon.com/images/I/31YNXnO2m2L._AC_.jpg", name:"Espátula para bolo", description:"", link:"https://www.amazon.com.br/s?k=espatula+para+bolo" },
+      { id:"utensilios-13", category:"utensilios", icon:"https://m.media-amazon.com/images/I/51sHeZrOspL._SX522_.jpg", name:"Pegador de sorvete em inox", description:"", link:"https://www.amazon.com.br/s?k=pegador+de+sorvete+inox" },
+      { id:"utensilios-14", category:"utensilios", icon:"https://m.media-amazon.com/images/I/51ER0CKJZML._AC_SX679_.jpg", name:"Jogo de espátulas para patê", description:"", link:"https://www.amazon.com.br/s?k=espatula+para+pate" },
+      { id:"utensilios-15", category:"utensilios", icon:"https://m.media-amazon.com/images/I/51+kZPH9VsL._AC_SX679_.jpg", name:"Kit utensílios de cozinha em silicone", description:"", link:"https://www.amazon.com.br/s?k=kit+utensilios+silicone" },
+      { id:"utensilios-16", category:"utensilios", icon:"https://m.media-amazon.com/images/I/41NGbbQo5CL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Colher medidora (kit simples)", description:"", link:"https://www.amazon.com.br/s?k=colher+medidora+kit" },
 
-        // Potes
-        { id: "potes-1", category: "potes", icon: "https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name: "Kit 2 Potes de Vidro Herméticos", description: "Para armazenar alimentos", link: "https://a.co/d/gH9mf9o" },
-        { id: "potes-2", category: "potes", icon: "https://m.media-amazon.com/images/I/61EoB8+uWBL._AC_SX679_.jpg", name: "Potes plásticos (kit)", description: "Kit com potes para mantimentos", link: "https://www.amazon.com.br/s?k=kit+potes+pl%C3%A1sticos+mantimentos" },
-        { id: "potes-3", category: "potes", icon: "https://m.media-amazon.com/images/I/51H0o6qZ4EL._AC_SX679_.jpg", name: "Pote para arroz", description: "Organização de mantimentos", link: "https://www.amazon.com.br/s?k=pote+para+arroz" },
-        { id: "potes-4", category: "potes", icon: "https://m.media-amazon.com/images/I/61j8oC2vS3L._AC_SX679_.jpg", name: "Pote para feijão", description: "Organização de mantimentos", link: "https://www.amazon.com.br/s?k=pote+para+feij%C3%A3o" },
-        { id: "potes-5", category: "potes", icon: "https://m.media-amazon.com/images/I/61wB0x9vMML._AC_SX679_.jpg", name: "Pote para açúcar", description: "Organização de mantimentos", link: "https://www.amazon.com.br/s?k=pote+para+a%C3%A7%C3%BAcar" },
-        { id: "potes-6", category: "potes", icon: "https://m.media-amazon.com/images/I/61yXzqQGg5L._AC_SX679_.jpg", name: "Pote para café", description: "Organização de mantimentos", link: "https://www.amazon.com.br/s?k=pote+para+caf%C3%A9" },
-        { id: "potes-7", category: "potes", icon: "https://m.media-amazon.com/images/I/61E+ZQd8s4L._AC_SX679_.jpg", name: "Pote para farinha", description: "Organização de mantimentos", link: "https://www.amazon.com.br/s?k=pote+para+farinha" },
-        { id: "potes-8", category: "potes", icon: "https://m.media-amazon.com/images/I/61CwDk2f9zL._AC_SX679_.jpg", name: "Potes temperos (kit)", description: "Para organizar temperos", link: "https://www.amazon.com.br/s?k=kit+potes+tempero" },
+      // Potes
+      { id:"potes-01", category:"potes", icon:"https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name:"Kit 2 Potes de Vidro Herméticos (opção 1)", description:"", link:"https://a.co/d/gH9mf9o" },
+      { id:"potes-02", category:"potes", icon:"https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name:"Kit 2 Potes de Vidro Herméticos (opção 2)", description:"", link:"https://a.co/d/gH9mf9o" },
+      { id:"potes-03", category:"potes", icon:"https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name:"Kit 2 Potes de Vidro Herméticos (opção 3)", description:"", link:"https://a.co/d/gH9mf9o" },
 
-        // Cozinha
-        { id: "cozinha-1", category: "cozinha", icon: "https://m.media-amazon.com/images/I/71y8r5qLk8L._AC_SX679_.jpg", name: "Panela", description: "Item essencial para o dia a dia", link: "https://www.amazon.com.br/s?k=panela" },
-        { id: "cozinha-2", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61mE0zGZgLL._AC_SX679_.jpg", name: "Frigideira", description: "Para grelhar e fritar", link: "https://www.amazon.com.br/s?k=frigideira" },
-        { id: "cozinha-3", category: "cozinha", icon: "https://m.media-amazon.com/images/I/31TpUxJ4mHL._AC_SX679_.jpg", name: "Coador de café Melitta 103", description: "Café fresquinho todo dia", link: "https://www.amazon.com.br/s?k=coador+cafe+melitta+103" },
-        { id: "cozinha-4", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61xYqYx2w0L._AC_SX679_.jpg", name: "Jarra", description: "Para sucos e água", link: "https://www.amazon.com.br/s?k=jarra+vidro" },
-        { id: "cozinha-5", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61Hq1Jx5BKL._AC_SX679_.jpg", name: "Escorredor de louça", description: "Para secar pratos e talheres", link: "https://www.amazon.com.br/s?k=escorredor+de+lou%C3%A7a" },
-        { id: "cozinha-6", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61sD8KZpC7L._AC_SX679_.jpg", name: "Jogo de copos", description: "Para servir bebidas", link: "https://www.amazon.com.br/s?k=jogo+de+copos" },
-        { id: "cozinha-7", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61XQ1l2h7vL._AC_SX679_.jpg", name: "Jogo de pratos", description: "Para refeições", link: "https://www.amazon.com.br/s?k=jogo+de+pratos" },
-        { id: "cozinha-8", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61R0g7xqfYL._AC_SX679_.jpg", name: "Talheres (kit)", description: "Kit com talheres", link: "https://www.amazon.com.br/s?k=kit+talheres" },
-        { id: "cozinha-9", category: "cozinha", icon: "https://m.media-amazon.com/images/I/61c5wGZ8uCL._AC_SX679_.jpg", name: "Pano de prato (kit)", description: "Para o dia a dia", link: "https://www.amazon.com.br/s?k=kit+pano+de+prato" },
+      { id:"potes-04", category:"potes", icon:"https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name:"Pote Hermético 1,5L (opção 1)", description:"", link:"https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
+      { id:"potes-05", category:"potes", icon:"https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name:"Pote Hermético 1,5L (opção 2)", description:"", link:"https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
+      { id:"potes-06", category:"potes", icon:"https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name:"Pote Hermético 1,5L (opção 3)", description:"", link:"https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
+      { id:"potes-07", category:"potes", icon:"https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name:"Pote Hermético 1,5L (opção 4)", description:"", link:"https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
 
-        // Formas
-        { id: "formas-1", category: "formas", icon: "https://m.media-amazon.com/images/I/61u8p5aJdEL._AC_SX679_.jpg", name: "Forma de bolo", description: "Para bolos e receitas", link: "https://www.amazon.com.br/s?k=forma+de+bolo" },
-        { id: "formas-2", category: "formas", icon: "https://m.media-amazon.com/images/I/61y6oQ7dWqL._AC_SX679_.jpg", name: "Forma de pizza", description: "Para pizzas", link: "https://www.amazon.com.br/s?k=forma+pizza" },
-        { id: "formas-3", category: "formas", icon: "https://m.media-amazon.com/images/I/61v6bq9xJxL._AC_SX679_.jpg", name: "Assadeira", description: "Para assar alimentos", link: "https://www.amazon.com.br/s?k=assadeira" },
-        { id: "formas-4", category: "formas", icon: "https://m.media-amazon.com/images/I/51h2IHO3cJS._AC_SX679_.jpg", name: "Forma de lasanha de vidro", description: "Vai do forno à mesa", link: "https://www.amazon.com.br/s?k=forma+lasanha+vidro" },
-        { id: "formas-5", category: "formas", icon: "https://m.media-amazon.com/images/I/61yVqHqP3EL._AC_SX679_.jpg", name: "Forma de pudim", description: "Para sobremesas", link: "https://www.amazon.com.br/s?k=forma+pudim" },
-        { id: "formas-6", category: "formas", icon: "https://m.media-amazon.com/images/I/61VxgWq7w5L._AC_SX679_.jpg", name: "Forma de cupcake", description: "Para muffins/cupcakes", link: "https://www.amazon.com.br/s?k=forma+cupcake" },
+      { id:"potes-08", category:"potes", icon:"https://americanas.vtexassets.com/arquivos/ids/450651-1280-auto/2521891574_1SZ.webp", name:"Conjunto 4 Potes Herméticos 250ml", description:"", link:"https://www.americanas.com.br/conjunto-de-4-potes-hermeticos-retangular-250ml-leve-4-pague-3-dup-2521891566/p" },
+      { id:"potes-09", category:"potes", icon:"https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ8BmqBG-obN7wY4VqwUNHEK48EzoXP9TnJyTVtL-7ShJ0FmfSkIQRLCTmvarQnqcjowwFYL-oz-YHhGqeS7a84VJr9id20vHW4X_n_dxfZ210_TZkD0Ura", name:"Conjunto 4 Potes Herméticos 500ml", description:"", link:"https://www.americanas.com.br/conjunto-4-potes-hermeticos-essencial-cristal-l4p3-500ml-dup/p" },
+      { id:"potes-10", category:"potes", icon:"https://m.media-amazon.com/images/I/61ecJ487YgL._AC_SX679_.jpg", name:"Kit Potes Herméticos Redondos", description:"", link:"https://a.co/d/32dXOwk" },
 
-        // Banheiro
-        { id: "banheiro-1", category: "banheiro", icon: "https://m.media-amazon.com/images/I/51zNDiujMCL._AC_SY300_SX300_QL70_ML2_.jpg", name: "Saboneteira", description: "Para organizar o sabonete", link: "https://www.amazon.com.br/s?k=saboneteira" },
-        { id: "banheiro-2", category: "banheiro", icon: "https://m.media-amazon.com/images/I/61Qd9l2m+5L._AC_SX679_.jpg", name: "Porta escovas", description: "Organização do banheiro", link: "https://www.amazon.com.br/s?k=porta+escovas+dente" },
-        { id: "banheiro-3", category: "banheiro", icon: "https://m.media-amazon.com/images/I/61sYl6oE3xL._AC_SX679_.jpg", name: "Lixeira", description: "Lixeira para banheiro", link: "https://www.amazon.com.br/s?k=lixeira+banheiro" },
-        { id: "banheiro-4", category: "banheiro", icon: "https://m.media-amazon.com/images/I/61x8Q3zQqzL._AC_SX679_.jpg", name: "Tapete de banheiro", description: "Conjunto de tapetes", link: "https://www.amazon.com.br/s?k=tapete+banheiro+jogo" },
-        { id: "banheiro-5", category: "banheiro", icon: "https://m.media-amazon.com/images/I/61y7g8fK4YL._AC_SX679_.jpg", name: "Toalhas (kit)", description: "Kit de toalhas", link: "https://www.amazon.com.br/s?k=kit+toalhas" },
+      // Cozinha
+      { id:"cozinha-01", category:"cozinha", icon:"https://m.media-amazon.com/images/I/71jNQBr4mbL._AC_SX679_.jpg", name:"Jarra de vidro", description:"", link:"https://www.amazon.com.br/s?k=jarra+de+vidro" },
+      { id:"cozinha-02", category:"cozinha", icon:"https://m.media-amazon.com/images/I/51d+B8zoAvL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Leiteira", description:"", link:"https://www.amazon.com.br/s?k=leiteira+inox" },
+      { id:"cozinha-03", category:"cozinha", icon:"https://m.media-amazon.com/images/I/31TpUxJ4mHL._AC_SX679_.jpg", name:"Coador de café Melitta 103", description:"", link:"https://www.amazon.com.br/s?k=coador+cafe+melitta+103" },
+      { id:"cozinha-04", category:"cozinha", icon:"https://m.media-amazon.com/images/I/61+LfzcEVGL._AC_SX679_.jpg", name:"Kit peneiras em inox", description:"", link:"https://www.amazon.com.br/s?k=kit+peneiras+inox" },
+      { id:"cozinha-05", category:"cozinha", icon:"https://m.media-amazon.com/images/I/41lQvVjbepL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Saladeira", description:"", link:"https://www.amazon.com.br/s?k=saladeira" },
+      { id:"cozinha-06", category:"cozinha", icon:"https://m.media-amazon.com/images/I/41BvG7PiFGL._AC_SX679_.jpg", name:"Bowl de vidro grande", description:"", link:"https://www.amazon.com.br/s?k=bowl+vidro+grande" },
+      { id:"cozinha-07", category:"cozinha", icon:"https://m.media-amazon.com/images/I/51lCJHAgXSL._AC_SX679_.jpg", name:"Porta-guardanapo em inox", description:"", link:"https://www.amazon.com.br/s?k=porta+guardanapo+inox" },
+      { id:"cozinha-08", category:"cozinha", icon:"https://m.media-amazon.com/images/I/61xTgzfTp1L._AC_SX679_.jpg", name:"Saleiro e pimenteiro", description:"", link:"https://www.amazon.com.br/s?k=saleiro+pimenteiro" },
+      { id:"cozinha-09", category:"cozinha", icon:"https://m.media-amazon.com/images/I/61vFMvBrCcL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Petisqueira 1", description:"", link:"https://www.amazon.com.br/s?k=petisqueira" },
+      { id:"cozinha-10", category:"cozinha", icon:"https://m.media-amazon.com/images/I/41sABmlWy5L._AC_SX679_.jpg", name:"Petisqueira 2", description:"", link:"https://www.amazon.com.br/s?k=petisqueira" },
+      { id:"cozinha-11", category:"cozinha", icon:"https://m.media-amazon.com/images/I/41fnZrY2myL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Jogo de xícaras de café (6 unidades)", description:"", link:"https://www.amazon.com.br/s?k=jogo+xicaras+cafe" },
 
-        // Organização
-        { id: "organizacao-1", category: "organizacao", icon: "https://m.media-amazon.com/images/I/71QBq-o+bZL._AC_SX300_SY300_QL70_ML2_.jpg", name: "Cabides (kit)", description: "Para organizar o guarda-roupa", link: "https://www.amazon.com.br/s?k=cabides+kit" },
-        { id: "organizacao-2", category: "organizacao", icon: "https://m.media-amazon.com/images/I/61C7yVQmB0L._AC_SX679_.jpg", name: "Organizador de gaveta", description: "Para dividir e organizar", link: "https://www.amazon.com.br/s?k=organizador+gaveta" },
-        { id: "organizacao-3", category: "organizacao", icon: "https://m.media-amazon.com/images/I/61f2pQpYHqL._AC_SX679_.jpg", name: "Cestos organizadores", description: "Para prateleiras e armários", link: "https://www.amazon.com.br/s?k=cesto+organizador" },
-        { id: "organizacao-4", category: "organizacao", icon: "https://m.media-amazon.com/images/I/61gZkzG3v2L._AC_SX679_.jpg", name: "Potes para lavanderia", description: "Para sabão/amaciantes", link: "https://www.amazon.com.br/s?k=potes+lavanderia" },
-        { id: "organizacao-5", category: "organizacao", icon: "https://m.media-amazon.com/images/I/61mY6p6w0yL._AC_SX679_.jpg", name: "Porta mantas/caixa", description: "Para organizar itens", link: "https://www.amazon.com.br/s?k=caixa+organizadora" }
-      ];
+      // Formas
+      { id:"formas-01", category:"formas", icon:"https://m.media-amazon.com/images/I/31DgHfr0lkL._AC_.jpg", name:"Forma de bolo redonda", description:"", link:"https://www.amazon.com.br/s?k=forma+bolo+redonda" },
+      { id:"formas-02", category:"formas", icon:"https://m.media-amazon.com/images/I/614ntxPcIsL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Forma de bolo com furo", description:"", link:"https://www.amazon.com.br/s?k=forma+bolo+furo" },
+      { id:"formas-03", category:"formas", icon:"https://m.media-amazon.com/images/I/51cQ4Rp1B8L._AC_SX679_.jpg", name:"Forma retangular média (bolo/brownie)", description:"", link:"https://www.amazon.com.br/s?k=forma+retangular+bolo" },
+      { id:"formas-04", category:"formas", icon:"https://m.media-amazon.com/images/I/51h2IHO3cJS._AC_SX679_.jpg", name:"Forma de lasanha de vidro", description:"", link:"https://www.amazon.com.br/s?k=forma+lasanha+vidro" },
+      { id:"formas-05", category:"formas", icon:"https://m.media-amazon.com/images/I/71K7vZLMzUL._AC_SX679_.jpg", name:"Forma de pizza", description:"", link:"https://www.amazon.com.br/s?k=forma+pizza" },
+
+      // Banheiro
+      { id:"banheiro-01", category:"banheiro", icon:"https://m.media-amazon.com/images/I/51zNDiujMCL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Saboneteira", description:"", link:"https://www.amazon.com.br/s?k=saboneteira" },
+      { id:"banheiro-02", category:"banheiro", icon:"https://m.media-amazon.com/images/I/61Y22+k1kAL._AC_SX679_.jpg", name:"Porta sabonete líquido", description:"", link:"https://www.amazon.com.br/s?k=porta+sabonete+liquido" },
+      { id:"banheiro-03", category:"banheiro", icon:"https://m.media-amazon.com/images/I/51sutAJ9eSL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Escova para vaso sanitário", description:"", link:"https://www.amazon.com.br/s?k=escova+vaso+sanitario" },
+      { id:"banheiro-04", category:"banheiro", icon:"https://m.media-amazon.com/images/I/71ByWjXmOPL._AC_SX679_.jpg", name:"Toalha de rosto 1", description:"", link:"https://www.amazon.com.br/s?k=toalha+de+rosto" },
+      { id:"banheiro-05", category:"banheiro", icon:"https://m.media-amazon.com/images/I/51Qjx9m0JEL._AC_SX679_.jpg", name:"Toalha de rosto 2", description:"", link:"https://www.amazon.com.br/s?k=toalha+de+rosto" },
+
+      // Organização
+      { id:"organizacao-01", category:"organizacao", icon:"https://m.media-amazon.com/images/I/71QBq-o+bZL._AC_SX300_SY300_QL70_ML2_.jpg", name:"Cabides (kit)", description:"", link:"https://www.amazon.com.br/s?k=cabides+kit" }
+    ];
 
     // ============================
     // STATE
@@ -330,21 +331,9 @@
     var selectedItem = null;
 
     // ============================
-    // HELPERS ES5
+    // HELPERS
     // ============================
     function $(id){ return document.getElementById(id); }
-
-    function hideDebug(){
-      try { $("debug-box").className = "hidden " + $("debug-box").className; } catch(e){}
-    }
-
-    function showDebug(message, hint) {
-      try {
-        $("debug-text").innerHTML = message || "Erro desconhecido";
-        $("debug-hint").innerHTML = hint || "";
-        $("debug-box").className = $("debug-box").className.replace(" hidden","");
-      } catch(e){}
-    }
 
     function showToast(message, type) {
       var container = $("toast-container");
@@ -379,8 +368,44 @@
 
     function isImageUrl(u){ return u && String(u).indexOf("http") === 0; }
 
-    function isValidDateBR(s){
-      return /^\d{2}\/\d{2}\/\d{4}$/.test(String(s||"").replace(/\s+/g,""));
+    function digitsOnly(s){
+      return String(s || "").replace(/[^\d]/g, "");
+    }
+
+    // Formata enquanto digita: 1504 -> 15/04, 15041998 -> 15/04/1998
+    function formatDateBRPartial(raw){
+      var d = digitsOnly(raw);
+      if (d.length > 8) d = d.substring(0,8);
+
+      var out = "";
+      if (d.length <= 2) {
+        out = d;
+      } else if (d.length <= 4) {
+        out = d.substring(0,2) + "/" + d.substring(2);
+      } else {
+        out = d.substring(0,2) + "/" + d.substring(2,4) + "/" + d.substring(4);
+      }
+      return out;
+    }
+
+    function isValidDateBRStrict(s){
+      // dd/mm/aaaa e valida ranges básicos
+      s = String(s || "");
+      if (!/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return false;
+      var dd = parseInt(s.substring(0,2),10);
+      var mm = parseInt(s.substring(3,5),10);
+      var yy = parseInt(s.substring(6,10),10);
+      if (mm < 1 || mm > 12) return false;
+      if (dd < 1 || dd > 31) return false;
+      if (yy < 1900 || yy > 2100) return false;
+      return true;
+    }
+
+    // Normaliza qualquer entrada (com ou sem barras) -> dd/mm/aaaa
+    function normalizeBirthdate(input){
+      var d = digitsOnly(input);
+      if (d.length !== 8) return null;
+      return d.substring(0,2) + "/" + d.substring(2,4) + "/" + d.substring(4,8);
     }
 
     function renderIconHtml(item) {
@@ -391,7 +416,7 @@
     }
 
     // ============================
-    // JSONP
+    // JSONP (para Android antigo)
     // ============================
     function jsonpRequest(params, onOk, onErr) {
       var cbName = "__cb_" + (new Date().getTime()) + "_" + Math.floor(Math.random()*100000);
@@ -478,7 +503,6 @@
       $("modal-item-desc").innerHTML = safeText(item.description || "");
       $("modal-icon").innerHTML = renderIconHtml(item);
 
-      // buy link
       var a = $("modal-buy-link");
       if (item.link) {
         a.href = item.link;
@@ -488,7 +512,6 @@
         a.style.display = "none";
       }
 
-      // decide reserve vs cancel
       var res = getReservation(item.id);
       if (!res) {
         $("modal-title").innerHTML = "Reservar item";
@@ -507,6 +530,7 @@
       }
 
       $("modal").className = $("modal").className.replace("hidden","").trim();
+      hookDateMaskInputs(); // garante máscara sempre ativa
     }
 
     function closeModal(){
@@ -517,16 +541,53 @@
     }
 
     // ============================
+    // MÁSCARA DE DATA (AUTO BARRAS)
+    // ============================
+    var dateMaskHooked = false;
+
+    function hookDateMaskInputs(){
+      // evita duplicar listeners
+      if (dateMaskHooked) return;
+      dateMaskHooked = true;
+
+      function bind(el){
+        if (!el) return;
+        el.addEventListener("input", function(){
+          var formatted = formatDateBRPartial(el.value);
+          if (el.value !== formatted) el.value = formatted;
+        });
+
+        el.addEventListener("blur", function(){
+          // no blur, se tiver 8 dígitos, normaliza full
+          var norm = normalizeBirthdate(el.value);
+          if (norm) el.value = norm;
+        });
+      }
+
+      try {
+        bind($("input-birth"));
+        bind($("input-cancel-birth"));
+      } catch(e){}
+    }
+
+    // ============================
     // ACTIONS RESERVAR / CANCELAR
     // ============================
     function confirmReserve(){
       if (!selectedItem) return;
 
       var name = String($("input-name").value || "").replace(/^\s+|\s+$/g,"");
-      var birth = String($("input-birth").value || "").replace(/\s+/g,"");
+      var birthRaw = String($("input-birth").value || "");
 
       if (!name) { showToast("Digite seu nome.", "error"); return; }
-      if (!isValidDateBR(birth)) { showToast("Data inválida. Use DD/MM/AAAA.", "error"); return; }
+
+      var birth = normalizeBirthdate(birthRaw);
+      if (!birth || !isValidDateBRStrict(birth)) {
+        showToast("Data inválida. Use DD/MM/AAAA (pode digitar só números).", "error");
+        return;
+      }
+
+      $("input-birth").value = birth;
 
       $("btn-confirm-reserve").innerHTML = "Reservando...";
       $("btn-confirm-reserve").disabled = true;
@@ -562,8 +623,15 @@
     function confirmCancel(){
       if (!selectedItem) return;
 
-      var birth = String($("input-cancel-birth").value || "").replace(/\s+/g,"");
-      if (!isValidDateBR(birth)) { showToast("Data inválida. Use DD/MM/AAAA.", "error"); return; }
+      var birthRaw = String($("input-cancel-birth").value || "");
+      var birth = normalizeBirthdate(birthRaw);
+
+      if (!birth || !isValidDateBRStrict(birth)) {
+        showToast("Data inválida. Use DD/MM/AAAA (pode digitar só números).", "error");
+        return;
+      }
+
+      $("input-cancel-birth").value = birth;
 
       $("btn-confirm-cancel").innerHTML = "Cancelando...";
       $("btn-confirm-cancel").disabled = true;
@@ -604,12 +672,10 @@
       var items = [];
       for (var i=0; i<giftItems.length; i++) {
         var it = giftItems[i];
-        if (currentCategory === "all" || it.category === currentCategory) {
-          items.push(it);
-        }
+        if (currentCategory === "all" || it.category === currentCategory) items.push(it);
       }
 
-      // ordena: disponíveis primeiro
+      // disponíveis primeiro
       var available = [];
       var reserved = [];
       for (var j=0; j<items.length; j++) {
@@ -635,7 +701,6 @@
         html += '<div class="text-center">';
         html += '<div class="mb-4 flex justify-center items-center" style="min-height:80px;">'+ renderIconHtml(item) +'</div>';
         html += '<h3 class="font-heading text-2xl mb-2" style="color:'+ config.text_color +'">'+ safeText(item.name) +'</h3>';
-        html += '<p class="text-base mb-4" style="color:'+ config.secondary_action_color +'">'+ safeText(item.description) +'</p>';
 
         if (r) {
           html += '<div class="text-sm italic mb-4" style="color:#8b7355">Reservado por '+ safeText(res.reserved_by || "alguém") +'</div>';
@@ -677,20 +742,6 @@
       var container = $("links-list");
       if (!container) return;
 
-      var cats = {
-        utensilios: { title: "🥄 Utensílios de Cozinha", items: [] },
-        potes: { title: "🫙 Potes e Armazenamento", items: [] },
-        cozinha: { title: "🍳 Cozinha Geral", items: [] },
-        formas: { title: "🎂 Formas e Assadeiras", items: [] },
-        banheiro: { title: "🛁 Banheiro", items: [] },
-        organizacao: { title: "🧺 Organização", items: [] }
-      };
-
-      for (var i=0; i<giftItems.length; i++) {
-        var it = giftItems[i];
-        if (it.link && cats[it.category]) cats[it.category].items.push(it);
-      }
-
       function storeName(link) {
         link = String(link || "");
         if (link.indexOf("amazon") >= 0 || link.indexOf("a.co") >= 0) return "Ver na Amazon";
@@ -699,29 +750,21 @@
         return "Ver loja";
       }
 
+      // lista simples (sem separar por categoria — fica leve e completa)
       var html = "";
-      for (var key in cats) {
-        if (!cats.hasOwnProperty(key)) continue;
-        var cat = cats[key];
-        if (!cat.items.length) continue;
+      for (var i=0; i<giftItems.length; i++) {
+        var it = giftItems[i];
+        if (!it.link) continue;
 
-        html += '<div class="mb-8">';
-        html += '<h3 class="font-heading text-2xl md:text-3xl mb-4" style="color:'+ config.text_color +'">'+ cat.title +'</h3>';
-
-        for (var j=0; j<cat.items.length; j++) {
-          var item = cat.items[j];
-          html += '<a href="'+ item.link +'" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl transition-all hover:shadow-md" style="background-color:white; border:1px solid #EDE9E3;">';
-          html += '<div class="flex items-center gap-3">';
-          html += '<div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center">';
-          html += (isImageUrl(item.icon) ? '<img src="'+ item.icon +'" class="w-full h-full object-contain" loading="lazy" onerror="this.outerHTML=\'🎁\'">' : '🎁');
-          html += '</div>';
-          html += '<span class="font-medium" style="color:'+ config.text_color +'">'+ safeText(item.name) +'</span>';
-          html += '</div>';
-          html += '<div class="text-sm" style="color:'+ config.primary_action_color +'">'+ storeName(item.link) +'</div>';
-          html += '</a>';
-        }
-
+        html += '<a href="'+ it.link +'" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl transition-all hover:shadow-md" style="background-color:white; border:1px solid #EDE9E3;">';
+        html += '<div class="flex items-center gap-3">';
+        html += '<div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center">';
+        html += (isImageUrl(it.icon) ? '<img src="'+ it.icon +'" class="w-full h-full object-contain" loading="lazy" onerror="this.outerHTML=\'🎁\'">' : '🎁');
         html += '</div>';
+        html += '<span class="font-medium" style="color:'+ config.text_color +'">'+ safeText(it.name) +'</span>';
+        html += '</div>';
+        html += '<div class="text-sm" style="color:'+ config.primary_action_color +'">'+ storeName(it.link) +'</div>';
+        html += '</a>';
       }
 
       container.innerHTML = html;
@@ -778,26 +821,19 @@
     // INIT
     // ============================
     function init() {
-      try {
-        $("hero-title").innerHTML = config.couple_names;
-        $("hero-subtitle").innerHTML = config.event_subtitle;
+      renderLinksList();
+      filterCategory("all");
 
-        renderLinksList();
-        filterCategory("all");
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
 
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+      // hooks da máscara
+      hookDateMaskInputs();
 
-        fetchReservations(false);
-        setInterval(function(){ fetchReservations(true); }, 25000);
+      fetchReservations(false);
+      setInterval(function(){ fetchReservations(true); }, 25000);
 
-        setSyncStatus("✅ Lista pronta! (reservas atualizando)");
-      } catch(e) {
-        showDebug(
-          "O JavaScript do site falhou ao iniciar. A lista e a contagem podem não aparecer.",
-          "Se precisar, me mande um print do Console (F12 > Console)."
-        );
-      }
+      setSyncStatus("✅ Lista pronta! (reservas atualizando)");
     }
 
     (function(){
