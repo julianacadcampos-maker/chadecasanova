@@ -1,850 +1,1069 @@
 <!doctype html>
-<html lang="pt-BR" class="h-full">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chá de Casa Nova – Juliana & Matheus</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Juliana & Matheus — Chá de Casa Nova</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Questrial&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    body { box-sizing: border-box; }
-    .font-heading { font-family: "Cormorant Garamond", Georgia, serif; }
-    .font-body { font-family: "Questrial", sans-serif; }
+    :root{
+      --bg:#f4efe8;
+      --card:#ffffffcc;
+      --cardSolid:#fff;
+      --text:#2b2b2b;
+      --muted:#6b6b6b;
+      --green:#5f7f5a;
+      --green2:#476b43;
+      --chip:#e9e4dc;
+      --border:#e5dfd6;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: radial-gradient(circle at 20% 0%, #fff 0%, var(--bg) 45%, #efe8de 100%);
+      color:var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1120px;margin:0 auto;padding:26px 18px 70px}
 
-    .hero-pattern {
-      background-image:
-        radial-gradient(ellipse at 20% 80%, rgba(195, 177, 160, 0.3) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(168, 195, 160, 0.2) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(210, 180, 140, 0.15) 0%, transparent 70%);
+    /* HERO */
+    .hero{ text-align:center; padding:8px 0 6px; }
+    .hero h1{
+      font-family:"Playfair Display", serif;
+      font-weight:600;
+      letter-spacing:.5px;
+      margin:12px 0 8px;
+      font-size:56px;
+      line-height:1.05;
+      color:#5b4a39;
+    }
+    .hero p{
+      margin:0 0 18px;
+      font-family:"Playfair Display", serif;
+      font-size:26px;
+      color:#7a6a59;
+      opacity:.92;
+      font-style:italic;
     }
 
-    .card-hover { transition: all 0.25s ease; }
-    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+    .cover{
+      margin:18px auto 18px;
+      max-width:940px;
+      border-radius:28px;
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      border:1px solid rgba(229,223,214,.8);
+      background:#fff;
+    }
+    .cover img{
+      display:block;
+      width:100%;
+      height:auto;
+      /* ✅ capa maior */
+      max-height:520px;
+      object-fit:cover;
+    }
 
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-    .animate-fade-in { animation: fadeInUp 0.5s ease forwards; }
+    .countCard{
+      max-width:940px;
+      margin:14px auto 16px;
+      background:var(--card);
+      border:1px solid rgba(229,223,214,.9);
+      border-radius:24px;
+      box-shadow: var(--shadow);
+      padding:18px 18px 16px;
+      backdrop-filter: blur(6px);
+    }
+    .countTop{
+      display:flex;align-items:center;justify-content:center;
+      gap:10px;
+      color:var(--green2);
+      font-weight:600;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size:13px;
+      margin-bottom:10px;
+    }
+    .countGrid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      align-items:stretch;
+      text-align:center;
+      margin-bottom:10px;
+    }
+    .countBox{
+      background:#fff;
+      border:1px solid rgba(229,223,214,.95);
+      border-radius:18px;
+      padding:14px 10px;
+    }
+    .countNum{
+      font-family:"Playfair Display", serif;
+      font-size:34px;
+      color:#5b4a39;
+      line-height:1;
+      margin-bottom:4px;
+    }
+    .countLbl{
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .countDate{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      color:#5b4a39;
+      font-family:"Playfair Display", serif;
+      font-size:24px;
+    }
+    .pillLine{
+      max-width:940px;
+      margin:0 auto 16px;
+      border:1px dashed rgba(95,127,90,.5);
+      background:rgba(233,228,220,.55);
+      color:#4b3f34;
+      border-radius:16px;
+      padding:12px 14px;
+      text-align:center;
+      font-weight:500;
+    }
+    .ctaRow{
+      display:flex;
+      justify-content:center;
+      margin:18px 0 6px;
+    }
+    .btn{
+      appearance:none;
+      border:0;
+      cursor:pointer;
+      border-radius:999px;
+      padding:14px 22px;
+      font-weight:600;
+      font-size:16px;
+      background:var(--green);
+      color:#fff;
+      box-shadow: 0 10px 22px rgba(95,127,90,.25);
+      transition: transform .06s ease, filter .15s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+    }
+    .btn:hover{ filter:brightness(.98) }
+    .btn:active{ transform: translateY(1px) }
+    .btn.secondary{
+      background:#fff;
+      color:var(--green2);
+      border:1px solid rgba(95,127,90,.35);
+      box-shadow:none;
+    }
 
-    .toast { animation: slideIn 0.25s ease, fadeOut 0.25s ease 2.7s forwards; }
-    @keyframes slideIn { from { transform: translateY(-80%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+    /* SECTIONS */
+    section{ scroll-margin-top:18px; }
+    .sectionTitle{
+      text-align:center;
+      margin:34px 0 14px;
+    }
+    .sectionTitle .icon{
+      font-size:26px;
+      margin-bottom:4px;
+    }
+    .sectionTitle h2{
+      font-family:"Playfair Display", serif;
+      color:#5b4a39;
+      font-weight:600;
+      font-size:44px;
+      margin:4px 0 6px;
+    }
+    .sectionTitle p{
+      color:var(--muted);
+      margin:0;
+      font-size:16px;
+    }
+    .toolbar{
+      max-width:1120px;
+      margin:16px auto 18px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+    }
+    .chip{
+      border:0;
+      cursor:pointer;
+      border-radius:999px;
+      padding:10px 14px;
+      background:var(--chip);
+      color:#5b4a39;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(229,223,214,.85);
+    }
+    .chip.active{
+      background:var(--green);
+      color:#fff;
+      border-color:transparent;
+    }
 
-    img { max-width: 100%; height: auto; }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:18px;
+      margin-top:14px;
+    }
+    @media (max-width:980px){ .grid{grid-template-columns:repeat(3,1fr)} .hero h1{font-size:46px} }
+    @media (max-width:720px){ .grid{grid-template-columns:repeat(2,1fr)} .hero h1{font-size:40px} .countGrid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:420px){ .grid{grid-template-columns:1fr} }
+
+    .card{
+      background:var(--cardSolid);
+      border:1px solid rgba(229,223,214,.95);
+      border-radius:24px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height: 330px;
+    }
+    .cardTop{
+      padding:14px 14px 6px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+    .badge{
+      font-size:12px;
+      font-weight:700;
+      padding:6px 10px;
+      border-radius:999px;
+      letter-spacing:.02em;
+      white-space:nowrap;
+    }
+    .badge.ok{ background:rgba(95,127,90,.12); color:var(--green2); border:1px solid rgba(95,127,90,.25) }
+    .badge.no{ background:rgba(190,60,60,.10); color:#8a2f2f; border:1px solid rgba(190,60,60,.22) }
+
+    .cardImg{
+      width:100%;
+      height:150px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px;
+    }
+    .cardImg img{
+      max-height:140px;
+      max-width:85%;
+      object-fit:contain;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,.10));
+    }
+    .cardBody{
+      padding:8px 16px 14px;
+      text-align:center;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      gap:10px;
+    }
+    .cardTitle{
+      font-family:"Playfair Display", serif;
+      font-size:26px;
+      color:#5b4a39;
+      margin:0;
+      line-height:1.15;
+    }
+    .cardHint{
+      color:var(--muted);
+      font-size:13px;
+      margin:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
+    }
+    .cardActions{
+      padding:0 16px 16px;
+      display:flex;
+      gap:10px;
+    }
+    .cardActions .btn{ width:100%; justify-content:center; padding:12px 14px; font-size:15px }
+    .cardActions .btn.secondary{ background:#fff }
+
+    /* Comprar online */
+    .buyList{
+      max-width:940px;
+      margin:18px auto 0;
+      background:var(--card);
+      border:1px solid rgba(229,223,214,.9);
+      border-radius:24px;
+      box-shadow: var(--shadow);
+      padding:16px;
+    }
+    .buyRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:12px 12px;
+      border-bottom:1px solid rgba(229,223,214,.75);
+    }
+    .buyRow:last-child{ border-bottom:0 }
+    .buyLeft{
+      display:flex;align-items:center;gap:12px;min-width:0;
+    }
+    .buyLeft img{
+      width:46px;height:46px;object-fit:contain;border-radius:12px;background:#fff;border:1px solid rgba(229,223,214,.9);
+      padding:6px;
+    }
+    .buyName{
+      font-weight:700;color:#5b4a39;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      max-width:560px;
+    }
+    .buyBtn{
+      white-space:nowrap;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(95,127,90,.35);
+      background:#fff;
+      color:var(--green2);
+      font-weight:700;
+    }
+
+    /* Toast */
+    .toast{
+      position:fixed;
+      top:16px; left:50%;
+      transform:translateX(-50%);
+      background:#5b2a2a;
+      color:#fff;
+      padding:12px 14px;
+      border-radius:14px;
+      box-shadow: var(--shadow);
+      max-width: calc(100% - 28px);
+      width: 760px;
+      display:none;
+      z-index:9999;
+      opacity:.92;
+    }
+    .toast.ok{ background:#264d2a }
+    .toast .small{ opacity:.9; font-size:13px; margin-top:4px }
 
     /* Modal */
-    .modal-backdrop { background: rgba(0,0,0,0.35); }
+    .overlay{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.35);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:9998;
+    }
+    .modal{
+      width:min(720px, 100%);
+      background:#fff;
+      border-radius:26px;
+      box-shadow: var(--shadow);
+      border:1px solid rgba(229,223,214,.95);
+      overflow:hidden;
+    }
+    .modalHead{
+      padding:18px 18px 6px;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+    }
+    .modalHead h3{
+      margin:0;
+      font-family:"Playfair Display", serif;
+      color:#5b4a39;
+      font-size:38px;
+      font-weight:600;
+    }
+    .modalHead p{ margin:6px 0 0; color:var(--muted) }
+    .xbtn{
+      border:0; background:transparent; cursor:pointer;
+      font-size:22px; padding:8px 10px; border-radius:12px;
+      color:#6b6b6b;
+    }
+    .modalBody{ padding:12px 18px 18px; }
+    .modalItem{
+      display:flex; gap:12px; align-items:center;
+      padding:12px; border:1px solid rgba(229,223,214,.9);
+      border-radius:18px;
+      background:#fff;
+      margin-bottom:14px;
+    }
+    .modalItem img{ width:56px;height:56px;object-fit:contain }
+    .modalItem .name{
+      font-family:"Playfair Display", serif;
+      font-size:28px;
+      color:#5b4a39;
+      margin:0;
+    }
+    .formRow{ margin:10px 0 12px }
+    label{ display:block; font-weight:700; color:#5b4a39; margin:0 0 6px }
+    input{
+      width:100%;
+      padding:13px 14px;
+      border-radius:14px;
+      border:1px solid rgba(229,223,214,.95);
+      outline:none;
+      font-size:16px;
+    }
+    input:focus{ border-color: rgba(95,127,90,.55); box-shadow:0 0 0 4px rgba(95,127,90,.12) }
+    .help{
+      font-size:12px;color:var(--muted); margin:6px 0 0;
+    }
+    .modalActions{
+      margin-top:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .footnote{
+      font-size:12px;color:var(--muted); margin-top:6px;
+    }
 
-    /* small helper */
-    .hint { color:#8b7355; font-size:12px; }
+    .loadingLine{
+      display:flex;justify-content:center;align-items:center;gap:8px;
+      color:var(--muted);
+      font-size:13px;
+      margin-top:8px;
+    }
+    .spinner{
+      width:14px;height:14px;border-radius:50%;
+      border:2px solid rgba(107,107,107,.25);
+      border-top-color: rgba(95,127,90,.9);
+      animation:spin .8s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 </head>
 
-<body class="h-full font-body">
-  <div id="app-wrapper" class="w-full h-full overflow-auto" style="background-color:#faf8f5">
+<body>
+  <div class="toast" id="toast">
+    <div id="toastMsg"></div>
+    <div class="small" id="toastSmall"></div>
+  </div>
 
-    <!-- Toast -->
-    <div id="toast-container" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50"></div>
+  <div class="wrap">
+    <header class="hero">
+      <h1>Juliana &amp; Matheus</h1>
+      <p>Um novo lar, um novo começo</p>
 
-    <!-- MODAL RESERVA/CANCELAMENTO -->
-    <div id="modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
-      <div class="absolute inset-0 modal-backdrop" onclick="closeModal()"></div>
+      <!-- ✅ Capa maior. Troque só o link abaixo pela sua imagem do Pinterest -->
+      <div class="cover">
+        <img id="coverImg" alt="Capa" />
+      </div>
 
-      <div class="relative w-full max-w-lg rounded-2xl shadow-xl p-6 md:p-8" style="background:#fff; border:1px solid #EDE9E3;">
-        <div class="flex items-start justify-between gap-4">
+      <div class="countCard" aria-label="Contagem regressiva">
+        <div class="countTop">⏰ FALTAM</div>
+        <div class="countGrid">
+          <div class="countBox">
+            <div class="countNum" id="cd_days">--</div>
+            <div class="countLbl">DIAS</div>
+          </div>
+          <div class="countBox">
+            <div class="countNum" id="cd_hours">--</div>
+            <div class="countLbl">HORAS</div>
+          </div>
+          <div class="countBox">
+            <div class="countNum" id="cd_mins">--</div>
+            <div class="countLbl">MIN</div>
+          </div>
+          <div class="countBox">
+            <div class="countNum" id="cd_secs">--</div>
+            <div class="countLbl">SEG</div>
+          </div>
+        </div>
+        <div class="countDate">📅 08 de Fevereiro de 2026 • 15h</div>
+      </div>
+
+      <div class="pillLine">📍 <b>Salão Torre Rubi</b> — Cond. Side Barra Funda • Rua do Bosque, 980</div>
+
+      <div class="ctaRow">
+        <button class="btn" id="btnGoGifts">Ver Lista de Presentes ⬇️</button>
+      </div>
+    </header>
+
+    <section id="gifts">
+      <div class="sectionTitle">
+        <div class="icon">🎁</div>
+        <h2>Lista de Presentes</h2>
+        <p>Clique em um item para reservá-lo</p>
+        <div class="loadingLine" id="loadingLine">
+          <div class="spinner"></div>
+          <div>Carregando reservas...</div>
+        </div>
+      </div>
+
+      <div class="toolbar" id="toolbar"></div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section id="buy">
+      <div class="sectionTitle">
+        <div class="icon">🛒🛍️</div>
+        <h2>Comprar Online</h2>
+        <p>Caso prefira comprar online, você encontra o link de cada item aqui:</p>
+      </div>
+
+      <div class="buyList" id="buyList"></div>
+    </section>
+  </div>
+
+  <!-- Modal: Reservar -->
+  <div class="overlay" id="reserveOverlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modalHead">
+        <div>
+          <h3>Reservar item</h3>
+          <p>Preencha seus dados para reservar este presente.</p>
+        </div>
+        <button class="xbtn" id="closeReserve" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modalBody">
+        <div class="modalItem">
+          <img id="reserveImg" alt="Item" />
           <div>
-            <div id="modal-title" class="font-heading text-3xl md:text-4xl" style="color:#5d4e37">Reservar item</div>
-            <div id="modal-subtitle" class="text-sm mt-1" style="color:#8b7355"></div>
-          </div>
-          <button onclick="closeModal()" class="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center">✕</button>
-        </div>
-
-        <div class="mt-6 flex items-center gap-4">
-          <div id="modal-icon" class="w-16 h-16 rounded-xl overflow-hidden bg-gray-50 flex items-center justify-center"></div>
-          <div>
-            <div id="modal-item-name" class="font-heading text-2xl" style="color:#5d4e37"></div>
-            <div id="modal-item-desc" class="text-sm" style="color:#8b7355"></div>
+            <p class="name" id="reserveName"></p>
           </div>
         </div>
 
-        <!-- FORM RESERVA -->
-        <div id="form-reserve" class="mt-6">
-          <label class="block text-sm mb-2" style="color:#5d4e37">Seu nome</label>
-          <input id="input-name" type="text" class="w-full px-4 py-3 rounded-xl border" style="border-color:#EDE9E3" placeholder="Ex: Maria Silva" />
-
-          <label class="block text-sm mt-4 mb-2" style="color:#5d4e37">Data de nascimento</label>
-          <input id="input-birth" type="text" inputmode="numeric" autocomplete="bday" maxlength="10"
-                 class="w-full px-4 py-3 rounded-xl border" style="border-color:#EDE9E3"
-                 placeholder="DD/MM/AAAA" />
-          <div class="hint mt-2">Você pode digitar só números. Ex: 15041998 → vira 15/04/1998 automaticamente.</div>
-
-          <button id="btn-confirm-reserve" onclick="confirmReserve()" class="mt-5 w-full px-6 py-4 rounded-full text-white font-medium transition-all hover:shadow-lg"
-            style="background-color:#6b9b5e">
-            Confirmar reserva
-          </button>
-
-          <p class="text-xs mt-3" style="color:#8b7355">
-            *A data de nascimento é usada para permitir o cancelamento da sua própria reserva depois.
-          </p>
+        <div class="formRow">
+          <label for="reservePerson">Seu nome</label>
+          <input id="reservePerson" type="text" placeholder="Ex: Juliana" autocomplete="name" />
         </div>
 
-        <!-- FORM CANCEL -->
-        <div id="form-cancel" class="hidden mt-6">
-          <div class="p-4 rounded-xl mb-4" style="background:#faf8f5; border:1px solid #EDE9E3;">
-            <div class="text-sm" style="color:#5d4e37">
-              Este item está reservado por <strong id="cancel-who"></strong>.
-            </div>
-          </div>
-
-          <label class="block text-sm mb-2" style="color:#5d4e37">Para cancelar, confirme a data de nascimento usada na reserva</label>
-          <input id="input-cancel-birth" type="text" inputmode="numeric" maxlength="10"
-                 class="w-full px-4 py-3 rounded-xl border" style="border-color:#EDE9E3"
-                 placeholder="DD/MM/AAAA" />
-          <div class="hint mt-2">Pode digitar só números também. Ex: 15041998.</div>
-
-          <button id="btn-confirm-cancel" onclick="confirmCancel()" class="mt-5 w-full px-6 py-4 rounded-full text-white font-medium transition-all hover:shadow-lg"
-            style="background-color:#8b7355">
-            Cancelar reserva
-          </button>
-
-          <p class="text-xs mt-3" style="color:#8b7355">
-            *Se a data não bater, o cancelamento não será permitido.
-          </p>
+        <div class="formRow">
+          <label for="reserveBirth">Data de nascimento</label>
+          <input id="reserveBirth" type="text" inputmode="numeric" placeholder="DD/MM/AAAA" maxlength="10" />
+          <p class="help">Você pode digitar só números. Ex: 15041998 → vira 15/04/1998 automaticamente.</p>
         </div>
 
-        <div class="mt-6">
-          <a id="modal-buy-link" href="#" target="_blank" rel="noopener noreferrer"
-            class="inline-flex items-center justify-center w-full px-6 py-4 rounded-full font-medium transition-all hover:shadow-md"
-            style="background:#ede9e3; color:#5d4e37">
-            Comprar online (opcional)
-          </a>
-        </div>
+        <button class="btn" id="confirmReserve">Confirmar reserva</button>
+        <div class="footnote">*A data de nascimento é usada para permitir o cancelamento da sua própria reserva depois.</div>
+
+        <!-- ✅ REMOVIDO: botão “Comprar online (opcional)” aqui -->
       </div>
     </div>
+  </div>
 
-    <!-- HERO -->
-    <section class="hero-pattern min-h-screen flex flex-col items-center justify-center px-6 py-16 relative overflow-hidden">
-      <div class="text-center max-w-2xl mx-auto animate-fade-in">
-        <p class="text-base md:text-lg tracking-[0.3em] uppercase mb-4" style="color:#6b9b5e">Chá de Casa Nova</p>
-
-        <div class="flex justify-center mb-6">
-          <img
-            src="https://i.pinimg.com/736x/4a/6c/aa/4a6caa8efc074ac29335bff3410e8f7c.jpg"
-            alt="Juliana & Matheus"
-            class="w-56 md:w-72 rounded-2xl shadow-md"
-            loading="lazy"
-          />
+  <!-- Modal: Cancelar -->
+  <div class="overlay" id="cancelOverlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modalHead">
+        <div>
+          <h3>Cancelar reserva</h3>
+          <p>Digite sua data de nascimento para cancelar a sua própria reserva.</p>
         </div>
-
-        <h1 class="font-heading text-6xl md:text-7xl lg:text-8xl font-medium mb-6 leading-tight" style="color:#5d4e37">
-          Juliana & Matheus
-        </h1>
-        <p class="text-2xl md:text-3xl lg:text-4xl font-heading italic mb-8" style="color:#8b7355">
-          Um novo lar, um novo começo
-        </p>
-
-        <!-- Countdown -->
-        <div class="mb-8 p-6 rounded-2xl" style="background-color:rgba(255,255,255,0.7); backdrop-filter: blur(10px)">
-          <p class="text-sm tracking-[0.2em] uppercase mb-4" style="color:#6b9b5e">⏰ Faltam</p>
-          <div id="countdown" class="flex justify-center gap-3 md:gap-6 mb-4">
-            <div class="text-center">
-              <div id="countdown-days" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
-              <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Dias</div>
-            </div>
-            <div class="font-heading text-3xl md:text-5xl" style="color:#6b9b5e">:</div>
-            <div class="text-center">
-              <div id="countdown-hours" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
-              <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Horas</div>
-            </div>
-            <div class="font-heading text-3xl md:text-5xl" style="color:#6b9b5e">:</div>
-            <div class="text-center">
-              <div id="countdown-minutes" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
-              <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Min</div>
-            </div>
-            <div class="font-heading text-3xl md:text-5xl" style="color:#6b9b5e">:</div>
-            <div class="text-center">
-              <div id="countdown-seconds" class="font-heading text-3xl md:text-5xl font-semibold" style="color:#5d4e37">--</div>
-              <div class="text-xs md:text-sm uppercase tracking-wider" style="color:#8b7355">Seg</div>
-            </div>
+        <button class="xbtn" id="closeCancel" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modalBody">
+        <div class="modalItem">
+          <img id="cancelImg" alt="Item" />
+          <div>
+            <p class="name" id="cancelName"></p>
           </div>
-          <p class="font-heading text-2xl md:text-3xl font-medium" style="color:#5d4e37">
-            📅 08 de Fevereiro de 2026 • 15h
-          </p>
         </div>
 
-        <div class="mb-8 p-3 rounded-xl" style="background-color:rgba(107,155,94,0.1); border:1px dashed #6b9b5e">
-          <p class="text-base md:text-lg text-center" style="color:#5d4e37">
-            📍 <strong>Salão Torre Rubi</strong> – Cond. Side Barra Funda • Rua do Bosque, 980
-          </p>
+        <div class="formRow">
+          <label for="cancelBirth">Data de nascimento</label>
+          <input id="cancelBirth" type="text" inputmode="numeric" placeholder="DD/MM/AAAA" maxlength="10" />
+          <p class="help">Você pode digitar só números. Ex: 15041998 → vira 15/04/1998 automaticamente.</p>
         </div>
 
-        <a href="#lista" class="inline-flex items-center gap-2 px-8 py-4 rounded-full text-white font-medium transition-all hover:shadow-lg hover:scale-105" style="background-color:#6b9b5e">
-          <span>Ver Lista de Presentes</span>
-          <span>↓</span>
-        </a>
+        <button class="btn secondary" id="confirmCancel">Confirmar cancelamento</button>
       </div>
-    </section>
-
-    <!-- LISTA -->
-    <section id="lista" class="py-20 px-6" style="background-color:#f5f2ed">
-      <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-10">
-          <span class="text-4xl mb-4 block">🎁</span>
-          <h2 class="font-heading text-4xl md:text-5xl mb-4" style="color:#5d4e37">Lista de Presentes</h2>
-          <p class="text-lg md:text-xl" style="color:#8b7355">Clique em um item para reservar</p>
-          <p id="sync-status" class="text-sm mt-3" style="color:#8b7355">🔄 Preparando lista...</p>
-        </div>
-
-        <div class="flex flex-wrap justify-center gap-3 mb-12">
-          <button onclick="filterCategory('all')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="all"
-            style="background-color:#6b9b5e; color:white">Todos</button>
-          <button onclick="filterCategory('utensilios')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="utensilios"
-            style="background-color:#ede9e3; color:#5d4e37">🥄 Utensílios</button>
-          <button onclick="filterCategory('potes')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="potes"
-            style="background-color:#ede9e3; color:#5d4e37">🫙 Potes</button>
-          <button onclick="filterCategory('cozinha')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="cozinha"
-            style="background-color:#ede9e3; color:#5d4e37">🍳 Cozinha</button>
-          <button onclick="filterCategory('formas')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="formas"
-            style="background-color:#ede9e3; color:#5d4e37">🎂 Formas</button>
-          <button onclick="filterCategory('banheiro')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="banheiro"
-            style="background-color:#ede9e3; color:#5d4e37">🛁 Banheiro</button>
-          <button onclick="filterCategory('organizacao')" class="category-btn px-6 py-3 rounded-full font-medium transition-all text-base md:text-lg" data-category="organizacao"
-            style="background-color:#ede9e3; color:#5d4e37">🧺 Organização</button>
-        </div>
-
-        <div id="gift-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-      </div>
-    </section>
-
-    <!-- COMPRAR ONLINE -->
-    <section id="links" class="py-20 px-6" style="background-color:#f5f2ed">
-      <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-12">
-          <span class="text-4xl mb-4 block">🛒🛍️</span>
-          <h2 class="font-heading text-4xl md:text-5xl mb-4" style="color:#5d4e37">Comprar Online</h2>
-          <p class="text-xl md:text-2xl" style="color:#8b7355">Caso prefira comprar online, você encontra o link de cada item aqui:</p>
-        </div>
-        <div id="links-list" class="space-y-3"></div>
-      </div>
-    </section>
-
-    <footer class="py-16 px-6 text-center" style="background-color:#ffffff">
-      <div class="max-w-2xl mx-auto">
-        <div class="mb-6"><span class="text-5xl">💚</span></div>
-        <p class="font-heading text-2xl md:text-3xl mb-6 italic" style="color:#5d4e37">
-          Obrigado por fazer parte desse momento tão especial. Cada gesto de carinho significa muito para nós!
-        </p>
-        <p class="font-heading text-xl md:text-2xl" style="color:#8b7355">Com carinho,</p>
-        <p class="font-heading text-3xl md:text-4xl mt-2" style="color:#5d4e37">Juliana & Matheus</p>
-      </div>
-    </footer>
-
+    </div>
   </div>
 
   <script>
-    // ============================
+    // ===========================
     // CONFIG
-    // ============================
+    // ===========================
     var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxayYFf7S6Ug0H74f5pnIQwQL-VIuOiT_QFzqU62bP5I_dUNDiK_0UoZullNcphlyrvHg/exec";
 
-    var config = {
-      text_color: "#5D4E37",
-      primary_action_color: "#6B9B5E",
-      secondary_action_color: "#8B7355"
-    };
+    // Troque pela URL real da sua capa do Pinterest (a mesma de antes)
+    var COVER_IMAGE_URL = "https://i.pinimg.com/736x/5f/71/a7/5f71a74ebd265ea4f16dc02c6eb0a680.jpg";
 
-    // ============================
-    // ITENS (EXATAMENTE como você colou: imagem + link)
-    // ============================
+    // Data do evento (horário de Brasília)
+    var EVENT_DATE = new Date("2026-02-08T15:00:00-03:00");
+
+    // ===========================
+    // ITENS (exatamente como você mandou)
+    // ===========================
     var giftItems = [
       // Utensílios
-      { id:"utensilios-01", category:"utensilios", icon:"https://m.media-amazon.com/images/I/51wOKTjJouL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Colher de pau (kit)", description:"", link:"https://www.amazon.com.br/s?k=colher+de+pau+kit" },
-      { id:"utensilios-02", category:"utensilios", icon:"https://ph-cdn3.ecosweb.com.br/imagens01/foto/utilidades-domesticas/talheres/kit-para-molho-com-concha-e-escumadeira-em-inox_140885_600_1.jpg", name:"Kit Concha e Escumadeira", description:"", link:"https://www.amazon.com.br/s?k=kit+concha+escumadeira+inox" },
-      { id:"utensilios-03", category:"utensilios", icon:"https://i.pinimg.com/736x/0e/d0/be/0ed0bed0a8d2e82a0cdbe18d1a2e5a43.jpg", name:"Kit Pegador de Macarrão e Colher de Servir", description:"", link:"https://www.amazon.com.br/s?k=pegador+macarrao+colher+servir" },
-      { id:"utensilios-04", category:"utensilios", icon:"https://m.media-amazon.com/images/I/412rlg5x9LL._AC_SL1000_.jpg", name:"Escorredor de Massa", description:"", link:"https://www.amazon.com.br/s?k=escorredor+de+massa" },
-      { id:"utensilios-05", category:"utensilios", icon:"https://m.media-amazon.com/images/I/611BlzyhyAL._AC_SX679_.jpg", name:"Ralador multifuncional", description:"", link:"https://www.amazon.com.br/s?k=ralador+multifuncional" },
-      { id:"utensilios-06", category:"utensilios", icon:"https://m.media-amazon.com/images/I/71+mE5Aqy9L._AC_SX679_.jpg", name:"Tábua de corte", description:"", link:"https://www.amazon.com.br/s?k=tabua+de+corte" },
-      { id:"utensilios-07", category:"utensilios", icon:"https://m.media-amazon.com/images/I/511XcDy06PL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Luva térmica", description:"", link:"https://www.amazon.com.br/s?k=luva+termica+cozinha" },
-      { id:"utensilios-08", category:"utensilios", icon:"https://m.media-amazon.com/images/I/71SY5kje0zL._AC_SX679_.jpg", name:"Descanso de panela", description:"", link:"https://www.amazon.com.br/s?k=descanso+de+panela" },
-      { id:"utensilios-09", category:"utensilios", icon:"https://m.media-amazon.com/images/I/51Byq+vTy1L._AC_SX679_.jpg", name:"Tesoura para cozinha", description:"", link:"https://www.amazon.com.br/s?k=tesoura+cozinha" },
-      { id:"utensilios-10", category:"utensilios", icon:"https://m.media-amazon.com/images/I/6155SEJ3rAL._AC_SX679_.jpg", name:"Faca para pão", description:"", link:"https://www.amazon.com.br/s?k=faca+para+pao" },
-      { id:"utensilios-11", category:"utensilios", icon:"https://m.media-amazon.com/images/I/31fl2APEMIL._AC_SX679_.jpg", name:"Faca para carne", description:"", link:"https://www.amazon.com.br/s?k=faca+para+carne" },
-      { id:"utensilios-12", category:"utensilios", icon:"https://m.media-amazon.com/images/I/31YNXnO2m2L._AC_.jpg", name:"Espátula para bolo", description:"", link:"https://www.amazon.com.br/s?k=espatula+para+bolo" },
-      { id:"utensilios-13", category:"utensilios", icon:"https://m.media-amazon.com/images/I/51sHeZrOspL._SX522_.jpg", name:"Pegador de sorvete em inox", description:"", link:"https://www.amazon.com.br/s?k=pegador+de+sorvete+inox" },
-      { id:"utensilios-14", category:"utensilios", icon:"https://m.media-amazon.com/images/I/51ER0CKJZML._AC_SX679_.jpg", name:"Jogo de espátulas para patê", description:"", link:"https://www.amazon.com.br/s?k=espatula+para+pate" },
-      { id:"utensilios-15", category:"utensilios", icon:"https://m.media-amazon.com/images/I/51+kZPH9VsL._AC_SX679_.jpg", name:"Kit utensílios de cozinha em silicone", description:"", link:"https://www.amazon.com.br/s?k=kit+utensilios+silicone" },
-      { id:"utensilios-16", category:"utensilios", icon:"https://m.media-amazon.com/images/I/41NGbbQo5CL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Colher medidora (kit simples)", description:"", link:"https://www.amazon.com.br/s?k=colher+medidora+kit" },
+      { id:"colher_pau_kit", name:"Colher de pau (kit)", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/51wOKTjJouL._AC_SY300_SX300_QL70_ML2_.jpg", link:"https://www.amazon.com.br/s?k=colher+de+pau+kit" },
+      { id:"kit_concha_escumadeira", name:"Kit Concha e Escumadeira", category:"Utensílios", icon:"https://ph-cdn3.ecosweb.com.br/imagens01/foto/utilidades-domesticas/talheres/kit-para-molho-com-concha-e-escumadeira-em-inox_140885_600_1.jpg", link:"https://www.amazon.com.br/s?k=kit+concha+escumadeira+inox" },
+      { id:"kit_pegador_macarrao_colher", name:"Kit Pegador de Macarrão e Colher de Servir", category:"Utensílios", icon:"https://i.pinimg.com/736x/0e/d0/be/0ed0bed0a8d2e82a0cdbe18d1a2e5a43.jpg", link:"https://www.amazon.com.br/s?k=pegador+macarrao+colher+servir" },
+      { id:"escorredor_massa", name:"Escorredor de Massa", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/412rlg5x9LL._AC_SL1000_.jpg", link:"https://www.amazon.com.br/s?k=escorredor+de+massa" },
+      { id:"ralador_multifuncional", name:"Ralador multifuncional", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/611BlzyhyAL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=ralador+multifuncional" },
+      { id:"tabua_corte", name:"Tábua de corte", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/71+mE5Aqy9L._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=tabua+de+corte" },
+      { id:"luva_termica", name:"Luva térmica", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/511XcDy06PL._AC_SY300_SX300_QL70_ML2_.jpg", link:"https://www.amazon.com.br/s?k=luva+termica+cozinha" },
+      { id:"descanso_panela", name:"Descanso de panela", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/71SY5kje0zL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=descanso+de+panela" },
+      { id:"tesoura_cozinha", name:"Tesoura para cozinha", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/51Byq+vTy1L._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=tesoura+cozinha" },
+      { id:"faca_pao", name:"Faca para pão", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/6155SEJ3rAL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=faca+para+pao" },
+      { id:"faca_carne", name:"Faca para carne", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/31fl2APEMIL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=faca+para+carne" },
+      { id:"espatula_bolo", name:"Espátula para bolo", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/31YNXnO2m2L._AC_.jpg", link:"https://www.amazon.com.br/s?k=espatula+para+bolo" },
+      { id:"pegador_sorvete", name:"Pegador de sorvete em inox", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/51sHeZrOspL._SX522_.jpg", link:"https://www.amazon.com.br/s?k=pegador+de+sorvete+inox" },
+      { id:"espatulas_pate", name:"Jogo de espátulas para patê", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/51ER0CKJZML._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=espatula+para+pate" },
+      { id:"kit_silicone", name:"Kit utensílios de cozinha em silicone", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/51+kZPH9VsL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=kit+utensilios+silicone" },
+      { id:"colher_medidora", name:"Colher medidora (kit simples)", category:"Utensílios", icon:"https://m.media-amazon.com/images/I/41NGbbQo5CL._AC_SY300_SX300_QL70_ML2_.jpg", link:"https://www.amazon.com.br/s?k=colher+medidora+kit" },
 
       // Potes
-      { id:"potes-01", category:"potes", icon:"https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name:"Kit 2 Potes de Vidro Herméticos (opção 1)", description:"", link:"https://a.co/d/gH9mf9o" },
-      { id:"potes-02", category:"potes", icon:"https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name:"Kit 2 Potes de Vidro Herméticos (opção 2)", description:"", link:"https://a.co/d/gH9mf9o" },
-      { id:"potes-03", category:"potes", icon:"https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name:"Kit 2 Potes de Vidro Herméticos (opção 3)", description:"", link:"https://a.co/d/gH9mf9o" },
-
-      { id:"potes-04", category:"potes", icon:"https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name:"Pote Hermético 1,5L (opção 1)", description:"", link:"https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
-      { id:"potes-05", category:"potes", icon:"https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name:"Pote Hermético 1,5L (opção 2)", description:"", link:"https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
-      { id:"potes-06", category:"potes", icon:"https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name:"Pote Hermético 1,5L (opção 3)", description:"", link:"https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
-      { id:"potes-07", category:"potes", icon:"https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name:"Pote Hermético 1,5L (opção 4)", description:"", link:"https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
-
-      { id:"potes-08", category:"potes", icon:"https://americanas.vtexassets.com/arquivos/ids/450651-1280-auto/2521891574_1SZ.webp", name:"Conjunto 4 Potes Herméticos 250ml", description:"", link:"https://www.americanas.com.br/conjunto-de-4-potes-hermeticos-retangular-250ml-leve-4-pague-3-dup-2521891566/p" },
-      { id:"potes-09", category:"potes", icon:"https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ8BmqBG-obN7wY4VqwUNHEK48EzoXP9TnJyTVtL-7ShJ0FmfSkIQRLCTmvarQnqcjowwFYL-oz-YHhGqeS7a84VJr9id20vHW4X_n_dxfZ210_TZkD0Ura", name:"Conjunto 4 Potes Herméticos 500ml", description:"", link:"https://www.americanas.com.br/conjunto-4-potes-hermeticos-essencial-cristal-l4p3-500ml-dup/p" },
-      { id:"potes-10", category:"potes", icon:"https://m.media-amazon.com/images/I/61ecJ487YgL._AC_SX679_.jpg", name:"Kit Potes Herméticos Redondos", description:"", link:"https://a.co/d/32dXOwk" },
+      { id:"kit_2_potes_vidro_1", name:"Kit 2 Potes de Vidro Herméticos (opção 1)", category:"Potes", icon:"https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", link:"https://a.co/d/gH9mf9o" },
+      { id:"kit_2_potes_vidro_2", name:"Kit 2 Potes de Vidro Herméticos (opção 2)", category:"Potes", icon:"https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", link:"https://a.co/d/gH9mf9o" },
+      { id:"kit_2_potes_vidro_3", name:"Kit 2 Potes de Vidro Herméticos (opção 3)", category:"Potes", icon:"https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", link:"https://a.co/d/gH9mf9o" },
+      { id:"pote_15l_1", name:"Pote Hermético 1,5L (opção 1)", category:"Potes", icon:"https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", link:"https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
+      { id:"pote_15l_2", name:"Pote Hermético 1,5L (opção 2)", category:"Potes", icon:"https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", link:"https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
+      { id:"pote_15l_3", name:"Pote Hermético 1,5L (opção 3)", category:"Potes", icon:"https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", link:"https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
+      { id:"pote_15l_4", name:"Pote Hermético 1,5L (opção 4)", category:"Potes", icon:"https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", link:"https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
+      { id:"potes_250ml", name:"Conjunto 4 Potes Herméticos 250ml", category:"Potes", icon:"https://americanas.vtexassets.com/arquivos/ids/450651-1280-auto/2521891574_1SZ.webp", link:"https://www.americanas.com.br/conjunto-de-4-potes-hermeticos-retangular-250ml-leve-4-pague-3-dup-2521891566/p" },
+      { id:"potes_500ml", name:"Conjunto 4 Potes Herméticos 500ml", category:"Potes", icon:"https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ8BmqBG-obN7wY4VqwUNHEK48EzoXP9TnJyTVtL-7ShJ0FmfSkIQRLCTmvarQnqcjowwFYL-oz-YHhGqeS7a84VJr9id20vHW4X_n_dxfZ210_TZkD0Ura", link:"https://www.americanas.com.br/conjunto-4-potes-hermeticos-essencial-cristal-l4p3-500ml-dup/p" },
+      { id:"potes_redondos", name:"Kit Potes Herméticos Redondos", category:"Potes", icon:"https://m.media-amazon.com/images/I/61ecJ487YgL._AC_SX679_.jpg", link:"https://a.co/d/32dXOwk" },
 
       // Cozinha
-      { id:"cozinha-01", category:"cozinha", icon:"https://m.media-amazon.com/images/I/71jNQBr4mbL._AC_SX679_.jpg", name:"Jarra de vidro", description:"", link:"https://www.amazon.com.br/s?k=jarra+de+vidro" },
-      { id:"cozinha-02", category:"cozinha", icon:"https://m.media-amazon.com/images/I/51d+B8zoAvL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Leiteira", description:"", link:"https://www.amazon.com.br/s?k=leiteira+inox" },
-      { id:"cozinha-03", category:"cozinha", icon:"https://m.media-amazon.com/images/I/31TpUxJ4mHL._AC_SX679_.jpg", name:"Coador de café Melitta 103", description:"", link:"https://www.amazon.com.br/s?k=coador+cafe+melitta+103" },
-      { id:"cozinha-04", category:"cozinha", icon:"https://m.media-amazon.com/images/I/61+LfzcEVGL._AC_SX679_.jpg", name:"Kit peneiras em inox", description:"", link:"https://www.amazon.com.br/s?k=kit+peneiras+inox" },
-      { id:"cozinha-05", category:"cozinha", icon:"https://m.media-amazon.com/images/I/41lQvVjbepL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Saladeira", description:"", link:"https://www.amazon.com.br/s?k=saladeira" },
-      { id:"cozinha-06", category:"cozinha", icon:"https://m.media-amazon.com/images/I/41BvG7PiFGL._AC_SX679_.jpg", name:"Bowl de vidro grande", description:"", link:"https://www.amazon.com.br/s?k=bowl+vidro+grande" },
-      { id:"cozinha-07", category:"cozinha", icon:"https://m.media-amazon.com/images/I/51lCJHAgXSL._AC_SX679_.jpg", name:"Porta-guardanapo em inox", description:"", link:"https://www.amazon.com.br/s?k=porta+guardanapo+inox" },
-      { id:"cozinha-08", category:"cozinha", icon:"https://m.media-amazon.com/images/I/61xTgzfTp1L._AC_SX679_.jpg", name:"Saleiro e pimenteiro", description:"", link:"https://www.amazon.com.br/s?k=saleiro+pimenteiro" },
-      { id:"cozinha-09", category:"cozinha", icon:"https://m.media-amazon.com/images/I/61vFMvBrCcL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Petisqueira 1", description:"", link:"https://www.amazon.com.br/s?k=petisqueira" },
-      { id:"cozinha-10", category:"cozinha", icon:"https://m.media-amazon.com/images/I/41sABmlWy5L._AC_SX679_.jpg", name:"Petisqueira 2", description:"", link:"https://www.amazon.com.br/s?k=petisqueira" },
-      { id:"cozinha-11", category:"cozinha", icon:"https://m.media-amazon.com/images/I/41fnZrY2myL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Jogo de xícaras de café (6 unidades)", description:"", link:"https://www.amazon.com.br/s?k=jogo+xicaras+cafe" },
+      { id:"jarra_vidro", name:"Jarra de vidro", category:"Cozinha", icon:"https://m.media-amazon.com/images/I/71jNQBr4mbL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=jarra+de+vidro" },
+      { id:"leiteira", name:"Leiteira", category:"Cozinha", icon:"https://m.media-amazon.com/images/I/51d+B8zoAvL._AC_SY300_SX300_QL70_ML2_.jpg", link:"https://www.amazon.com.br/s?k=leiteira+inox" },
+      { id:"coador_melitta_103", name:"Coador de café Melitta 103", category:"Cozinha", icon:"https://m.media-amazon.com/images/I/31TpUxJ4mHL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=coador+cafe+melitta+103" },
+      { id:"kit_peneiras_inox", name:"Kit peneiras em inox", category:"Cozinha", icon:"https://m.media-amazon.com/images/I/61+LfzcEVGL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=kit+peneiras+inox" },
+      { id:"saladeira", name:"Saladeira", category:"Cozinha", icon:"https://m.media-amazon.com/images/I/41lQvVjbepL._AC_SY300_SX300_QL70_ML2_.jpg", link:"https://www.amazon.com.br/s?k=saladeira" },
+      { id:"bowl_vidro_grande", name:"Bowl de vidro grande", category:"Cozinha", icon:"https://m.media-amazon.com/images/I/41BvG7PiFGL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=bowl+vidro+grande" },
+      { id:"porta_guardanapo", name:"Porta-guardanapo em inox", category:"Cozinha", icon:"https://m.media-amazon.com/images/I/51lCJHAgXSL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=porta+guardanapo+inox" },
+      { id:"saleiro_pimenteiro", name:"Saleiro e pimenteiro", category:"Cozinha", icon:"https://m.media-amazon.com/images/I/61xTgzfTp1L._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=saleiro+pimenteiro" },
+      { id:"petisqueira_1", name:"Petisqueira 1", category:"Cozinha", icon:"https://m.media-amazon.com/images/I/61vFMvBrCcL._AC_SY300_SX300_QL70_ML2_.jpg", link:"https://www.amazon.com.br/s?k=petisqueira" },
+      { id:"petisqueira_2", name:"Petisqueira 2", category:"Cozinha", icon:"https://m.media-amazon.com/images/I/41sABmlWy5L._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=petisqueira" },
+      { id:"jogo_xicaras_cafe", name:"Jogo de xícaras de café (6 unidades)", category:"Cozinha", icon:"https://m.media-amazon.com/images/I/41fnZrY2myL._AC_SY300_SX300_QL70_ML2_.jpg", link:"https://www.amazon.com.br/s?k=jogo+xicaras+cafe" },
 
       // Formas
-      { id:"formas-01", category:"formas", icon:"https://m.media-amazon.com/images/I/31DgHfr0lkL._AC_.jpg", name:"Forma de bolo redonda", description:"", link:"https://www.amazon.com.br/s?k=forma+bolo+redonda" },
-      { id:"formas-02", category:"formas", icon:"https://m.media-amazon.com/images/I/614ntxPcIsL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Forma de bolo com furo", description:"", link:"https://www.amazon.com.br/s?k=forma+bolo+furo" },
-      { id:"formas-03", category:"formas", icon:"https://m.media-amazon.com/images/I/51cQ4Rp1B8L._AC_SX679_.jpg", name:"Forma retangular média (bolo/brownie)", description:"", link:"https://www.amazon.com.br/s?k=forma+retangular+bolo" },
-      { id:"formas-04", category:"formas", icon:"https://m.media-amazon.com/images/I/51h2IHO3cJS._AC_SX679_.jpg", name:"Forma de lasanha de vidro", description:"", link:"https://www.amazon.com.br/s?k=forma+lasanha+vidro" },
-      { id:"formas-05", category:"formas", icon:"https://m.media-amazon.com/images/I/71K7vZLMzUL._AC_SX679_.jpg", name:"Forma de pizza", description:"", link:"https://www.amazon.com.br/s?k=forma+pizza" },
+      { id:"forma_bolo_redonda", name:"Forma de bolo redonda", category:"Formas", icon:"https://m.media-amazon.com/images/I/31DgHfr0lkL._AC_.jpg", link:"https://www.amazon.com.br/s?k=forma+bolo+redonda" },
+      { id:"forma_bolo_furo", name:"Forma de bolo com furo", category:"Formas", icon:"https://m.media-amazon.com/images/I/614ntxPcIsL._AC_SY300_SX300_QL70_ML2_.jpg", link:"https://www.amazon.com.br/s?k=forma+bolo+furo" },
+      { id:"forma_retangular_media", name:"Forma retangular média (bolo/brownie)", category:"Formas", icon:"https://m.media-amazon.com/images/I/51cQ4Rp1B8L._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=forma+retangular+bolo" },
+      { id:"forma_lasanha_vidro", name:"Forma de lasanha de vidro", category:"Formas", icon:"https://m.media-amazon.com/images/I/51h2IHO3cJS._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=forma+lasanha+vidro" },
+      { id:"forma_pizza", name:"Forma de pizza", category:"Formas", icon:"https://m.media-amazon.com/images/I/71K7vZLMzUL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=forma+pizza" },
 
       // Banheiro
-      { id:"banheiro-01", category:"banheiro", icon:"https://m.media-amazon.com/images/I/51zNDiujMCL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Saboneteira", description:"", link:"https://www.amazon.com.br/s?k=saboneteira" },
-      { id:"banheiro-02", category:"banheiro", icon:"https://m.media-amazon.com/images/I/61Y22+k1kAL._AC_SX679_.jpg", name:"Porta sabonete líquido", description:"", link:"https://www.amazon.com.br/s?k=porta+sabonete+liquido" },
-      { id:"banheiro-03", category:"banheiro", icon:"https://m.media-amazon.com/images/I/51sutAJ9eSL._AC_SY300_SX300_QL70_ML2_.jpg", name:"Escova para vaso sanitário", description:"", link:"https://www.amazon.com.br/s?k=escova+vaso+sanitario" },
-      { id:"banheiro-04", category:"banheiro", icon:"https://m.media-amazon.com/images/I/71ByWjXmOPL._AC_SX679_.jpg", name:"Toalha de rosto 1", description:"", link:"https://www.amazon.com.br/s?k=toalha+de+rosto" },
-      { id:"banheiro-05", category:"banheiro", icon:"https://m.media-amazon.com/images/I/51Qjx9m0JEL._AC_SX679_.jpg", name:"Toalha de rosto 2", description:"", link:"https://www.amazon.com.br/s?k=toalha+de+rosto" },
+      { id:"saboneteira", name:"Saboneteira", category:"Banheiro", icon:"https://m.media-amazon.com/images/I/51zNDiujMCL._AC_SY300_SX300_QL70_ML2_.jpg", link:"https://www.amazon.com.br/s?k=saboneteira" },
+      { id:"porta_sabonete_liquido", name:"Porta sabonete líquido", category:"Banheiro", icon:"https://m.media-amazon.com/images/I/61Y22+k1kAL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=porta+sabonete+liquido" },
+      { id:"escova_vaso", name:"Escova para vaso sanitário", category:"Banheiro", icon:"https://m.media-amazon.com/images/I/51sutAJ9eSL._AC_SY300_SX300_QL70_ML2_.jpg", link:"https://www.amazon.com.br/s?k=escova+vaso+sanitario" },
+      { id:"toalha_rosto_1", name:"Toalha de rosto 1", category:"Banheiro", icon:"https://m.media-amazon.com/images/I/71ByWjXmOPL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=toalha+de+rosto" },
+      { id:"toalha_rosto_2", name:"Toalha de rosto 2", category:"Banheiro", icon:"https://m.media-amazon.com/images/I/51Qjx9m0JEL._AC_SX679_.jpg", link:"https://www.amazon.com.br/s?k=toalha+de+rosto" },
 
       // Organização
-      { id:"organizacao-01", category:"organizacao", icon:"https://m.media-amazon.com/images/I/71QBq-o+bZL._AC_SX300_SY300_QL70_ML2_.jpg", name:"Cabides (kit)", description:"", link:"https://www.amazon.com.br/s?k=cabides+kit" }
+      { id:"cabides_kit", name:"Cabides (kit)", category:"Organização", icon:"https://m.media-amazon.com/images/I/71QBq-o+bZL._AC_SX300_SY300_QL70_ML2_.jpg", link:"https://www.amazon.com.br/s?k=cabides+kit" }
     ];
 
-    // ============================
+    // ===========================
     // STATE
-    // ============================
-    var reservations = [];
-    var currentCategory = "all";
-    var selectedItem = null;
+    // ===========================
+    var reservationsMap = {}; // item_id -> {reserved_by, reserved_birthdate,...}
+    var selectedCategory = "Todos";
 
-    // ============================
+    var selectedReserveItem = null;
+    var selectedCancelItem = null;
+
+    // ===========================
     // HELPERS
-    // ============================
+    // ===========================
     function $(id){ return document.getElementById(id); }
 
-    function showToast(message, type) {
-      var container = $("toast-container");
-      if (!container) return;
-      var toast = document.createElement("div");
-      toast.className = "toast px-6 py-3 rounded-full shadow-lg text-white font-medium";
-      toast.style.backgroundColor = (type === "success") ? "#6B9B5E" : "#D4A5A5";
-      toast.innerHTML = message;
-      container.appendChild(toast);
-      setTimeout(function(){ try{ container.removeChild(toast); }catch(e){} }, 3000);
+    function showToast(msg, small, ok){
+      var t = $("toast");
+      $("toastMsg").textContent = msg || "";
+      $("toastSmall").textContent = small || "";
+      t.className = "toast" + (ok ? " ok" : "");
+      t.style.display = "block";
+      clearTimeout(showToast._tm);
+      showToast._tm = setTimeout(function(){ t.style.display = "none"; }, 4200);
     }
 
-    function setSyncStatus(text) {
-      var el = $("sync-status");
-      if (el) el.innerHTML = text;
+    function pad2(n){ return (n<10?"0":"")+n; }
+
+    // Máscara de data: DD/MM/AAAA
+    function maskBirthInput(el){
+      el.addEventListener("input", function(){
+        var v = (el.value || "").replace(/\D/g,"").slice(0,8); // só 8 dígitos
+        if (v.length >= 5) el.value = v.slice(0,2)+"/"+v.slice(2,4)+"/"+v.slice(4);
+        else if (v.length >= 3) el.value = v.slice(0,2)+"/"+v.slice(2);
+        else el.value = v;
+      });
     }
 
-    function pad2(n) {
-      n = String(n);
-      return (n.length < 2) ? ("0" + n) : n;
+    function isValidDateBR(s){
+      return /^\d{2}\/\d{2}\/\d{4}$/.test((s||"").trim());
     }
 
-    function safeText(s) {
-      s = String(s || "");
-      s = s.replace(/&/g,"&amp;");
-      s = s.replace(/</g,"&lt;");
-      s = s.replace(/>/g,"&gt;");
-      s = s.replace(/"/g,"&quot;");
-      s = s.replace(/'/g,"&#039;");
-      return s;
-    }
+    // JSONP caller
+    function jsonpCall(params, cb){
+      var callbackName = "cb_" + Math.random().toString(36).slice(2);
+      window[callbackName] = function(data){
+        try{ cb(null, data); } finally {
+          delete window[callbackName];
+          if (script && script.parentNode) script.parentNode.removeChild(script);
+        }
+      };
 
-    function isImageUrl(u){ return u && String(u).indexOf("http") === 0; }
-
-    function digitsOnly(s){
-      return String(s || "").replace(/[^\d]/g, "");
-    }
-
-    // Formata enquanto digita: 1504 -> 15/04, 15041998 -> 15/04/1998
-    function formatDateBRPartial(raw){
-      var d = digitsOnly(raw);
-      if (d.length > 8) d = d.substring(0,8);
-
-      var out = "";
-      if (d.length <= 2) {
-        out = d;
-      } else if (d.length <= 4) {
-        out = d.substring(0,2) + "/" + d.substring(2);
-      } else {
-        out = d.substring(0,2) + "/" + d.substring(2,4) + "/" + d.substring(4);
-      }
-      return out;
-    }
-
-    function isValidDateBRStrict(s){
-      // dd/mm/aaaa e valida ranges básicos
-      s = String(s || "");
-      if (!/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return false;
-      var dd = parseInt(s.substring(0,2),10);
-      var mm = parseInt(s.substring(3,5),10);
-      var yy = parseInt(s.substring(6,10),10);
-      if (mm < 1 || mm > 12) return false;
-      if (dd < 1 || dd > 31) return false;
-      if (yy < 1900 || yy > 2100) return false;
-      return true;
-    }
-
-    // Normaliza qualquer entrada (com ou sem barras) -> dd/mm/aaaa
-    function normalizeBirthdate(input){
-      var d = digitsOnly(input);
-      if (d.length !== 8) return null;
-      return d.substring(0,2) + "/" + d.substring(2,4) + "/" + d.substring(4,8);
-    }
-
-    function renderIconHtml(item) {
-      if (isImageUrl(item.icon)) {
-        return '<img src="'+ item.icon +'" alt="'+ safeText(item.name) +'" class="w-20 h-20 object-contain mx-auto rounded-lg" loading="lazy" onerror="this.onerror=null; this.outerHTML=\'<span class=&quot;text-4xl block&quot;>🎁</span>\'">';
-      }
-      return '<span class="text-4xl block">🎁</span>';
-    }
-
-    // ============================
-    // JSONP (para Android antigo)
-    // ============================
-    function jsonpRequest(params, onOk, onErr) {
-      var cbName = "__cb_" + (new Date().getTime()) + "_" + Math.floor(Math.random()*100000);
-      params._ts = new Date().getTime();
-
-      var query = [];
-      for (var k in params) {
-        if (params.hasOwnProperty(k)) {
-          query.push(encodeURIComponent(k) + "=" + encodeURIComponent(String(params[k])));
+      var q = [];
+      for (var k in params){
+        if (params.hasOwnProperty(k)){
+          q.push(encodeURIComponent(k) + "=" + encodeURIComponent(params[k]));
         }
       }
-      query.push("callback=" + encodeURIComponent(cbName));
+      q.push("callback=" + encodeURIComponent(callbackName));
+      var url = APPS_SCRIPT_URL + (APPS_SCRIPT_URL.indexOf("?")>-1 ? "&" : "?") + q.join("&");
 
-      var url = APPS_SCRIPT_URL + (APPS_SCRIPT_URL.indexOf("?") >= 0 ? "&" : "?") + query.join("&");
-
-      var done = false;
       var script = document.createElement("script");
-
-      var timer = setTimeout(function(){
-        if (done) return;
-        done = true;
-        cleanup();
-        if (onErr) onErr({ message: "Timeout" });
-      }, 15000);
-
-      window[cbName] = function(data){
-        if (done) return;
-        done = true;
-        cleanup();
-        if (onOk) onOk(data);
-      };
-
-      function cleanup() {
-        clearTimeout(timer);
-        try { window[cbName] = null; } catch(e){}
-        try { if (script && script.parentNode) script.parentNode.removeChild(script); } catch(e){}
-      }
-
-      script.onerror = function(){
-        if (done) return;
-        done = true;
-        cleanup();
-        if (onErr) onErr({ message: "Falha ao carregar JSONP" });
-      };
-
       script.src = url;
+      script.onerror = function(){
+        delete window[callbackName];
+        cb(new Error("Falha ao carregar o script (JSONP)."));
+      };
       document.body.appendChild(script);
     }
 
-    // ============================
-    // RESERVAS
-    // ============================
-    function isReserved(itemId) {
-      for (var i=0; i<reservations.length; i++) {
-        if (String(reservations[i].item_id) === String(itemId)) return true;
-      }
-      return false;
+    // ===========================
+    // COUNTDOWN
+    // ===========================
+    function tickCountdown(){
+      var now = new Date();
+      var diff = EVENT_DATE.getTime() - now.getTime();
+      if (diff < 0) diff = 0;
+
+      var sec = Math.floor(diff/1000);
+      var days = Math.floor(sec / 86400); sec -= days*86400;
+      var hours = Math.floor(sec / 3600); sec -= hours*3600;
+      var mins = Math.floor(sec / 60); sec -= mins*60;
+
+      $("cd_days").textContent = days;
+      $("cd_hours").textContent = pad2(hours);
+      $("cd_mins").textContent = pad2(mins);
+      $("cd_secs").textContent = pad2(sec);
     }
 
-    function getReservation(itemId) {
-      for (var i=0; i<reservations.length; i++) {
-        if (String(reservations[i].item_id) === String(itemId)) return reservations[i];
+    // ===========================
+    // RENDER
+    // ===========================
+    function getCategories(){
+      var map = { "Todos": true };
+      for (var i=0;i<giftItems.length;i++){
+        map[giftItems[i].category] = true;
       }
-      return null;
+      return Object.keys(map);
     }
 
-    function findItemById(itemId){
-      for (var i=0; i<giftItems.length; i++){
-        if (String(giftItems[i].id) === String(itemId)) return giftItems[i];
+    function renderToolbar(){
+      var cats = getCategories();
+      var bar = $("toolbar");
+      bar.innerHTML = "";
+      for (var i=0;i<cats.length;i++){
+        (function(cat){
+          var b = document.createElement("button");
+          b.className = "chip" + (cat===selectedCategory ? " active" : "");
+          b.textContent = cat;
+          b.onclick = function(){
+            selectedCategory = cat;
+            renderToolbar();
+            renderGrid();
+          };
+          bar.appendChild(b);
+        })(cats[i]);
       }
-      return null;
     }
 
-    // ============================
-    // MODAL
-    // ============================
-    function openModal(itemId){
-      var item = findItemById(itemId);
-      if (!item) return;
-
-      selectedItem = item;
-
-      $("modal-item-name").innerHTML = safeText(item.name);
-      $("modal-item-desc").innerHTML = safeText(item.description || "");
-      $("modal-icon").innerHTML = renderIconHtml(item);
-
-      var a = $("modal-buy-link");
-      if (item.link) {
-        a.href = item.link;
-        a.style.display = "inline-flex";
-      } else {
-        a.href = "#";
-        a.style.display = "none";
-      }
-
-      var res = getReservation(item.id);
-      if (!res) {
-        $("modal-title").innerHTML = "Reservar item";
-        $("modal-subtitle").innerHTML = "Preencha seus dados para reservar este presente.";
-        $("form-reserve").className = "mt-6";
-        $("form-cancel").className = "hidden mt-6";
-        $("input-name").value = "";
-        $("input-birth").value = "";
-      } else {
-        $("modal-title").innerHTML = "Cancelar reserva";
-        $("modal-subtitle").innerHTML = "Cancelamento é permitido apenas com a mesma data usada na reserva.";
-        $("form-reserve").className = "hidden mt-6";
-        $("form-cancel").className = "mt-6";
-        $("cancel-who").innerHTML = safeText(res.reserved_by || "alguém");
-        $("input-cancel-birth").value = "";
-      }
-
-      $("modal").className = $("modal").className.replace("hidden","").trim();
-      hookDateMaskInputs(); // garante máscara sempre ativa
-    }
-
-    function closeModal(){
-      selectedItem = null;
-      var m = $("modal");
-      if (!m) return;
-      if (m.className.indexOf("hidden") === -1) m.className = "hidden " + m.className;
-    }
-
-    // ============================
-    // MÁSCARA DE DATA (AUTO BARRAS)
-    // ============================
-    var dateMaskHooked = false;
-
-    function hookDateMaskInputs(){
-      // evita duplicar listeners
-      if (dateMaskHooked) return;
-      dateMaskHooked = true;
-
-      function bind(el){
-        if (!el) return;
-        el.addEventListener("input", function(){
-          var formatted = formatDateBRPartial(el.value);
-          if (el.value !== formatted) el.value = formatted;
-        });
-
-        el.addEventListener("blur", function(){
-          // no blur, se tiver 8 dígitos, normaliza full
-          var norm = normalizeBirthdate(el.value);
-          if (norm) el.value = norm;
-        });
-      }
-
-      try {
-        bind($("input-birth"));
-        bind($("input-cancel-birth"));
-      } catch(e){}
-    }
-
-    // ============================
-    // ACTIONS RESERVAR / CANCELAR
-    // ============================
-    function confirmReserve(){
-      if (!selectedItem) return;
-
-      var name = String($("input-name").value || "").replace(/^\s+|\s+$/g,"");
-      var birthRaw = String($("input-birth").value || "");
-
-      if (!name) { showToast("Digite seu nome.", "error"); return; }
-
-      var birth = normalizeBirthdate(birthRaw);
-      if (!birth || !isValidDateBRStrict(birth)) {
-        showToast("Data inválida. Use DD/MM/AAAA (pode digitar só números).", "error");
-        return;
-      }
-
-      $("input-birth").value = birth;
-
-      $("btn-confirm-reserve").innerHTML = "Reservando...";
-      $("btn-confirm-reserve").disabled = true;
-
-      jsonpRequest(
-        {
-          action: "reserve",
-          item_id: selectedItem.id,
-          item_name: selectedItem.name,
-          reserved_by: name,
-          reserved_birthdate: birth
-        },
-        function(res){
-          $("btn-confirm-reserve").innerHTML = "Confirmar reserva";
-          $("btn-confirm-reserve").disabled = false;
-
-          if (res && res.ok) {
-            showToast("✅ Reservado com sucesso!", "success");
-            closeModal();
-            fetchReservations(true);
-          } else {
-            showToast((res && res.message) ? res.message : "Não foi possível reservar.", "error");
-          }
-        },
-        function(){
-          $("btn-confirm-reserve").innerHTML = "Confirmar reserva";
-          $("btn-confirm-reserve").disabled = false;
-          showToast("Falha de conexão ao reservar.", "error");
-        }
-      );
-    }
-
-    function confirmCancel(){
-      if (!selectedItem) return;
-
-      var birthRaw = String($("input-cancel-birth").value || "");
-      var birth = normalizeBirthdate(birthRaw);
-
-      if (!birth || !isValidDateBRStrict(birth)) {
-        showToast("Data inválida. Use DD/MM/AAAA (pode digitar só números).", "error");
-        return;
-      }
-
-      $("input-cancel-birth").value = birth;
-
-      $("btn-confirm-cancel").innerHTML = "Cancelando...";
-      $("btn-confirm-cancel").disabled = true;
-
-      jsonpRequest(
-        {
-          action: "cancel",
-          item_id: selectedItem.id,
-          reserved_birthdate: birth
-        },
-        function(res){
-          $("btn-confirm-cancel").innerHTML = "Cancelar reserva";
-          $("btn-confirm-cancel").disabled = false;
-
-          if (res && res.ok) {
-            showToast("✅ Reserva cancelada!", "success");
-            closeModal();
-            fetchReservations(true);
-          } else {
-            showToast((res && res.message) ? res.message : "Não foi possível cancelar.", "error");
-          }
-        },
-        function(){
-          $("btn-confirm-cancel").innerHTML = "Cancelar reserva";
-          $("btn-confirm-cancel").disabled = false;
-          showToast("Falha de conexão ao cancelar.", "error");
-        }
-      );
-    }
-
-    // ============================
-    // RENDER GRID
-    // ============================
-    function renderGiftGrid() {
-      var grid = $("gift-grid");
-      if (!grid) return;
+    function renderGrid(){
+      var grid = $("grid");
+      grid.innerHTML = "";
 
       var items = [];
-      for (var i=0; i<giftItems.length; i++) {
+      for (var i=0;i<giftItems.length;i++){
         var it = giftItems[i];
-        if (currentCategory === "all" || it.category === currentCategory) items.push(it);
+        if (selectedCategory==="Todos" || it.category===selectedCategory) items.push(it);
       }
 
-      // disponíveis primeiro
-      var available = [];
-      var reserved = [];
-      for (var j=0; j<items.length; j++) {
-        if (isReserved(items[j].id)) reserved.push(items[j]);
-        else available.push(items[j]);
+      for (var j=0;j<items.length;j++){
+        (function(it){
+          var reserved = !!reservationsMap[it.id];
+
+          var card = document.createElement("div");
+          card.className = "card";
+
+          var top = document.createElement("div");
+          top.className = "cardTop";
+
+          var badge = document.createElement("div");
+          badge.className = "badge " + (reserved ? "no" : "ok");
+          badge.textContent = reserved ? "Reservado" : "Disponível";
+
+          top.appendChild(document.createElement("div"));
+          top.appendChild(badge);
+
+          var imgWrap = document.createElement("div");
+          imgWrap.className = "cardImg";
+          var img = document.createElement("img");
+          img.alt = it.name;
+          img.src = it.icon;
+          img.loading = "lazy";
+          imgWrap.appendChild(img);
+
+          var body = document.createElement("div");
+          body.className = "cardBody";
+
+          var h = document.createElement("h3");
+          h.className = "cardTitle";
+          h.textContent = it.name;
+
+          var hint = document.createElement("p");
+          hint.className = "cardHint";
+          hint.innerHTML = reserved ? "🔒 Reservado" : "✅ Clique para reservar";
+
+          body.appendChild(h);
+          body.appendChild(hint);
+
+          var actions = document.createElement("div");
+          actions.className = "cardActions";
+
+          var btn1 = document.createElement("button");
+          btn1.className = "btn" + (reserved ? " secondary" : "");
+          btn1.textContent = reserved ? "Cancelar" : "Reservar";
+          btn1.onclick = function(){
+            if (reserved) openCancel(it);
+            else openReserve(it);
+          };
+
+          actions.appendChild(btn1);
+
+          card.appendChild(top);
+          card.appendChild(imgWrap);
+          card.appendChild(body);
+          card.appendChild(actions);
+
+          grid.appendChild(card);
+        })(items[j]);
       }
-      var sorted = available.concat(reserved);
+    }
 
-      var html = "";
-      for (var k=0; k<sorted.length; k++) {
-        var item = sorted[k];
-        var res = getReservation(item.id);
-        var r = !!res;
+    function renderBuyList(){
+      var box = $("buyList");
+      box.innerHTML = "";
 
-        html += '<div class="card-hover rounded-2xl p-6 border-2 relative overflow-hidden" style="background-color:#fff; border-color:#EDE9E3;">';
+      for (var i=0;i<giftItems.length;i++){
+        (function(it){
+          var row = document.createElement("div");
+          row.className = "buyRow";
 
-        if (r) {
-          html += '<div class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium text-white" style="background-color:'+ config.secondary_action_color +'">Reservado</div>';
-        } else {
-          html += '<div class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium text-white" style="background-color:'+ config.primary_action_color +'">Disponível</div>';
+          var left = document.createElement("div");
+          left.className = "buyLeft";
+          var img = document.createElement("img");
+          img.src = it.icon;
+          img.alt = it.name;
+          img.loading = "lazy";
+
+          var nm = document.createElement("div");
+          nm.className = "buyName";
+          nm.textContent = it.name;
+
+          left.appendChild(img);
+          left.appendChild(nm);
+
+          var a = document.createElement("a");
+          a.className = "buyBtn";
+          a.href = it.link;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.textContent = "Comprar";
+
+          row.appendChild(left);
+          row.appendChild(a);
+
+          box.appendChild(row);
+        })(giftItems[i]);
+      }
+    }
+
+    // ===========================
+    // MODALS
+    // ===========================
+    function openReserve(it){
+      selectedReserveItem = it;
+      $("reserveImg").src = it.icon;
+      $("reserveName").textContent = it.name;
+      $("reservePerson").value = "";
+      $("reserveBirth").value = "";
+      $("reserveOverlay").style.display = "flex";
+      setTimeout(function(){ $("reservePerson").focus(); }, 60);
+    }
+
+    function closeReserve(){
+      $("reserveOverlay").style.display = "none";
+      selectedReserveItem = null;
+    }
+
+    function openCancel(it){
+      selectedCancelItem = it;
+      $("cancelImg").src = it.icon;
+      $("cancelName").textContent = it.name;
+      $("cancelBirth").value = "";
+      $("cancelOverlay").style.display = "flex";
+      setTimeout(function(){ $("cancelBirth").focus(); }, 60);
+    }
+
+    function closeCancel(){
+      $("cancelOverlay").style.display = "none";
+      selectedCancelItem = null;
+    }
+
+    // ===========================
+    // API
+    // ===========================
+    function loadReservations(){
+      $("loadingLine").style.display = "flex";
+      jsonpCall({ action:"list" }, function(err, data){
+        $("loadingLine").style.display = "none";
+        if (err){
+          showToast("Erro ao carregar reservas.", err.message, false);
+          return;
+        }
+        if (!data || !data.ok){
+          showToast("Erro ao carregar reservas.", (data && data.message) ? data.message : "Resposta inválida.", false);
+          return;
         }
 
-        html += '<div class="text-center">';
-        html += '<div class="mb-4 flex justify-center items-center" style="min-height:80px;">'+ renderIconHtml(item) +'</div>';
-        html += '<h3 class="font-heading text-2xl mb-2" style="color:'+ config.text_color +'">'+ safeText(item.name) +'</h3>';
-
-        if (r) {
-          html += '<div class="text-sm italic mb-4" style="color:#8b7355">Reservado por '+ safeText(res.reserved_by || "alguém") +'</div>';
-          html += '<button onclick="openModal(\''+ item.id +'\')" class="w-full px-6 py-3 rounded-full text-white font-medium transition-all hover:shadow-md" style="background-color:'+ config.secondary_action_color +'">Cancelar reserva</button>';
-        } else {
-          html += '<div class="text-sm mb-4" style="color:#6b9b5e">✅ Clique para reservar</div>';
-          html += '<button onclick="openModal(\''+ item.id +'\')" class="w-full px-6 py-3 rounded-full text-white font-medium transition-all hover:shadow-md" style="background-color:'+ config.primary_action_color +'">Reservar</button>';
+        reservationsMap = {};
+        var arr = data.reservations || [];
+        for (var i=0;i<arr.length;i++){
+          var r = arr[i];
+          reservationsMap[String(r.item_id||"")] = r;
         }
 
-        html += '</div></div>';
-      }
-
-      grid.innerHTML = html;
+        renderGrid();
+      });
     }
 
-    function filterCategory(cat) {
-      currentCategory = cat;
+    function reserveItem(){
+      if (!selectedReserveItem) return;
 
-      var btns = document.getElementsByClassName("category-btn");
-      for (var i=0; i<btns.length; i++) {
-        var btn = btns[i];
-        var c = btn.getAttribute("data-category");
-        if (c === cat) {
-          btn.style.backgroundColor = config.primary_action_color;
-          btn.style.color = "white";
-        } else {
-          btn.style.backgroundColor = "#EDE9E3";
-          btn.style.color = config.text_color;
+      var name = ($("reservePerson").value || "").trim();
+      var birth = ($("reserveBirth").value || "").trim();
+
+      if (!name || !birth){
+        showToast("Preencha nome e data de nascimento.", "", false);
+        return;
+      }
+      if (!isValidDateBR(birth)){
+        showToast("Data inválida.", "Use DD/MM/AAAA.", false);
+        return;
+      }
+
+      var it = selectedReserveItem;
+
+      jsonpCall({
+        action:"reserve",
+        item_id: it.id,
+        item_name: it.name,
+        reserved_by: name,
+        reserved_birthdate: birth
+      }, function(err, data){
+        if (err){
+          showToast("Erro ao reservar.", err.message, false);
+          return;
         }
-      }
-
-      renderGiftGrid();
-    }
-
-    // ============================
-    // RENDER LINKS
-    // ============================
-    function renderLinksList() {
-      var container = $("links-list");
-      if (!container) return;
-
-      function storeName(link) {
-        link = String(link || "");
-        if (link.indexOf("amazon") >= 0 || link.indexOf("a.co") >= 0) return "Ver na Amazon";
-        if (link.indexOf("mercadolivre") >= 0) return "Ver no Mercado Livre";
-        if (link.indexOf("americanas") >= 0) return "Ver nas Americanas";
-        return "Ver loja";
-      }
-
-      // lista simples (sem separar por categoria — fica leve e completa)
-      var html = "";
-      for (var i=0; i<giftItems.length; i++) {
-        var it = giftItems[i];
-        if (!it.link) continue;
-
-        html += '<a href="'+ it.link +'" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-xl transition-all hover:shadow-md" style="background-color:white; border:1px solid #EDE9E3;">';
-        html += '<div class="flex items-center gap-3">';
-        html += '<div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center">';
-        html += (isImageUrl(it.icon) ? '<img src="'+ it.icon +'" class="w-full h-full object-contain" loading="lazy" onerror="this.outerHTML=\'🎁\'">' : '🎁');
-        html += '</div>';
-        html += '<span class="font-medium" style="color:'+ config.text_color +'">'+ safeText(it.name) +'</span>';
-        html += '</div>';
-        html += '<div class="text-sm" style="color:'+ config.primary_action_color +'">'+ storeName(it.link) +'</div>';
-        html += '</a>';
-      }
-
-      container.innerHTML = html;
-    }
-
-    // ============================
-    // COUNTDOWN
-    // ============================
-    function updateCountdown() {
-      try {
-        var eventDate = new Date("2026-02-08T15:00:00-03:00");
-        var now = new Date();
-        var diff = eventDate.getTime() - now.getTime();
-        if (diff <= 0) diff = 0;
-
-        var days = Math.floor(diff / (1000*60*60*24));
-        var hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-        var minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
-        var seconds = Math.floor((diff % (1000*60)) / 1000);
-
-        $("countdown-days").innerHTML = String(days);
-        $("countdown-hours").innerHTML = pad2(hours);
-        $("countdown-minutes").innerHTML = pad2(minutes);
-        $("countdown-seconds").innerHTML = pad2(seconds);
-      } catch(e) {}
-    }
-
-    // ============================
-    // FETCH RESERVAS
-    // ============================
-    function fetchReservations(silent) {
-      if (!silent) setSyncStatus("🔄 Carregando reservas...");
-
-      jsonpRequest(
-        { action:"list" },
-        function(res) {
-          if (res && res.ok) {
-            reservations = res.reservations || [];
-            renderGiftGrid();
-            if (!silent) setSyncStatus("✅ Reservas atualizadas.");
-          } else {
-            renderGiftGrid();
-            if (!silent) setSyncStatus("⚠️ Não foi possível carregar reservas agora.");
-          }
-        },
-        function() {
-          renderGiftGrid();
-          if (!silent) setSyncStatus("⚠️ Falha ao carregar reservas.");
+        if (!data || !data.ok){
+          showToast("Não foi possível reservar.", (data && data.message) ? data.message : "Resposta inválida.", false);
+          return;
         }
-      );
+        closeReserve();
+        showToast("Reservado com sucesso!", it.name, true);
+        loadReservations();
+      });
     }
 
-    // ============================
+    function cancelItem(){
+      if (!selectedCancelItem) return;
+
+      var birth = ($("cancelBirth").value || "").trim();
+      if (!birth){
+        showToast("Digite sua data de nascimento.", "", false);
+        return;
+      }
+      if (!isValidDateBR(birth)){
+        showToast("Data inválida.", "Use DD/MM/AAAA.", false);
+        return;
+      }
+
+      var it = selectedCancelItem;
+
+      jsonpCall({
+        action:"cancel",
+        item_id: it.id,
+        reserved_birthdate: birth
+      }, function(err, data){
+        if (err){
+          showToast("Erro ao cancelar.", err.message, false);
+          return;
+        }
+        if (!data || !data.ok){
+          showToast("Não foi possível cancelar.", (data && data.message) ? data.message : "Resposta inválida.", false);
+          return;
+        }
+        closeCancel();
+        showToast("Reserva cancelada!", it.name, true);
+        loadReservations();
+      });
+    }
+
+    // ===========================
     // INIT
-    // ============================
-    function init() {
-      renderLinksList();
-      filterCategory("all");
+    // ===========================
+    document.addEventListener("DOMContentLoaded", function(){
+      // capa
+      $("coverImg").src = COVER_IMAGE_URL;
 
-      updateCountdown();
-      setInterval(updateCountdown, 1000);
+      // countdown
+      tickCountdown();
+      setInterval(tickCountdown, 1000);
 
-      // hooks da máscara
-      hookDateMaskInputs();
+      // scroll botão
+      $("btnGoGifts").onclick = function(){
+        var el = document.getElementById("gifts");
+        if (el && el.scrollIntoView) el.scrollIntoView({ behavior:"smooth", block:"start" });
+      };
 
-      fetchReservations(false);
-      setInterval(function(){ fetchReservations(true); }, 25000);
+      // modais
+      $("closeReserve").onclick = closeReserve;
+      $("reserveOverlay").addEventListener("click", function(e){
+        if (e.target === $("reserveOverlay")) closeReserve();
+      });
 
-      setSyncStatus("✅ Lista pronta! (reservas atualizando)");
-    }
+      $("closeCancel").onclick = closeCancel;
+      $("cancelOverlay").addEventListener("click", function(e){
+        if (e.target === $("cancelOverlay")) closeCancel();
+      });
 
-    (function(){
-      if (document.readyState === "complete" || document.readyState === "interactive") {
-        setTimeout(init, 1);
-      } else if (document.addEventListener) {
-        document.addEventListener("DOMContentLoaded", init);
-      } else {
-        window.attachEvent && window.attachEvent("onload", init);
-      }
-    })();
+      $("confirmReserve").onclick = reserveItem;
+      $("confirmCancel").onclick = cancelItem;
+
+      maskBirthInput($("reserveBirth"));
+      maskBirthInput($("cancelBirth"));
+
+      renderToolbar();
+      renderGrid();
+      renderBuyList();
+      loadReservations();
+    });
   </script>
 </body>
 </html>
