@@ -1312,16 +1312,29 @@
         try {
           window.dataSdk
             .delete(reservation)
-            .then(function (result) {
-              if (result && result.isOk) {
-                closeCancelModal();
-                openCancelConfirmationModal();
-              } else {
-                console.error("dataSdk.delete isOk=false:", result);
-                showToast("Erro ao cancelar. Tente novamente.", "error");
-              }
-              finishCancelUI();
-            })
+.then(function (result) {
+  if (result && result.isOk) {
+    // ✅ Sucesso REAL
+    closeCancelModal();
+    openCancelConfirmationModal();
+
+    showToast("Reserva cancelada com sucesso ✅", "success");
+
+    // Atualiza UI depois, sem risco de erro visual
+    setTimeout(function () {
+      finishCancelUI();
+      reloadReservations && reloadReservations();
+    }, 300);
+
+    return; // ⛔ IMPORTANTE: encerra aqui
+  }
+
+  // ❌ Só entra aqui se REALMENTE falhar
+  console.error("dataSdk.delete isOk=false:", result);
+  showToast("Erro ao cancelar. Tente novamente.", "error");
+  finishCancelUI();
+})
+
             .catch(function (error) {
               console.error("Erro no dataSdk.delete:", error);
               showToast("Erro ao cancelar. Tente novamente.", "error");
