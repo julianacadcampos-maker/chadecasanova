@@ -182,12 +182,12 @@
         </div>
 
         <!-- Main Content -->
-        <div class="text-center max-w-2xl mx-auto animate-fade-in">
+        <div class="text-center max-w-6xl mx-auto animate-fade-in">
           <!-- Couple Cover Photo -->
           <div class="w-full mb-12 mt-0">
             <div
               class="w-full max-w-6xl mx-auto rounded-2xl overflow-hidden shadow-xl"
-              style="aspect-ratio: 4/3"
+              style="aspect-ratio: 16/9"
             >
               <img
                 src="https://i.pinimg.com/originals/4a/6c/aa/4a6caa8efc074ac29335bff3410e8f7c.jpg"
@@ -768,6 +768,7 @@
         { id: "potes-1", category: "potes", icon: "https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name: "Kit 2 Potes de Vidro Herméticos", description: "Para armazenar alimentos - opção 1", link: "https://a.co/d/gH9mf9o" },
         { id: "potes-2", category: "potes", icon: "https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name: "Kit 2 Potes de Vidro Herméticos", description: "Para armazenar alimentos - opção 2", link: "https://a.co/d/gH9mf9o" },
         { id: "potes-3", category: "potes", icon: "https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name: "Kit 2 Potes de Vidro Herméticos", description: "Para armazenar alimentos - opção 3", link: "https://a.co/d/gH9mf9o" },
+        { id: "potes-4", category: "potes", icon: "https://m.media-amazon.com/images/I/51G655iyvdL._AC_SL1080_.jpg", name: "Kit 2 Potes de Vidro Herméticos", description: "Vedação firme e bonita", link: "https://a.co/d/gH9mf9o" },
         { id: "potes-4", category: "potes", icon: "https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name: "Pote Hermético 1,5L", description: "Tamanho ideal - opção 1", link: "https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
         { id: "potes-5", category: "potes", icon: "https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name: "Pote Hermético 1,5L", description: "Tamanho ideal - opção 2", link: "https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
         { id: "potes-6", category: "potes", icon: "https://m.media-amazon.com/images/I/51tohHGnQhL._AC_SX679_.jpg", name: "Pote Hermético 1,5L", description: "Tamanho ideal - opção 3", link: "https://www.mercadolivre.com.br/pote-hermetico-porta-mantimentos-empilhavel-vedado-15l/p/MLB22726917" },
@@ -1415,6 +1416,7 @@
 
         const data = {
           item_id: String(itemId),
+          item_name: String(item.name),
           reserved_by: String(name),
           reserved_birthdate: normalizeBirthdate(birthdate),
           reserved_at: new Date().toISOString(),
@@ -1447,7 +1449,7 @@
                   }, 100);
                 } else {
                   console.error("dataSdk.create retornou isOk=false:", result, data);
-                  showToast("Não foi possível reservar agora. Atualize a página e tente novamente.", "error");
+                  showToast(((result && result.data && result.data.message) ? result.data.message : "Não foi possível reservar agora. Atualize a página e tente novamente."), "error");
                 }
               })
               ["catch"](function (err) {
@@ -1458,7 +1460,7 @@
                 if (submitLoading) submitLoading.classList.add("hidden");
 
                 console.error("Erro no dataSdk.create:", err, data);
-                showToast("Erro ao processar a reserva. Atualize a página e tente novamente.", "error");
+                showToast(("Erro ao processar a reserva: " + (err && err.message ? err.message : "tente novamente.")), "error");
               });
           } else {
             clearTimeout(timeoutId);
