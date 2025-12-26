@@ -1314,6 +1314,7 @@
             .delete(reservation)
 .then(function (result) {
  var ok = !!(result && (result.isOk === true || result.ok === true));
+  
 if (ok) {
     // ✅ Sucesso REAL
     closeCancelModal();
