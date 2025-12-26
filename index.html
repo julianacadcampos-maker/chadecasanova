@@ -1310,38 +1310,44 @@
         }
 
         try {
-          window.dataSdk
-            .delete(reservation)
-.then(function (result) {
- var ok = !!(result && (result.isOk === true || result.ok === true));
-  
-if (ok) {
-    // ✅ Sucesso REAL
-    closeCancelModal();
-    openCancelConfirmationModal();
+try {
+  var cancelSucceeded = false;
 
-    showToast("Reserva cancelada com sucesso ✅", "success");
+  window.dataSdk
+    .delete(reservation)
+    .then(function (result) {
+      // Aceita os 2 formatos: {ok:true} OU {isOk:true}
+      cancelSucceeded = !!(result && (result.ok === true || result.isOk === true));
 
-    // Atualiza UI depois, sem risco de erro visual
-    setTimeout(function () {
+      if (cancelSucceeded) {
+        closeCancelModal();
+        openCancelConfirmationModal();
+        finishCancelUI();
+        return;
+      }
+
+      console.error("dataSdk.delete retornou ok=false:", result);
+      showToast("Erro ao cancelar. Tente novamente.", "error");
       finishCancelUI();
-      reloadReservations && reloadReservations();
-    }, 300);
+    })
+    .catch(function (error) {
+      console.error("Erro no dataSdk.delete:", error);
 
-    return; // ⛔ IMPORTANTE: encerra aqui
-  }
+      // Se por algum motivo o cancelamento já foi efetuado,
+      // NÃO exibe toast de erro (evita falso negativo)
+      if (!cancelSucceeded) {
+        showToast("Erro ao cancelar. Tente novamente.", "error");
+      }
 
-  // ❌ Só entra aqui se REALMENTE falhar
-  console.error("dataSdk.delete isOk=false:", result);
-  showToast("Erro ao cancelar. Tente novamente.", "error");
+      finishCancelUI();
+    });
+
+} catch (e) {
+  console.error("Erro inesperado no cancelamento:", e);
+  showToast("Erro inesperado. Tente novamente.", "error");
   finishCancelUI();
-})
+}
 
-            .catch(function (error) {
-              console.error("Erro no dataSdk.delete:", error);
-              showToast("Erro ao cancelar. Tente novamente.", "error");
-              finishCancelUI();
-            });
         } catch (e) {
           console.error("Erro inesperado no cancelamento:", e);
           showToast("Erro inesperado. Tente novamente.", "error");
