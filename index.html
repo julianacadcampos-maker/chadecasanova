@@ -1313,7 +1313,8 @@
           window.dataSdk
             .delete(reservation)
 .then(function (result) {
-  if (result && result.isOk) {
+ var ok = !!(result && (result.isOk === true || result.ok === true));
+if (ok) {
     // ✅ Sucesso REAL
     closeCancelModal();
     openCancelConfirmationModal();
