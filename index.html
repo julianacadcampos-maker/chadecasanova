@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chá de Casa Nova – Juliana &amp; Matheus</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/_sdk/element_sdk.js"></script>
-    <script src="/_sdk/data_sdk.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&amp;family=Questrial&amp;display=swap"
@@ -186,10 +184,10 @@
         <!-- Main Content -->
         <div class="text-center max-w-2xl mx-auto animate-fade-in">
           <!-- Couple Cover Photo -->
-          <div class="w-full mb-10 -mt-16 md:-mt-20">
+          <div class="w-full mb-12 mt-0">
             <div
               class="w-full max-w-6xl mx-auto rounded-2xl overflow-hidden shadow-xl"
-              style="aspect-ratio: 3/2"
+              style="aspect-ratio: 4/3"
             >
               <img
                 src="https://i.pinimg.com/originals/4a/6c/aa/4a6caa8efc074ac29335bff3410e8f7c.jpg"
@@ -637,7 +635,41 @@
       </div>
 
       <!-- Cancel Reservation Modal -->
-      <div id="cancel-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background-color: rgba(0, 0, 0, 0.5)">
+      
+      <!-- ✅ Modal: Cancelamento concluído -->
+      <div id="cancel-confirmation-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background-color: rgba(0,0,0,0.55)">
+        <div class="w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden" style="background-color: #f8f2e9">
+          <div class="p-6 md:p-8">
+            <div class="flex items-start justify-between gap-4 mb-6">
+              <div>
+                <p class="text-sm uppercase tracking-widest mb-1" style="color: #8b7355">✅ Tudo certo</p>
+                <h3 class="font-heading text-3xl md:text-4xl" style="color: #5d4e37">Reserva cancelada</h3>
+              </div>
+              <button type="button" class="text-2xl leading-none px-3 py-1 rounded-full" style="color: #8b7355" onclick="closeCancelConfirmationModal()">×</button>
+            </div>
+
+            <div class="rounded-2xl p-5 md:p-6" style="background-color: #ffffff; border: 1px solid #e8dccb">
+              <p class="text-base md:text-lg leading-relaxed mb-4" style="color: #8b7355">
+                Perfeito! O item voltou a ficar <strong style="color:#6b9b5e">disponível</strong> para outras pessoas escolherem.
+              </p>
+
+              <div class="rounded-xl p-5" style="background-color: #fff9e6; border: 1px solid #f5e6b3">
+                <p class="text-base md:text-lg leading-relaxed" style="color: #8b6914">
+                  💡 Se foi engano, você pode reservar novamente a qualquer momento.
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+              <button type="button" class="px-6 py-3 rounded-full font-medium" style="background-color: #6b9b5e; color: white" onclick="closeCancelConfirmationModal()">
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<div id="cancel-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" style="background-color: rgba(0, 0, 0, 0.5)">
         <div class="bg-white rounded-2xl max-w-md w-full p-8 relative animate-fade-in">
           <button onclick="closeCancelModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
             <svg class="w-5 h-5" fill="none" stroke="#8B7355" viewbox="0 0 24 24">
@@ -788,7 +820,114 @@
       let dataSdkReady = false;
       let dataSdkInitError = null;
 
+      
       // ---------------------------
+      // APPS SCRIPT (JSONP) — compatível com Android antigo
+      // ---------------------------
+      const APPS_SCRIPT_EXEC_URL = "https://script.google.com/macros/s/AKfycbxayYFf7S6Ug0H74f5pnIQwQL-VIuOiT_QFzqU62bP5I_dUNDiK_0UoZullNcphlyrvHg/exec";
+
+      function jsonpRequest_(params) {
+        return new Promise(function (resolve, reject) {
+          try {
+            var cbName = "__cb_" + Math.random().toString(36).slice(2) + Date.now();
+            params = params || {};
+            params.callback = cbName;
+
+            var qs = Object.keys(params)
+              .map(function (k) {
+                return encodeURIComponent(k) + "=" + encodeURIComponent(params[k] == null ? "" : String(params[k]));
+              })
+              .join("&");
+
+            var src = APPS_SCRIPT_EXEC_URL + (APPS_SCRIPT_EXEC_URL.indexOf("?") >= 0 ? "&" : "?") + qs;
+
+            var script = document.createElement("script");
+            script.async = true;
+            script.src = src;
+
+            var timeoutId = setTimeout(function () {
+              cleanup_();
+              reject(new Error("Timeout na chamada do Apps Script"));
+            }, 15000);
+
+            function cleanup_() {
+              try { clearTimeout(timeoutId); } catch (e) {}
+              try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
+              try { if (script && script.parentNode) script.parentNode.removeChild(script); } catch (e) {}
+            }
+
+            window[cbName] = function (data) {
+              cleanup_();
+              resolve(data);
+            };
+
+            script.onerror = function () {
+              cleanup_();
+              reject(new Error("Falha ao carregar JSONP (verifique a URL do Apps Script)"));
+            };
+
+            document.head.appendChild(script);
+          } catch (err) {
+            reject(err);
+          }
+        });
+      }
+
+      // SDK mínimo (substitui /_sdk/data_sdk.js)
+      (function () {
+        var handlerRef = null;
+
+        function refresh_() {
+          return jsonpRequest_({ action: "list" }).then(function (r) {
+            if (r && r.ok) {
+              if (handlerRef && typeof handlerRef.onDataChanged === "function") {
+                handlerRef.onDataChanged(r.reservations || []);
+              }
+              return { isOk: true, data: r };
+            }
+            return { isOk: false, data: r };
+          });
+        }
+
+        window.dataSdk = {
+          init: function (handler) {
+            handlerRef = handler || null;
+            return refresh_();
+          },
+          create: function (payload) {
+            return jsonpRequest_({
+              action: "reserve",
+              item_id: payload.item_id,
+              item_name: payload.item_name,
+              reserved_by: payload.reserved_by,
+              reserved_birthdate: payload.reserved_birthdate
+            }).then(function (r) {
+              if (r && r.ok) {
+                return refresh_().then(function () {
+                  return { isOk: true, data: r };
+                });
+              }
+              return { isOk: false, data: r };
+            });
+          },
+          delete: function (payload) {
+            return jsonpRequest_({
+              action: "cancel",
+              item_id: payload.item_id,
+              reserved_birthdate: payload.reserved_birthdate
+            }).then(function (r) {
+              if (r && r.ok) {
+                return refresh_().then(function () {
+                  return { isOk: true, data: r };
+                });
+              }
+              return { isOk: false, data: r };
+            });
+          },
+        };
+      })();
+
+// ---------------------------
       // HELPERS
       // ---------------------------
       function formatDateInput(input) {
@@ -1175,7 +1314,7 @@
             .then(function (result) {
               if (result && result.isOk) {
                 closeCancelModal();
-                showToast("Reserva cancelada com sucesso! O item está disponível novamente.", "success");
+                openCancelConfirmationModal();
               } else {
                 console.error("dataSdk.delete isOk=false:", result);
                 showToast("Erro ao cancelar. Tente novamente.", "error");
